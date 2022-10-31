@@ -9,9 +9,4 @@ This analysis was completed by [HousingForward Virginia](https://housingforwardv
 - Bedford County
 - Campbell County
 - City of Lynchburg
-- Town of Altavista
-- Town of Amherst
-- Town of Appomattox
-- Town of Bedford
-- Town of Brookneal
 
