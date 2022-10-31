@@ -1,1 +1,945 @@
-# CVPDC Housing Market Assessment
+# CVPDC Housing Market Assessment {#part-3-1}
+
+The following provides a regional-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been aggregated to the regional-level and includes:
+
+- Amherst County
+- Appomattox County
+- Bedford County
+- Campbell County
+- City of Lynchburg
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tidycensus)
+library(janitor)
+library(scales)
+library(ggplot2)
+library(tigris)
+
+cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
+
+
+```
+
+## Takeaways
+
+
+
+## Population trends
+
+```{r}
+#| label: pop-data
+
+# Get population estimates from the Population Estimates Program (PEP) from 2010 to 2019.
+
+pep_total_raw <- get_estimates(
+  geography = "county",
+  state = "VA",
+  variables = "POP",
+  year = 2019,
+  time_series = TRUE
+)
+
+# Get decennial Census estimates.
+
+census_raw <- get_decennial(
+  geography = "county",
+  state = "VA",
+  year = 2020,
+  sumfile = "pl",
+  variables = "P1_001N"
+)
+
+pep_total_clean <- pep_total_raw %>%
+  filter(!DATE %in% c(2, 3)) %>% # Remove non-decennial 2010 counts
+  mutate(year = # Translate date codes into years
+    case_when(
+      DATE == 1 ~ "2010",
+      DATE == 4 ~ "2011",
+      DATE == 5 ~ "2012",
+      DATE == 6 ~ "2013",
+      DATE == 7 ~ "2014",
+      DATE == 8 ~ "2015",
+      DATE == 9 ~ "2016",
+      DATE == 10 ~ "2017",
+      DATE == 11 ~ "2018",
+      DATE == 12 ~ "2019")) %>%
+  mutate(counttype = # Add descriptions to count types
+      case_when(
+        DATE == 1 ~ "Census population",
+        TRUE ~ "Population estimate")) %>% 
+  select( # Simplify columns
+    GEOID,
+    year,
+    counttype,
+    value
+  )
+
+
+# Prep total population counts from 2020 Census summary file
+
+census_clean <- census_raw %>% 
+  mutate(year = "2020", # Add year and count type columns
+         counttype = "Census population") %>% 
+  select( # Simplify columns
+    GEOID,
+    year,
+    counttype,
+    value
+  )
+
+population_data <-pep_total_clean %>% 
+  bind_rows(census_clean) %>% 
+  subset(GEOID %in% cv)
+
+write_rds(population_data, "data/pop_data.rds")
+
+```
+```{r}
+#| label: fig-pop
+#| fig-cap: "Total regional population"
+
+# Aggregate data to the regional-level
+
+cv_pop <- read_rds("data/pop_data.rds") %>% 
+  group_by(year, counttype) %>% 
+  summarise(value = sum(value))
+
+# Create bar chart showing the change in population from 2010 to 2020
+
+
+```
+```{r}
+#| label: components-data
+#| eval: FALSE
+# PEP does not have data available for 2020 and 2021. There is a gap between 2019 and 2021 because Census uses 2020 as a baseline. 
+
+pep_change_raw <- get_estimates(
+  geography = "county",
+  state = "VA",
+  variables = c("NATURALINC", "DOMESTICMIG", "INTERNATIONALMIG"),
+  time_series = TRUE
+)
+
+pep_change_clean <- pep_change_raw %>%  
+  mutate(GEOID = as.character(GEOID)) %>%  
+  filter(GEOID %in% cv) %>% 
+  mutate(year = # Translate date codes into years
+    case_when(
+      PERIOD == 1 ~ "2010",
+      PERIOD == 2 ~ "2011",
+      PERIOD == 3 ~ "2012",
+      PERIOD == 4 ~ "2013",
+      PERIOD == 5 ~ "2014",
+      PERIOD == 6 ~ "2015",
+      PERIOD == 7 ~ "2016",
+      PERIOD == 8 ~ "2017",
+      PERIOD == 9 ~ "2018",
+      PERIOD == 10 ~ "2019")) %>% 
+  mutate(component = # Rename components of change
+    case_when(
+      variable == "NATURALINC" ~ "Natural increase",
+      variable == "DOMESTICMIG" ~ "Domestic migration",
+      variable == "INTERNATIONALMIG" ~ "International migration")) %>%  
+  select( # Simplify columns
+    GEOID,
+    year,
+    component,
+    value
+  )
+
+pep_2021 <- read_csv("data/comp_chang_2021.csv") %>% 
+  pivot_longer(4:6,
+               names_to = "component",
+               values_to = "value") %>% 
+  mutate(year = 2021,
+         component =
+    case_when(
+      component == "NATURALINC" ~ "Natural increase",
+      component == "DOMESTICMIG" ~ "Domestic migration",
+      component == "INTERNATIONALMIG" ~ "International migration")) %>% 
+  select(GEOID, year, component, value) |> 
+  mutate(GEOID = as.character(GEOID))
+
+cv_comp_change <- pep_change_clean %>% 
+  rbind(pep_2021) |>
+  filter(GEOID %in% cv) %>%
+  left_join(counties("VA", year = 2021), by = "GEOID") %>%
+  select(NAMELSAD, year, component, value)
+
+
+```
+```{r}
+#| label: fig-projections
+
+
+projections <- read_csv("data/uva_proj.csv") %>% 
+  subset(FIPS %in% cv)
+
+
+```
+
+## Household trends
+
+```{r}
+
+# Table B25003: Households by Tenure
+
+years <- 2010:2020
+
+b25003_vars <- load_variables(2020, "acs5") %>% 
+  filter(str_sub(name, end = 6) %in% "B25003") %>% 
+  filter(str_length(name) < 11)
+
+b25003_raw <- map_dfr(years, function(yr){
+  b25003_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25003",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) %>% 
+    mutate(year = yr)
+})
+
+b25003_raw <- b25003_raw %>% 
+  subset(GEOID %in% cv)
+
+
+b25003_vars_cleaned <- b25003_vars %>% 
+  separate(label, into = c("est", "total", "tenure"), sep = "!!") %>% 
+  select(variable = name, tenure) |>
+  drop_na() |>
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  ))
+
+b25003_data <- b25003_raw %>% 
+  right_join(b25003_vars_cleaned, by = "variable") %>% 
+  select(NAME, GEOID, year, tenure, estimate, moe) %>% 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME
+         ))
+
+write_rds(b25003_data, "data/b25003_data.rds")
+
+
+```
+
+```{r}
+
+# Table B25007: Tenure by Age of Householder
+
+b25007_vars <- load_variables(2020, "acs5") %>%
+  filter(str_sub(name, end = 6) %in% "B25007")
+
+b25007_raw <- map_dfr(years, function(yr){
+  b25007_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25007",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) %>%
+    mutate(year = yr)
+})
+
+b25007_raw <- b25007_raw %>%
+  subset(GEOID %in% cv)
+
+b25007_vars_cleaned <- b25007_vars %>%
+  separate(label, into = c("est", "total", "tenure", "age"), sep = "!!") %>%
+  select(variable = name, tenure, age) %>%
+  drop_na() |>
+  mutate(tenure = case_when(
+    tenure == "Owner occupied:" ~ "Homeowner",
+    tenure == "Renter occupied:" ~ "Renter"
+  ))
+
+b25007_data <- b25007_raw %>%
+  right_join(b25007_vars_cleaned, by = "variable") %>% 
+  select(NAME, GEOID, year, tenure, age, estimate, moe) %>% 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME),
+         age = case_when(
+    age == "Householder 15 to 24 years" ~ "Under 25 years old",
+    age == "Householder 25 to 34 years" ~ "25 to 44 years old",
+    age == "Householder 35 to 44 years" ~ "25 to 44 years old",
+    age == "Householder 45 to 54 years" ~ "45 to 64 years old",
+    age == "Householder 55 to 59 years" ~ "45 to 64 years old",
+    age == "Householder 60 to 64 years" ~ "45 to 64 years old",
+    age == "Householder 65 to 74 years" ~ "65 years and over",
+    age == "Householder 75 to 84 years" ~ "65 years and over",
+    age == "Householder 85 years and over" ~ "65 years and over"
+  ))
+
+write_rds(b25007_data, "data/b25007_data.rds")
+
+```
+
+```{r}
+
+# Table B11001: Household type (including Living Alone)
+
+b11001_vars <- load_variables(2020, "acs5") %>% 
+  filter(str_sub(name, end = 7) %in% "B11001_")
+
+
+b11001_raw <- map_dfr(years, function(yr){
+  b11001_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B11001",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |>
+    mutate(year = yr)
+})
+
+b11001_raw <- b11001_raw %>% 
+  subset(GEOID %in% cv)
+
+b11001_vars_cleaned <- b11001_vars %>% 
+  separate(label, into = c("est", "tot", "type", "relationship", "householder"),
+           sep = "!!") |>
+  select(variable = name, type, relationship, householder) %>% 
+  mutate(
+    householder = case_when(
+      relationship == "Married-couple family" ~ relationship,
+      relationship == "Householder living alone" ~ relationship,
+      relationship == "Householder not living alone" ~ relationship,
+      TRUE ~ householder),
+    relationship = case_when(
+      relationship == "Householder living alone" ~ type,
+      relationship == "Householder not living alone" ~ type,
+      TRUE ~ relationship)
+    ) %>% 
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) %>% 
+  drop_na()
+
+b11001_data <- b11001_raw |>
+  right_join(b11001_vars_cleaned, by = "variable") |>
+  select(NAME, GEOID, year, "hhtype" = householder, relationship, type, estimate) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+          NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME))
+
+write_rds(b11001_data, "data/b11001_data.rds")
+
+```
+
+```{r}
+
+# Table B25009: Household size by tenure
+
+b25009_vars <- load_variables(2020, "acs5") %>% 
+  filter(str_sub(name, end = 6) %in% "B25009")
+
+b25009_raw <- map_dfr(years, function(yr){
+  b25009_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25009",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |>
+    mutate(year = yr)
+})
+
+b25009_raw <- b25009_raw %>% 
+  subset(GEOID %in% cv)
+
+b25009_vars_cleaned <- b25009_vars %>% 
+  separate(label, into = c("est", "total", "tenure", "size"), sep = "!!") %>% 
+  select(variable = name, tenure, size)  %>% 
+  drop_na() |>
+  mutate(tenure = case_when(
+    tenure == "Owner occupied:" ~ "Homeowner",
+    tenure == "Renter occupied:" ~ "Renter"
+  ))
+
+b25009_data <- b25009_raw %>% 
+  right_join(b25009_vars_cleaned, by = "variable") %>% 
+  select(NAME, GEOID, year, tenure, size, estimate) %>% 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) %>% 
+  mutate(size = case_when(
+    size == "1-person household" ~ size,
+    size == "2-person household" ~ size,
+    size == "3-person household" ~ size,
+    TRUE ~ "4 or more person household"
+  )) 
+
+write_rds(b25009_data, "data/b25009_data.rds")
+
+```
+
+
+```{r}
+#| label: hh-seniors-data
+#| eval: FALSE
+
+# Table B09020: Senior population by living arrangements
+
+b09020_vars <- load_variables(2020, "acs5") |>
+  filter(str_sub(name, end = 6) %in% "B09020")
+
+b09020_raw <- map_dfr(years, function(yr){
+  b09020_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B09020",
+    year = yr,
+    survey = "acs5"
+  ) |>
+    mutate(year = yr)
+})
+
+b09020_raw <- b09020_raw |>
+  subset(GEOID %in% cv)
+
+b09020_vars_cleaned <- b09020_vars |>
+  separate(label, into = c("est", "total", "hhgq", "family", "relationship", "sex", "alone"), sep = "!!") |>
+  select(variable = name, hhgq, family, relationship, alone) |>
+  filter(!variable %in% c("B09020_001", "B09020_002", "B09020_003", "B09020_005", "B09020_006",
+                          "B09020_012", "B09020_013", "B09020_014", "B09020_017")) |>
+  mutate(relationship = case_when(
+    relationship == "Spouse" ~ "With spouse",
+    relationship == "Nonrelatives" ~ "With nonrelatives",
+    relationship %in% c("Parent", "Parent-in-law", "Other relatives") ~ "With other relative(s)",
+    hhgq == "In group quarters" ~ "Group quarters",
+    !is.na(alone) ~ alone,
+    TRUE ~ relationship
+  )) |>
+  mutate(family = case_when(
+    family == "In family households:" ~ "Family",
+    family == "In nonfamily households:" ~ "Nonfamily",
+    hhgq == "In group quarters" ~ "Group quarters"
+  )) |>
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) |>
+  select(1,3,4)
+
+b09020_data <- b09020_raw |>
+  right_join(b09020_vars_cleaned, by = "variable") |>
+  select(NAME, GEOID, year, family, relationship, estimate) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME))
+  
+write_rds(b09020_data, "data/b09020_data.rds")
+
+```
+
+```{r}
+#| label: hh-subfam-data
+#| eval: FALSE
+
+# Table B11013: Subfamily type by presence of own children
+
+b11013_vars <- load_variables(2020, "acs5") |>
+  filter(str_sub(name, end = 6) %in% "B11013")
+
+b11013_raw <- map_dfr(years, function(yr){
+  b11013_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B11013",
+    year = yr,
+    survey = "acs5"
+  ) |>
+    mutate(year = yr)
+})
+
+b11013_raw <- b11013_raw |>
+  subset(GEOID %in% cv)
+
+b11013_vars_cleaned <- b11013_vars |>
+  separate(label, into = c("est", "total", "subfamily", "children"), sep = "!!") |>
+  select(variable = name, subfamily, children) |>
+  filter(!variable %in% c("B11013_001", "B11013_002")) |>
+  mutate(subfamily = case_when(
+    subfamily == "Married-couple subfamily:" ~ "Married couple",
+    subfamily == "Mother-child subfamily" ~ "Single mother",
+    subfamily == "Father-child subfamily" ~ "Single father")) |>
+  mutate(children = case_when(
+    children == "With own children under 18 years" ~ "With children",
+    children == "No own children under 18 years" ~ "No children",
+    TRUE ~ "With children"))
+
+b11013_data <- b11013_raw |>
+  right_join(b11013_vars_cleaned, by = "variable") |>
+  select(NAME, GEOID, year, subfamily, children, estimate) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME))
+
+write_rds(b11013_data, "data/b11013_data.rds")
+
+```
+
+
+```{r} 
+#| label: hh-multigen-data
+#| eval: FALSE
+library(sf)
+# Load PUMA geographies for Virginia
+pumas <- pumas(state = "VA")
+
+# Filter PUMAs to Virginia Region 2000 (North and South)
+
+pumas_cv <- pumas |>
+  filter(str_detect(NAMELSAD10, "Lynchburg|Bedford"))
+
+# Pull each PUMS year separately because data structure is not same across 2016 to 2020
+
+multigen_2016 <- get_pums(
+  variables = "MULTG",
+  state = "VA",
+  year = 2016,
+  puma = pumas_cv$PUMACE10)
+
+multigen_2016 <- multigen_2016 |>
+  mutate(YEAR = "2016",
+         SPORDER = as.numeric(SPORDER),
+         PUMA = case_when(
+           str_length(PUMA) == 4 ~ paste0("0", PUMA),
+           TRUE ~ as.character(PUMA))) |>
+  select(YEAR, SERIALNO, PUMA, SPORDER, WGTP, PWGTP, MULTG)
+
+multigen_2017 <- get_pums(
+  variables = "MULTG",
+  state = "VA",
+  year = 2017,
+  puma = pumas_cv$PUMACE10)
+
+multigen_2017 <- multigen_2017 |>
+  mutate(SPORDER = as.numeric(SPORDER),
+         YEAR = "2017") |>
+  select(YEAR, SERIALNO, PUMA, SPORDER, WGTP, PWGTP, MULTG)
+
+multigen_2018 <- get_pums(
+  variables = "MULTG",
+  state = "VA",
+  year = 2018,
+  puma = pumas_cv$PUMACE10)
+
+multigen_2018 <- multigen_2018 |>
+  mutate(SPORDER = as.numeric(SPORDER),
+         YEAR = "2018") |>
+  select(YEAR, SERIALNO, PUMA, SPORDER, WGTP, PWGTP, MULTG)
+
+multigen_2019 <- get_pums(
+  variables = "MULTG",
+  state = "VA",
+  year = 2019,
+  puma = pumas_cv$PUMACE10)
+
+multigen_2019 <- multigen_2019 |>
+  mutate(YEAR = "2019") |>
+  select(YEAR, SERIALNO, PUMA, SPORDER, WGTP, PWGTP, MULTG)
+
+multigen_2020 <- get_pums(
+  variables = "MULTG",
+  state = "VA",
+  year = 2020,
+  puma = pumas_cv$PUMACE10)
+
+multigen_2020 <- multigen_2020 |>
+  mutate(YEAR = "2020") |>
+  select(YEAR, SERIALNO, PUMA, SPORDER, WGTP, PWGTP, MULTG)
+
+# Bind years together and recode
+
+multigen_raw <- bind_rows(multigen_2016, multigen_2017, multigen_2018,
+                          multigen_2019, multigen_2020) |>
+  filter(!MULTG %in% c("b", "0")) |>
+  mutate(geography = case_when(
+    PUMA == "51096" ~ "Lynchburg city and Campbell County",
+    PUMA == "51095" ~ "Amherst, Appomattox, and Bedford Counties"
+  )) %>% 
+  mutate(MULTG = case_when(
+    MULTG == "1" ~ "Single generation",
+    MULTG == "2" ~ "Multiple generations"
+  ))
+
+# Summarize percent of multigenerational households by year
+multigen_data <- multigen_raw |>
+  group_by(geography, YEAR) |>
+  summarise(pct = sum(PWGTP[MULTG == "Multiple generations"]) / sum(PWGTP))|>
+  mutate(geography = fct_reorder(geography, pct, .desc = TRUE))
+
+write_rds(multigen_data, "data/multigen_data.rds")
+
+```
+
+```{r}
+#| label: hh-adultchild-data
+#| eval: FALSE
+
+years <- 2015:2020
+
+b09021_vars <- load_variables(2020, "acs5") |>
+  filter(str_sub(name, end = 6) %in% "B09021")
+
+b09021_raw <- map_dfr(years, function(yr){
+  b09021_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B09021",
+    year = yr,
+    survey = "acs5"
+  ) |>
+    mutate(year = yr)
+})
+
+b09021_raw <- b09021_raw |>
+  subset(GEOID %in% cv)
+
+b09021_vars_cleaned <- b09021_vars |>
+  filter(name %in% c("B09021_009", "B09021_010", "B09021_011",
+                     "B09021_012", "B09021_013", "B09021_014")) |>
+  separate(label, into = c("est", "total", "age", "arrangement"), sep = "!!") |>
+  select(variable = name, arrangement) |>
+  mutate(arrangement = case_when(
+    arrangement == "Householder living with spouse or spouse of householder" ~ "With spouse",
+    arrangement == "Householder living with unmarried partner or unmarried partner of householder" ~ "With partner",
+    TRUE ~ arrangement
+  ))
+
+b09021_data <- b09021_raw |>
+  right_join(b09021_vars_cleaned, by = "variable") |>
+  select(NAME, GEOID, year, arrangement, estimate) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) 
+
+
+write_rds(b09021_data, "data/b09021_data.rds")
+```
+
+## Economic trends
+
+```{r}
+#| label: hh-inc-data
+#| eval: FALSE
+
+b25118_vars <- load_variables(2020, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25118")
+
+b25118_raw <- map_dfr(years, function(yr){
+  b25118_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25118",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |> 
+    mutate(year = yr)
+  })
+
+b25118_raw <- b25118_raw |> 
+  subset(GEOID %in% cv)
+
+b25118_vars_cleaned <- b25118_vars |> 
+  separate(label, into = c("est", "total", "tenure", "income"), sep = "!!") |>  
+  select(variable = name, tenure, income) |> 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied:" ~ "Homeowner",
+    tenure == "Renter occupied:" ~ "Renter"
+  )) |> 
+  drop_na()
+
+b25118_data <- b25118_raw |> 
+  right_join(b25118_vars_cleaned, by = "variable") |> 
+  select(NAME, year, tenure, income, estimate) |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) |>
+  mutate(income = case_when(
+    income == "Less than $5,000" ~ "Less than $15,000",
+    income == "$5,000 to $9,999" ~ "Less than $15,000",
+    income == "$10,000 to $14,999" ~ "Less than $15,000",
+    income == "$15,000 to $19,999" ~ "$15,000 to $24,999",
+    income == "$$20,000 to $24,999" ~ "$15,000 to $24,999",
+    income == "$25,000 to $34,999" ~ "$25,000 to $49,999",
+    income == "$35,000 to $49,999" ~ "$25,000 to $49,999",
+    income == "$50,000 to $74,999" ~ "$50,000 to $74,999",
+    TRUE ~ income
+  ))
+  
+write_rds(b25118_data, "data/b25118_data.rds")
+```
+
+```{r}
+#| label: med-income-data
+#| eval: FALSE
+
+
+years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+
+b25119_vars <- load_variables(2020, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25119")
+
+b25119_raw <- map_dfr(years, function(yr){
+  b25119_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25119",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) %>%
+    mutate(year = yr)
+  })
+
+b25119_raw <- b25119_raw |> 
+  subset(GEOID %in% cv)
+
+b25119_vars_cleaned <- b25119_vars |> 
+  separate(label, into = c("est", "income", "total", "tenure"), sep = "!!") |>  
+  select(variable = name, tenure) |> 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied (dollars)" ~ "Homeowner",
+    tenure == "Renter occupied (dollars)" ~ "Renter"
+  ))
+
+b25119_vars_cleaned$tenure <- b25119_vars_cleaned$tenure |>  replace_na('All households')
+b25119_data <- b25119_raw |> 
+  right_join(b25119_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, estimate, moe)
+
+library(readxl)
+
+cpi <- read_excel("data/CPI_U_RS.xlsx")
+
+cpi <- cpi |> 
+  rename(year = Year,
+         priceindex = Index) |> 
+  transform(year = as.numeric(year))
+
+b25119_cpi <- b25119_data |> 
+  left_join(cpi, by = 'year') |> 
+  transform(dollars20 = ((381.2/priceindex)*estimate)) |>
+  select(NAME, GEOID, year, tenure, dollars20, cdollars = estimate) |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) |>
+  filter(tenure != "All households") |> 
+  select(year, NAME, tenure, dollars20, cdollars)
+
+write_rds(b25119_cpi, "data/b25119_cpi.rds")
+
+```
+```{r}
+#| label: inc-race-data
+#| eval: FALSE
+
+years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+
+b19013 <- paste0("B19013", LETTERS[2:9])
+
+b19013_defns <- load_variables(2020, "acs5") %>%
+  filter(str_sub(name, end = 7) %in% b19013) %>%
+  filter(str_detect(name, "PR") == FALSE)
+
+concept_to_race <- function(x) {
+  out <- x %>%
+    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") %>%
+    str_to_title()
+}
+
+b19013_cleaned <- b19013_defns %>%
+  mutate(race = concept_to_race(concept)) %>%
+  separate(label, c("estimate", "medhhincome"), sep = "!!") %>%
+  select(variable = name, medhhincome, race) %>%
+  mutate(across(.fns = ~replace_na(.x, "All")),
+          across(.fns = ~str_remove_all(.x, ":")))
+
+b19013_raw <- map_dfr(b19013, function(tb) {
+  yearly_data <- map_dfr(years, function(yr) {
+    acs_pull <- get_acs(
+      geography = "county",
+      table = tb,
+      year = yr,
+      state = "VA"
+    ) %>%
+    left_join(b19013_cleaned, by = "variable")
+    acs_rearranged <- acs_pull %>%
+      mutate(year = yr) %>%
+      select(variable, year, NAME, GEOID, race, medhhincome,
+             estimate, moe)
+    acs_rearranged
+  })
+  yearly_data
+})
+
+cpi <- read_excel("data/CPI_U_RS.xlsx") |> 
+  rename(year = Year,
+         priceindex = Index) |> 
+  transform(year = as.numeric(year))
+
+b19013_data <- b19013_raw |> 
+  subset(GEOID %in% cv) |> 
+  mutate(across(.fns = ~str_remove_all(.x, "Alone Householder")),
+         across(.fns = ~str_remove_all(.x, ", Virginia")),
+         across(.fns = ~trimws(.x))) |> 
+  select(year, NAME, GEOID, race, estimate, moe) |> 
+  transform(year = as.numeric(year),
+            estimate = as.numeric(estimate))|> 
+  left_join(cpi, by = 'year')|> 
+  select(year, NAME, GEOID, race, estimate, moe, priceindex) |> 
+  transform(dollars20 = ((381.2/priceindex)*estimate)) |> 
+  mutate(race = case_when(
+    race == "Black Or African American" ~ "Black",
+    race == "Two Or More Races Householder" ~ "Multiracial",
+    race == "White Alone, Not Hispanic Or Latino Householder" ~ "White, non-Hispanic",
+    race == "Hispanic Or Latino Householder" ~ "Hispanic or Latino",
+    TRUE ~ race
+  )) |> 
+  filter(race %in% c("White, non-Hispanic", "Black", "Asian", "Multiracial", "Hispanic or Latino"))
+
+write_rds(b19013_data, "data/b19013_data.rds")
+```
+
+
+## Housing Stock
+
+```{r}
+#| label: structure-data
+#| eval: false
+
+# Table B25127: Tenure by year structure built by units in structure
+
+b25127_vars <- load_variables(2020, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25127")
+
+b25127_raw <- map_dfr(years, function(yr){
+  b25127_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25127",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |> 
+    mutate(year = yr)
+})
+
+b25127_raw <- b25127_raw |> 
+  subset(GEOID %in% cv) 
+
+b25127_vars_cleaned <- b25127_vars |> 
+  separate(label, into = c("est", "total", "tenure", "yrbuilt", "structure"), sep = "!!") |> 
+  select(variable = name, tenure, yrbuilt, structure) |> 
+  drop_na() |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) |> 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  ))
+
+b25127_raw <- b25127_raw |> 
+  right_join(b25127_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, yrbuilt, structure, estimate, moe)
+
+b25127_data <- b25127_raw |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         yrbuilt = str_remove_all(yrbuilt, "Built "),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) |>
+  select(NAME, GEOID, year, tenure, yrbuilt, structure, estimate) |> 
+  mutate(structure = case_when(
+    structure == "1, detached  or attached" ~ "Single-family",
+    structure == "2 to 4" ~ "2 to 4 units",
+    structure == "5 to 19" ~ "5 to 19 units",
+    structure == "20 to 49" ~ "20 or more units",
+    structure == "50 or more" ~ "20 or more units",
+    TRUE ~ "Other"
+  )) 
+
+write_rds(b25127_data, "data/b25127_data.rds")
+
+```
+
+
+```{r}
+#| label: beds-data
+#| eval: false
+#| 
+b25042_vars <- load_variables(2020, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25042")
+
+b25042_raw <- map_dfr(years, function(yr) {
+  b25042_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25042",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |> 
+    mutate(year = yr)
+})
+
+b25042_raw <- b25042_raw %>% 
+  subset(GEOID %in% cv)
+
+b25042_vars_cleaned <- b25042_vars |> 
+  separate(label, into = c("est", "total", "tenure", "br"), sep = "!!") |> 
+  select(variable = name, tenure, br) |> 
+  drop_na() |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) |> 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  ))
+
+b25042_raw <- b25042_raw |> 
+  right_join(b25042_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, br, estimate)
+
+b25042_data <- b25042_raw |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) |>
+  select(NAME, GEOID, year, tenure, br, estimate) 
+
+
+write_rds(b25042_data, "data/b25042_data.rds")
+```
+
+### Homeownership Market
+
+
+
+### Rental Market
+
+
+
+
+
+
+
+

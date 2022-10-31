@@ -1,1 +1,3 @@
 # County Housing Market Assessment
+
+The following provides a locality-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been disaggregated to show the differences between localities

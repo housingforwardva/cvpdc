@@ -1,0 +1,134 @@
+﻿county,GEOID,PERIOD,NATURALINC,INTERNATIONALMIG,DOMESTICMIG
+"Accomack County, Virginia",51001,12,-242,32,105
+"Albemarle County, Virginia",51003,12,-77,140,967
+"Alexandria city, Virginia",51510,12,1290,608,-6188
+"Alleghany County, Virginia",51005,12,-164,-1,-13
+"Amelia County, Virginia",51007,12,-84,1,105
+"Amherst County, Virginia",51009,12,-158,7,159
+"Appomattox County, Virginia",51011,12,4,5,212
+"Arlington County, Virginia",51013,12,1234,749,-7685
+"Augusta County, Virginia",51015,12,-482,26,503
+"Bath County, Virginia",51017,12,-21,2,-61
+"Bedford County, Virginia",51019,12,-430,21,1042
+"Bland County, Virginia",51021,12,-49,0,-25
+"Botetourt County, Virginia",51023,12,-249,7,499
+"Bristol city, Virginia",51520,12,-129,0,-77
+"Brunswick County, Virginia",51025,12,-107,6,238
+"Buchanan County, Virginia",51027,12,-228,5,-176
+"Buckingham County, Virginia",51029,12,-69,0,197
+"Buena Vista city, Virginia",51530,12,-22,2,1
+"Campbell County, Virginia",51031,12,-220,29,34
+"Caroline County, Virginia",51033,12,-47,6,470
+"Carroll County, Virginia",51035,12,-243,14,145
+"Charles City County, Virginia",51036,12,-88,0,-51
+"Charlotte County, Virginia",51037,12,-80,1,19
+"Charlottesville city, Virginia",51540,12,264,114,-1116
+"Chesapeake city, Virginia",51550,12,384,153,1014
+"Chesterfield County, Virginia",51041,12,461,269,4402
+"Clarke County, Virginia",51043,12,-78,2,170
+"Colonial Heights city, Virginia",51570,12,28,5,49
+"Covington city, Virginia",51580,12,-8,3,0
+"Craig County, Virginia",51045,12,-42,0,26
+"Culpeper County, Virginia",51047,12,70,58,755
+"Cumberland County, Virginia",51049,12,-44,0,69
+"Danville city, Virginia",51590,12,-368,20,92
+"Dickenson County, Virginia",51051,12,-152,0,-106
+"Dinwiddie County, Virginia",51053,12,-213,2,223
+"Emporia city, Virginia",51595,12,-27,-1,-22
+"Essex County, Virginia",51057,12,-32,1,12
+"Fairfax city, Virginia",51600,12,339,100,-290
+"Fairfax County, Virginia",51059,12,5721,3370,-17789
+"Falls Church city, Virginia",51610,12,55,16,-231
+"Fauquier County, Virginia",51061,12,-35,22,894
+"Floyd County, Virginia",51063,12,-36,1,126
+"Fluvanna County, Virginia",51065,12,-63,8,502
+"Franklin city, Virginia",51620,12,41,0,5
+"Franklin County, Virginia",51067,12,-311,11,776
+"Frederick County, Virginia",51069,12,-61,44,1987
+"Fredericksburg city, Virginia",51630,12,70,77,223
+"Galax city, Virginia",51640,12,-18,2,-16
+"Giles County, Virginia",51071,12,-125,0,-69
+"Gloucester County, Virginia",51073,12,-183,3,565
+"Goochland County, Virginia",51075,12,-71,1,738
+"Grayson County, Virginia",51077,12,-133,3,190
+"Greene County, Virginia",51079,12,13,11,357
+"Greensville County, Virginia",51081,12,-34,0,77
+"Halifax County, Virginia",51083,12,-238,3,67
+"Hampton city, Virginia",51650,12,47,47,499
+"Hanover County, Virginia",51085,12,-271,37,1747
+"Harrisonburg city, Virginia",51660,12,251,192,-686
+"Henrico County, Virginia",51087,12,132,635,-1552
+"Henry County, Virginia",51089,12,-500,-1,-40
+"Highland County, Virginia",51091,12,-21,0,11
+"Hopewell city, Virginia",51670,12,5,21,146
+"Isle of Wight County, Virginia",51093,12,-132,37,724
+"James City County, Virginia",51095,12,-124,50,1561
+"King and Queen County, Virginia",51097,12,-58,0,132
+"King George County, Virginia",51099,12,74,4,613
+"King William County, Virginia",51101,12,-3,3,267
+"Lancaster County, Virginia",51103,12,-171,0,190
+"Lee County, Virginia",51105,12,-210,-1,109
+"Lexington city, Virginia",51678,12,45,3,95
+"Loudoun County, Virginia",51107,12,2608,643,1651
+"Louisa County, Virginia",51109,12,-113,12,1208
+"Lunenburg County, Virginia",51111,12,-104,16,84
+"Lynchburg city, Virginia",51680,12,178,111,-160
+"Madison County, Virginia",51113,12,-10,6,109
+"Manassas city, Virginia",51683,12,397,97,-514
+"Manassas Park city, Virginia",51685,12,-37,44,-148
+"Martinsville city, Virginia",51690,12,-9,5,99
+"Mathews County, Virginia",51115,12,-83,0,104
+"Mecklenburg County, Virginia",51117,12,-296,19,236
+"Middlesex County, Virginia",51119,12,-102,3,260
+"Montgomery County, Virginia",51121,12,-110,145,-1075
+"Nelson County, Virginia",51125,12,-84,2,141
+"New Kent County, Virginia",51127,12,-25,2,845
+"Newport News city, Virginia",51700,12,742,230,-2293
+"Norfolk city, Virginia",51710,12,801,264,-3540
+"Northampton County, Virginia",51131,12,-107,4,-44
+"Northumberland County, Virginia",51133,12,-154,0,350
+"Norton city, Virginia",51720,12,-4,2,-12
+"Nottoway County, Virginia",51135,12,-42,4,18
+"Orange County, Virginia",51137,12,-61,14,849
+"Page County, Virginia",51139,12,-132,4,241
+"Patrick County, Virginia",51141,12,-221,0,266
+"Petersburg city, Virginia",51730,12,90,2,-95
+"Pittsylvania County, Virginia",51143,12,-429,6,76
+"Poquoson city, Virginia",51735,12,-42,1,162
+"Portsmouth city, Virginia",51740,12,211,51,-451
+"Powhatan County, Virginia",51145,12,-62,2,772
+"Prince Edward County, Virginia",51147,12,-41,21,96
+"Prince George County, Virginia",51149,12,-15,-9,-127
+"Prince William County, Virginia",51153,12,3483,980,-2824
+"Pulaski County, Virginia",51155,12,-250,2,246
+"Radford city, Virginia",51750,12,7,3,404
+"Rappahannock County, Virginia",51157,12,-43,-1,140
+"Richmond city, Virginia",51760,12,455,362,-887
+"Richmond County, Virginia",51159,12,-64,4,159
+"Roanoke city, Virginia",51770,12,34,131,-1169
+"Roanoke County, Virginia",51161,12,-505,41,192
+"Rockbridge County, Virginia",51163,12,-175,2,206
+"Rockingham County, Virginia",51165,12,-108,61,680
+"Russell County, Virginia",51167,12,-173,1,-6
+"Salem city, Virginia",51775,12,-113,12,96
+"Scott County, Virginia",51169,12,-249,4,116
+"Shenandoah County, Virginia",51171,12,-168,24,645
+"Smyth County, Virginia",51173,12,-335,6,73
+"Southampton County, Virginia",51175,12,-146,1,205
+"Spotsylvania County, Virginia",51177,12,299,64,2861
+"Stafford County, Virginia",51179,12,663,45,2583
+"Staunton city, Virginia",51790,12,-38,32,-133
+"Suffolk city, Virginia",51800,12,101,29,1381
+"Surry County, Virginia",51181,12,-15,-1,0
+"Sussex County, Virginia",51183,12,-80,1,74
+"Tazewell County, Virginia",51185,12,-427,6,-3
+"Virginia Beach city, Virginia",51810,12,992,280,-3022
+"Warren County, Virginia",51187,12,-14,17,134
+"Washington County, Virginia",51191,12,-447,6,232
+"Waynesboro city, Virginia",51820,12,-4,29,247
+"Westmoreland County, Virginia",51193,12,-96,0,334
+"Williamsburg city, Virginia",51830,12,-68,17,196
+"Winchester city, Virginia",51840,12,51,48,22
+"Wise County, Virginia",51195,12,-255,-3,-118
+"Wythe County, Virginia",51197,12,-197,-2,99
+"York County, Virginia",51199,12,-96,43,818
