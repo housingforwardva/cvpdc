@@ -97,6 +97,7 @@ population_data <-pep_total_clean %>%
 write_rds(population_data, "data/pop_data.rds")
 
 ```
+
 ```{r}
 #| label: fig-pop
 #| fig-cap: "Total regional population"
@@ -109,8 +110,8 @@ cv_pop <- read_rds("data/pop_data.rds") %>%
 
 # Create bar chart showing the change in population from 2010 to 2020
 
-
 ```
+
 ```{r}
 #| label: components-data
 #| eval: FALSE
@@ -169,8 +170,10 @@ cv_comp_change <- pep_change_clean %>%
   left_join(counties("VA", year = 2021), by = "GEOID") %>%
   select(NAMELSAD, year, component, value)
 
+write_rds(cv_comp_change, "data/comp_data.rds")
 
 ```
+
 ```{r}
 #| label: fig-projections
 
@@ -821,7 +824,7 @@ write_rds(b19013_data, "data/b19013_data.rds")
 ```
 
 
-## Housing Stock
+## Housing stock
 
 ```{r}
 #| label: structure-data
@@ -1017,7 +1020,7 @@ cv_cbps <- cbps_data %>%
 write_rds(rr_cbps, "data/cv_cbps.rds")
 ```
 
-### Homeownership Market
+## Homeownership market
 
 ```{r}
 #| label: ho-rate-data
@@ -1037,7 +1040,7 @@ cv_ho <- ho_rate %>%
 ```
 
 
-### Rental Market
+## Rental market
 
 
 
