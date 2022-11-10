@@ -16,11 +16,11 @@ book:
   date: today
   chapters:
     - index.qmd 
-    - part: "PART 1: Introduction and Background"
+    - part: "PART 1: Introduction and background"
       chapters:
         - part-1-1.qmd # Introduction
         - part-1-2.qmd # Background research
-      - part: "PART 2: Engagement Summary"
+      - part: "PART 2: Engagement summary"
       chapters:
         - part-2-1.qmd # Methods and themes
     - part: "Part 3: Findings"
@@ -28,7 +28,7 @@ book:
         - part-3-1.qmd # CVPDC Housing Market Assessment
         - part-3-2.qmd # County Housing Market Assessment
         - part-3-3.qmd # City of Lynchburg Housing Market Analysis
-    - part: "Part 4: Policy Evaluation"
+    - part: "Part 4: Policy evaluation"
       chapters:
         - part-4-1.qmd # Regional and local policy evaluation
     - part: "Part 5: Policy recommendations"

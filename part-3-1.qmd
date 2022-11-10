@@ -17,6 +17,7 @@ library(janitor)
 library(scales)
 library(ggplot2)
 library(tigris)
+library(sf)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -31,6 +32,7 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 ```{r}
 #| label: pop-data
+#| eval: false
 
 # Get population estimates from the Population Estimates Program (PEP) from 2010 to 2019.
 
@@ -77,7 +79,6 @@ pep_total_clean <- pep_total_raw %>%
     value
   )
 
-
 # Prep total population counts from 2020 Census summary file
 
 census_clean <- census_raw %>% 
@@ -114,7 +115,8 @@ cv_pop <- read_rds("data/pop_data.rds") %>%
 
 ```{r}
 #| label: components-data
-#| eval: FALSE
+#| eval: false
+
 # PEP does not have data available for 2020 and 2021. There is a gap between 2019 and 2021 because Census uses 2020 as a baseline. 
 
 pep_change_raw <- get_estimates(
@@ -177,7 +179,6 @@ write_rds(cv_comp_change, "data/comp_data.rds")
 ```{r}
 #| label: fig-projections
 
-
 projections <- read_csv("data/uva_proj.csv") %>% 
   subset(FIPS %in% cv)
 
@@ -187,6 +188,8 @@ projections <- read_csv("data/uva_proj.csv") %>%
 ## Household trends
 
 ```{r}
+#| label: tenure-data
+#| eval: false
 
 # Table B25003: Households by Tenure
 
@@ -235,6 +238,8 @@ write_rds(b25003_data, "data/b25003_data.rds")
 ```
 
 ```{r}
+#| label: age
+#| eval: false
 
 # Table B25007: Tenure by Age of Householder
 
@@ -289,6 +294,8 @@ write_rds(b25007_data, "data/b25007_data.rds")
 ```
 
 ```{r}
+#| label: hhtype-data
+#| eval: false
 
 # Table B11001: Household type (including Living Alone)
 
@@ -342,6 +349,8 @@ write_rds(b11001_data, "data/b11001_data.rds")
 ```
 
 ```{r}
+#| label: hhsize-data
+#| eval: false
 
 # Table B25009: Household size by tenure
 
@@ -393,9 +402,11 @@ write_rds(b25009_data, "data/b25009_data.rds")
 
 ```{r}
 #| label: hh-seniors-data
-#| eval: FALSE
+#| eval: false
 
 # Table B09020: Senior population by living arrangements
+
+years <- 2012:2020 # 5-year estimates only go back to 2012
 
 b09020_vars <- load_variables(2020, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B09020")
@@ -449,9 +460,11 @@ write_rds(b09020_data, "data/b09020_data.rds")
 
 ```{r}
 #| label: hh-subfam-data
-#| eval: FALSE
+#| eval: false
 
 # Table B11013: Subfamily type by presence of own children
+
+years <- 2010:2020
 
 b11013_vars <- load_variables(2020, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B11013")
@@ -498,7 +511,8 @@ write_rds(b11013_data, "data/b11013_data.rds")
 
 ```{r} 
 #| label: hh-multigen-data
-#| eval: FALSE
+#| eval: false
+
 library(sf)
 # Load PUMA geographies for Virginia
 pumas <- pumas(state = "VA")
@@ -592,7 +606,7 @@ write_rds(multigen_data, "data/multigen_data.rds")
 
 ```{r}
 #| label: hh-adultchild-data
-#| eval: FALSE
+#| eval: false
 
 years <- 2015:2020
 
@@ -640,7 +654,9 @@ write_rds(b09021_data, "data/b09021_data.rds")
 
 ```{r}
 #| label: hh-inc-data
-#| eval: FALSE
+#| eval: false
+
+years <- 2010:2020
 
 b25118_vars <- load_variables(2020, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25118")
@@ -692,8 +708,9 @@ write_rds(b25118_data, "data/b25118_data.rds")
 ```
 
 ```{r}
+
 #| label: med-income-data
-#| eval: FALSE
+#| eval: false
 
 
 years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
@@ -752,9 +769,10 @@ b25119_cpi <- b25119_data |>
 write_rds(b25119_cpi, "data/b25119_cpi.rds")
 
 ```
+
 ```{r}
 #| label: inc-race-data
-#| eval: FALSE
+#| eval: false
 
 years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
 
@@ -832,6 +850,8 @@ write_rds(b19013_data, "data/b19013_data.rds")
 
 # Table B25127: Tenure by year structure built by units in structure
 
+years <- 2010:2020
+
 b25127_vars <- load_variables(2020, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25127")
 
@@ -888,7 +908,9 @@ write_rds(b25127_data, "data/b25127_data.rds")
 ```{r}
 #| label: beds-data
 #| eval: false
-#| 
+
+years <- 2010:2020
+
 b25042_vars <- load_variables(2020, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25042")
 
@@ -937,14 +959,13 @@ write_rds(b25042_data, "data/b25042_data.rds")
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
-  filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|CAMPBELL|LYNCHBURG"))
+  filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL|LYNCHBURG"))
 
 library(leaflet)
 
 leaflet(mhc) |> 
   addTiles() |> 
   addCircleMarkers()
-
 
 
 ```
@@ -1042,10 +1063,31 @@ cv_ho <- ho_rate %>%
 
 ## Rental market
 
+```{r}
+#| label: rent
+
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
+
+# Download data for current rent and inflation-adjusted rent into a single csv - name cvpdc_rent.csv
+
+# Note the download date of data here: 
+
+
+
+```
+
+```{r}
+#| label: vacancy
+
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
+
+# Download data into csv - name cvpdc_vacancy.csv
+
+# Note the download date of data here: 
 
 
 
 
-
+```
 
 

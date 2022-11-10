@@ -1,1 +1,19 @@
 # City of Lynchburg Housing Market Analysis
+
+```{r}
+#| label: nhpd-data
+
+
+nhpd_prop <- read_csv("data/nhpd_properties.csv") %>% 
+  clean_names() %>% 
+  filter(property_status != "Inactive") %>% 
+  filter(grepl("lynchburg", city, ignore.case = TRUE))
+
+nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
+  clean_names() %>% 
+  filter(subsidy_status != "Inactive") %>% 
+  filter(grepl("lynchburg", city, ignore.case = TRUE))
+
+```
+
+
