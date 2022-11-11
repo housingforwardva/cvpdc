@@ -18,6 +18,9 @@ library(scales)
 library(ggplot2)
 library(tigris)
 library(sf)
+library(glue)
+library(httr)
+library(readxl)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -1090,4 +1093,123 @@ cv_ho <- ho_rate %>%
 
 ```
 
+## Affordability
 
+```{r}
+#| label: cb-data
+
+years <- 2012:2019
+
+sumlev <- "050"
+
+dir.create(glue("data/{sumlev}"))
+
+walk(years, ~{
+  url <- glue("https://www.huduser.gov/PORTAL/datasets/cp/{.x - 4}thru{.x}-{sumlev}-csv.zip")
+  file <- basename(url)
+  path <- file.path("data", sumlev, file)
+  if (!file.exists(path)) {
+    GET(url, write_disk(path, overwrite = TRUE), progress(type = "down"))
+  }
+  print(glue("Unzipping {.x}..."))
+  unzip(path, exdir = file.path("data", sumlev, .x))
+})
+
+# Tables to get
+tables <- c(7, 9, paste0(18, LETTERS[1:3]))
+
+# Go through and write out the various tables
+walk(tables, function(table) {
+  mytable <- purrr::map_df(years, function(year) {
+    # Identify the year-specific folder
+    path <- file.path("data", "050", year)
+    # Find the file - it may be buried so use recursive = TRUE
+    file <- list.files(path, pattern = glue("Table{table}.csv"), recursive = TRUE)
+    # Read in the file quietly
+    raw <- read_csv(file.path(path, file), col_types = cols())
+    # Clean it up
+    cleaned <- raw |>
+      clean_names() |>
+      mutate(fips = substr(geoid, 8, 12)) |>
+      separate(name, into = c("county", "state"), sep = ",") |>
+      filter(st == "51") |>
+      pivot_longer(starts_with("T"),
+                   names_to = "code",
+                   values_to = "value") |>
+      mutate(id = str_extract(code, "\\d+$"),
+             type = str_extract(code, "est|moe")) |>
+      select(-code) |>
+      pivot_wider(names_from = type, values_from = value) |>
+      rename(Estimate = est, MOE = moe) |>
+      mutate(Code := glue("T{table}_est{id}"),
+             Year = year) |>
+      select(Code, Year, Estimate, MOE, everything(), -id) |>
+      mutate(fips = case_when(
+        fips == "51515" ~ "51019",
+        TRUE ~ fips
+      )) |>
+      mutate(county = case_when(
+        county == "Bedford city" ~ "Bedford County",
+        TRUE ~ county
+      )) |>
+      subset(fips %in% cv)
+    
+  
+    # Account for different data dictionaries
+    # Find the data dictionary in the appropriate folder
+    dict_path <- list.files(path, pattern = "dictionary", recursive = TRUE, full.names = TRUE)
+    
+    # Read in the data dictionary and merge
+    dict <- read_excel(dict_path,
+                       sheet = glue("Table {table}"))
+    cleaned_with_dict <- cleaned %>%
+      left_join(dict, by = c("Code" = "Column Name"))
+    cleaned_with_dict
+  })
+  file_name <- glue("Table{table}_2012to2019.csv")
+  message(glue("Writing file {file_name}..."))
+  write_csv(mytable, glue("data/{file_name}"))
+})
+
+```
+```{r}
+#| label: cb7-clean
+#| eval: false
+
+cb_7 <- read_csv("data/Table7_2012to2019.csv") %>% 
+  clean_names() %>% 
+  filter(line_type == "Detail") %>% 
+  select(year, estimate, moe, county, fips, tenure, household_income, household_type, cost_burden) %>% 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  )) %>% 
+  mutate(household_income = case_when(
+    household_income == "household income is less than or equal to 30% of HAMFI" ~ "30% AMI or less",
+    household_income == "household income is greater than 30% but less than or equal to 50% of HAMFI" ~ "31 to 50% AMI",
+    household_income == "household income is greater than 50% but less than or equal to 80% of HAMFI" ~ "51 to 80% AMI",
+    household_income == "household income is greater than 80% but less than or equal to 100% of HAMFI" ~ "81 to 100% AMI",
+    household_income == "household income is greater than 100% of HAMFI" ~ "101% AMI or greater"
+  )) %>% 
+  mutate(household_type = case_when(
+    household_type == "household type is elderly family (2 persons, with either or both age 62 or over)" ~ "Elderly family",
+    household_type == "household type is small family (2 persons, neither person 62 years or over, or 3 or 4 persons)" ~ "Small family",
+    household_type == "household type is large family (5 or more persons)" ~ "Large family",
+    household_type == "household type is elderly non-family" ~ "Elderly non-family",
+    household_type == "other household type (non-elderly non-family)" ~ "Non-elderly non-family"
+  ))  %>% 
+  mutate(cost_burden = case_when(
+    cost_burden == "housing cost burden is less than or equal to 30%" ~ "Not cost-burdened",
+    cost_burden == "housing cost burden is greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
+    cost_burden == "housing cost burden is greater than 50%" ~ "Severely cost-burdened",
+    cost_burden == "housing cost burden not computed (household has no/negative income)" ~ "No or negative income"
+  )) %>% 
+  mutate(cb_group = case_when(
+    cost_burden == "Cost-burdened" ~ "Cost-burdened",
+    cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
+    TRUE ~ cost_burden
+  ))
+
+write_rds(cb_7, "data/cb_7.rds")
+
+```

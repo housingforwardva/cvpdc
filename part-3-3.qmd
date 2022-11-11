@@ -1,5 +1,45 @@
 # City of Lynchburg Housing Market Analysis
 
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tidyverse)
+library(janitor)
+library(ggplot2)
+library(leaflet)
+library(tigris)
+library(sf)
+
+lburg <- "51680"
+
+```
+
+
+```{r}
+
+wards <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPStatic/MapServer/62/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE)
+
+parcels <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPDynamic/MapServer/41/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) %>% 
+  st_point_on_surface()
+
+residential <- parcels %>%
+  clean_names() %>% 
+  select(parcel_id, loc_addr, loc_city, loc_zip, owner1, mail_addr, mail_city, mail_stat, mail_zip, pc_desc, yr_built) %>% 
+  filter(str_detect(pc_desc, "RESIDENTIAL")) %>% 
+  st_join(left = FALSE, wards["Designation"])
+           
+         
+leaflet(parcels) %>% 
+  addTiles() %>% 
+  addCircleMarkers(radius = 1)
+
+unique(parcels$PCDesc)
+
+
+```
+
 ```{r}
 #| label: nhpd-data
 
@@ -15,5 +55,131 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>%
   filter(grepl("lynchburg", city, ignore.case = TRUE))
 
 ```
+```{r}
+#| label: gap-data
+
+tb_18c <- read_csv("data/Table18C_2012to2019.csv")
+
+colnames(tb_18c)[16] <- "Cost"
+
+renter <- tb_18c %>% 
+  clean_names() %>% 
+  filter(line_type == "Detail") %>% 
+  select(county, fips, year, estimate, tenure, cost, household_income) %>% 
+  group_by(county, fips, year, tenure, cost, household_income) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(fips == lburg)
+
+
+tb_18_match <- renter %>% 
+  filter(tenure == "Renter occupied") %>% 
+  mutate(cost = case_when(
+    cost == "greater than RHUD30 and less than or equal to RHUD50" ~ "31 to 50 percent AMI",
+    cost == "greater than RHUD50 and less than or equal to RHUD80" ~ "51 to 80 percent AMI",
+    cost == "greater than RHUD80" ~ "80 percent AMI or greater",
+    cost == "less than or equal to RHUD30" ~ "30 percent AMI or below"
+  )) %>% 
+  mutate(household_income = case_when(
+    household_income == "greater than 100% of HAMFI" ~ "80 percent AMI or greater",
+    household_income == "greater than 80% of HAMFI but less than or equal to 100% of HAMFI" ~ "80 percent AMI or greater",
+    household_income == "greater than 50% of HAMFI but less than or equal to 80% of HAMFI" ~ "51 to 80 percent AMI",
+    household_income == "greater than 30% of HAMFI but less than or equal to 50% of HAMFI" ~ "31 to 50 percent AMI",
+    household_income == "less than or equal to 30% of HAMFI" ~ "30 percent AMI or below"
+  )) |>
+  group_by(county, fips, year, cost, household_income) %>% 
+  summarise(estimate = sum(estimate))
+
+
+tb_18_match <- tb_18_match %>% 
+  mutate(match = case_when(
+    cost == household_income ~ "Affordable",
+    cost == "30 percent AMI or below" & household_income == "31 to 50 percent AMI" ~ "Very affordable",
+    cost == "30 percent AMI or below" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
+    cost == "30 percent AMI or below" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+        cost == "31 to 50 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Affordable",
+    cost == "31 to 50 percent AMI" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
+    cost == "31 to 50 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+        cost == "31 to 50 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+    cost == "51 to 80 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+        cost == "51 to 80 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
+    cost == "51 to 80 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+    cost == "80 percent AMI or greater" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+    cost == "80 percent AMI or greater" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
+    cost == "80 percent AMI or greater" & household_income == "51 to 80 percent AMI" ~ "Unaffordable"
+  )) %>% 
+  mutate(gapcode = case_when(
+    match == "Unaffordable" ~ "Gap",
+    TRUE ~ "Matches or less than income"
+  ))
+
+write_rds(tb_18_match, "data/tb_18_match.rds")
+
+```
+```{r}
+
+gap <- tb_18_match %>% 
+  group_by(year, household_income, gapcode) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  mutate(estimate = case_when(
+    gapcode == "Gap" ~ estimate * -1,
+    gapcode == "Matches or less than income" ~ estimate
+  )) %>% 
+  filter(household_income != "80 percent AMI or greater") %>% 
+  mutate(gapcode = case_when(
+    gapcode == "Gap" ~ "Unaffordable",
+    TRUE ~ "Affordable"
+  ))
+
+ggplot(gap,
+       aes(x = year, 
+           y = estimate,
+           fill = gapcode)) +
+  geom_col() +
+  facet_grid(~household_income) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Rental housing gap by AMI",
+       subtitle = "2012 to 2019",
+       fill = "Affordability of current home") +
+  theme(
+    legend.position = "bottom",
+    axis.title = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "grey95",
+                                      size = 0.05),
+    axis.ticks = element_blank()
+  )
+
+
+```
+## Rental market
+
+```{r}
+#| label: rprops
+
+# Utilize CoStar properties search for Multi-Family. Filter for City of Lynchburg.
+
+# Download property-level data export, including lat/long.
+
+
+```
+
+
+```{r}
+#| label: rent
+
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
+
+# Download data for current rent and inflation-adjusted rent into a single csv - name [locality_abbv]_rent.csv --- for example amherst_rent.csv or lburg_rent.csv
+
+# Merge all data into a single csv named - local_rent.csv
+
+# Note the download date of data here: 
+
+
+
+
+```
+
+## Homeownership market
 
 
