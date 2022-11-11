@@ -192,6 +192,34 @@ ggplot(gap,
 
 
 ```
+
+```{r}
+#| label: hcv-data
+#| eval: false
+
+hcv <- st_read("https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/Housing_Choice_Vouchers_by_Tract/FeatureServer/0/query?f=json&where=(STATE%20IN%20('51'))&outFields=*", quiet = TRUE)
+
+write_rds(hcv, "data/hcv.rds")
+
+```
+
+```{r}
+#| label: hcv-map
+
+hcv <- read_rds("data/hcv.rds") %>% 
+  st_transform(crs = 4326) %>% 
+  clean_names() %>% 
+  filter(county == 680)
+
+palette <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent")
+
+leaflet(hcv) %>% 
+  addTiles() %>% 
+  addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
+              opacity = 1)
+
+
+```
 ## Rental market
 
 ```{r}
