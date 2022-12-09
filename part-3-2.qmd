@@ -2,6 +2,19 @@
 
 The following provides a locality-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been disaggregated to show the differences between localities
 
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tigris)
+library(hdatools)
+library(ggiraph)
+library(scales)
+
+cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
+
+```
+
 ## Takeaways
 
 ## Population trends
@@ -138,6 +151,8 @@ b25127_data <- read_rds("data/b25127_data.rds")
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
   filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL|LYNCHBURG"))
+
+
 
 ```
 

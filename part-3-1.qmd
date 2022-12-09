@@ -21,6 +21,7 @@ library(sf)
 library(glue)
 library(httr)
 library(readxl)
+library(hdatools)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -37,7 +38,7 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 #| label: pop-data
 #| eval: false
 
-# Get population estimates from the Population Estimates Program (PEP) from 2010 to 2019.
+# Get population estimates from the Population Estimates Program (PEP) from 2010 to 2019. 2021 data are set to be released in March 2023. 
 
 pep_total_raw <- get_estimates(
   geography = "county",
@@ -113,6 +114,17 @@ cv_pop <- read_rds("data/pop_data.rds") %>%
   summarise(value = sum(value))
 
 # Create bar chart showing the change in population from 2010 to 2020
+
+pop_bar <- ggplot(cv_pop,
+                  aes(x = year,
+                      y = value,
+                      fill = value)) +
+  geom_col() +
+  theme_hfv()
+
+
+pop_bar
+  
 
 ```
 
@@ -196,9 +208,9 @@ projections <- read_csv("data/uva_proj.csv") %>%
 
 # Table B25003: Households by Tenure
 
-years <- 2010:2020
+years <- 2010:2021
 
-b25003_vars <- load_variables(2020, "acs5") %>% 
+b25003_vars <- load_variables(2021, "acs5") %>% 
   filter(str_sub(name, end = 6) %in% "B25003") %>% 
   filter(str_length(name) < 11)
 
@@ -246,7 +258,7 @@ write_rds(b25003_data, "data/b25003_data.rds")
 
 # Table B25007: Tenure by Age of Householder
 
-b25007_vars <- load_variables(2020, "acs5") %>%
+b25007_vars <- load_variables(2021, "acs5") %>%
   filter(str_sub(name, end = 6) %in% "B25007")
 
 b25007_raw <- map_dfr(years, function(yr){
@@ -302,7 +314,7 @@ write_rds(b25007_data, "data/b25007_data.rds")
 
 # Table B11001: Household type (including Living Alone)
 
-b11001_vars <- load_variables(2020, "acs5") %>% 
+b11001_vars <- load_variables(2021, "acs5") %>% 
   filter(str_sub(name, end = 7) %in% "B11001_")
 
 
@@ -357,7 +369,7 @@ write_rds(b11001_data, "data/b11001_data.rds")
 
 # Table B25009: Household size by tenure
 
-b25009_vars <- load_variables(2020, "acs5") %>% 
+b25009_vars <- load_variables(2021, "acs5") %>% 
   filter(str_sub(name, end = 6) %in% "B25009")
 
 b25009_raw <- map_dfr(years, function(yr){
@@ -409,9 +421,9 @@ write_rds(b25009_data, "data/b25009_data.rds")
 
 # Table B09020: Senior population by living arrangements
 
-years <- 2012:2020 # 5-year estimates only go back to 2012
+years <- 2012:2021 # 5-year estimates only go back to 2012
 
-b09020_vars <- load_variables(2020, "acs5") |>
+b09020_vars <- load_variables(2021, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B09020")
 
 b09020_raw <- map_dfr(years, function(yr){
@@ -467,9 +479,9 @@ write_rds(b09020_data, "data/b09020_data.rds")
 
 # Table B11013: Subfamily type by presence of own children
 
-years <- 2010:2020
+years <- 2010:2021
 
-b11013_vars <- load_variables(2020, "acs5") |>
+b11013_vars <- load_variables(2021, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B11013")
 
 b11013_raw <- map_dfr(years, function(yr){
@@ -611,9 +623,9 @@ write_rds(multigen_data, "data/multigen_data.rds")
 #| label: hh-adultchild-data
 #| eval: false
 
-years <- 2015:2020
+years <- 2015:2021
 
-b09021_vars <- load_variables(2020, "acs5") |>
+b09021_vars <- load_variables(2021, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B09021")
 
 b09021_raw <- map_dfr(years, function(yr){
@@ -659,9 +671,9 @@ write_rds(b09021_data, "data/b09021_data.rds")
 #| label: hh-inc-data
 #| eval: false
 
-years <- 2010:2020
+years <- 2010:2021
 
-b25118_vars <- load_variables(2020, "acs5") |> 
+b25118_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25118")
 
 b25118_raw <- map_dfr(years, function(yr){
@@ -716,9 +728,9 @@ write_rds(b25118_data, "data/b25118_data.rds")
 #| eval: false
 
 
-years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+years <- 2014:2021 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
 
-b25119_vars <- load_variables(2020, "acs5") |> 
+b25119_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25119")
 
 b25119_raw <- map_dfr(years, function(yr){
@@ -777,7 +789,7 @@ write_rds(b25119_cpi, "data/b25119_cpi.rds")
 #| label: inc-race-data
 #| eval: false
 
-years <- 2014:2020 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+years <- 2014:2021 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
 
 b19013 <- paste0("B19013", LETTERS[2:9])
 
@@ -853,9 +865,9 @@ write_rds(b19013_data, "data/b19013_data.rds")
 
 # Table B25127: Tenure by year structure built by units in structure
 
-years <- 2010:2020
+years <- 2010:2021
 
-b25127_vars <- load_variables(2020, "acs5") |> 
+b25127_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25127")
 
 b25127_raw <- map_dfr(years, function(yr){
@@ -912,9 +924,9 @@ write_rds(b25127_data, "data/b25127_data.rds")
 #| label: beds-data
 #| eval: false
 
-years <- 2010:2020
+years <- 2010:2021
 
-b25042_vars <- load_variables(2020, "acs5") |> 
+b25042_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25042")
 
 b25042_raw <- map_dfr(years, function(yr) {
@@ -1009,7 +1021,7 @@ cbps_raw <- map_df(bps_years, ~{
 
 # Read in latest 2022 cumulative data (through September)
 
-cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2209y.txt", 
+cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2210y.txt", 
                      col_names = FALSE,
                      skip = 2) |> 
   select(X1:X18) |> 
@@ -1041,7 +1053,7 @@ cv_cbps <- cbps_data %>%
   summarise(units = sum(units))
 
 
-write_rds(rr_cbps, "data/cv_cbps.rds")
+write_rds(cv_cbps, "data/cv_cbps.rds")
 ```
 
 ## Homeownership market
