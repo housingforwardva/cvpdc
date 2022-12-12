@@ -190,6 +190,23 @@ cv_comp_change <- pep_change_clean %>%
 write_rds(cv_comp_change, "data/comp_data.rds")
 
 ```
+```{r}
+
+cv_comp_change <- read_rds("data/comp_data.rds")
+
+cv_change <- cv_comp_change %>% 
+  group_by(year, component) %>% 
+  summarise(value = sum(value))
+
+ggplot(cv_change,
+       aes(x = year,
+           y = value,
+           fill = component)) +
+  geom_col(position = "stack") +
+  theme_hfv()
+
+
+```
 
 ```{r}
 #| label: fig-projections
@@ -772,14 +789,14 @@ cpi <- cpi |>
 
 b25119_cpi <- b25119_data |> 
   left_join(cpi, by = 'year') |> 
-  transform(dollars20 = ((381.2/priceindex)*estimate)) |>
-  select(NAME, GEOID, year, tenure, dollars20, cdollars = estimate) |> 
+  transform(dollars21 = ((399/priceindex)*estimate)) |> 
+  select(NAME, GEOID, year, tenure, dollars21, cdollars = estimate) |> 
   mutate(NAME = str_remove_all(NAME, ", Virginia"),
          NAME = case_when(
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
            TRUE ~ NAME)) |>
   filter(tenure != "All households") |> 
-  select(year, NAME, tenure, dollars20, cdollars)
+  select(year, NAME, tenure, dollars21, cdollars)
 
 write_rds(b25119_cpi, "data/b25119_cpi.rds")
 
@@ -843,7 +860,7 @@ b19013_data <- b19013_raw |>
             estimate = as.numeric(estimate))|> 
   left_join(cpi, by = 'year')|> 
   select(year, NAME, GEOID, race, estimate, moe, priceindex) |> 
-  transform(dollars20 = ((381.2/priceindex)*estimate)) |> 
+  transform(dollars21 = ((399/priceindex)*estimate)) |> 
   mutate(race = case_when(
     race == "Black Or African American" ~ "Black",
     race == "Two Or More Races Householder" ~ "Multiracial",

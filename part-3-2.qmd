@@ -33,6 +33,15 @@ pop_data <- read_rds("data/pop_data.rds")
 
 comp_data <- read_rds("data/comp_data.rds")
 
+# Create group bar chart showing population change by locality.
+
+ggplot(comp_data,
+       aes(x = year, 
+           y = value,
+           fill = component)) +
+  geom_col(position = "stack") +
+  facet_wrap(~NAMELSAD, nrow = 1)
+
 
 
 ```

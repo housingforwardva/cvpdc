@@ -70,11 +70,13 @@ res_own <- residential %>%
 sfr <- res_own %>% 
   filter(ownership == "SFR")
 
-
+sfr_ward <- sfr %>% 
+  group_by(Designation) %>% 
+  summarise(count = n_distinct(parcel_id))
          
 leaflet(sfr) %>% 
   addTiles() %>% 
-  addCircleMarkers(radius = .2)
+  addCircleMarkers(radius = .1)
 
 unique(parcels$PCDesc)
 
@@ -220,6 +222,8 @@ leaflet(hcv) %>%
 
 
 ```
+
+
 ## Rental market
 
 ```{r}
@@ -250,5 +254,7 @@ leaflet(hcv) %>%
 ```
 
 ## Homeownership market
+
+
 
 
