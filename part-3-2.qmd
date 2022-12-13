@@ -10,6 +10,7 @@ library(tigris)
 library(hdatools)
 library(ggiraph)
 library(scales)
+library(ggtext)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -40,7 +41,13 @@ ggplot(comp_data,
            y = value,
            fill = component)) +
   geom_col(position = "stack") +
-  facet_wrap(~NAMELSAD, nrow = 1)
+  facet_wrap(~NAMELSAD, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(size = 6, angle = 90),
+        legend.position = "bottom") +
+  labs(title = "Components of population change",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
 
 
 

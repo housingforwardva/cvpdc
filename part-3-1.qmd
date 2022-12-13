@@ -11,6 +11,9 @@ The following provides a regional-level analysis of major trends impacting housi
 ```{r}
 #| label: setup
 
+
+# Load necessary libraries.
+
 library(tidyverse)
 library(tidycensus)
 library(janitor)
@@ -22,6 +25,9 @@ library(glue)
 library(httr)
 library(readxl)
 library(hdatools)
+library(ggiraph)
+
+# Create a vector of FIPS codes of the region in order to easily pull localities from data sets.
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -107,23 +113,37 @@ write_rds(population_data, "data/pop_data.rds")
 #| label: fig-pop
 #| fig-cap: "Total regional population"
 
-# Aggregate data to the regional-level
+# Read in saved data and aggregate to the regional level.
 
 cv_pop <- read_rds("data/pop_data.rds") %>% 
-  group_by(year, counttype) %>% 
-  summarise(value = sum(value))
+  group_by(year, counttype) %>% # Group by year and the count type.
+  summarise(value = sum(value)) # Sum the values.
 
 # Create bar chart showing the change in population from 2010 to 2020
 
 pop_bar <- ggplot(cv_pop,
                   aes(x = year,
                       y = value,
-                      fill = value)) +
+                      fill = value,
+                      data_id = value,
+                      tooltip = label_comma()(value))) +
   geom_col() +
-  theme_hfv()
+  geom_col_interactive(size = 2) +
+  theme_hfv() + 
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Total population",
+       subtitle = "From 2010 to 2020") +
+  scale_y_continuous(label = label_comma())
 
-
-pop_bar
+  
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = pop_bar,
+         height_svg = 4)
+} else {
+  
+  pop_bar
+}
   
 
 ```
@@ -192,24 +212,35 @@ write_rds(cv_comp_change, "data/comp_data.rds")
 ```
 ```{r}
 
+# Read in saved data. 
+
 cv_comp_change <- read_rds("data/comp_data.rds")
 
+# Aggregate data to the regional level.
+
 cv_change <- cv_comp_change %>% 
-  group_by(year, component) %>% 
-  summarise(value = sum(value))
+  group_by(year, component) %>% # Group by year and component of change.
+  summarise(value = sum(value)) # Sum values.
 
 ggplot(cv_change,
        aes(x = year,
            y = value,
            fill = component)) +
   geom_col(position = "stack") +
-  theme_hfv()
+  theme_hfv() +
+  scale_fill_hfv() + 
+  labs(title = "Components of population change",
+       subtitle = "From 2010 to 2021") +
+  theme(legend.position = "bottom")
+  
 
 
 ```
 
 ```{r}
 #| label: fig-projections
+
+# Read in saved UVA Projections data.
 
 projections <- read_csv("data/uva_proj.csv") %>% 
   subset(FIPS %in% cv)
