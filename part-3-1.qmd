@@ -133,7 +133,7 @@ pop_bar <- ggplot(cv_pop,
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
   labs(title = "Total population",
        subtitle = "From 2010 to 2020") +
-  scale_y_continuous(label = label_comma())
+  scale_y_continuous(label = label_comma()) 
 
   
 if (knitr::is_html_output()) {
@@ -243,7 +243,43 @@ ggplot(cv_change,
 # Read in saved UVA Projections data.
 
 projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% cv)
+  subset(FIPS %in% cv) %>% # Filter for Lynchburg metro localities
+  select(FIPS, NAME, `2030`,`2040`, `2050`) %>%  # Select only necessary variables
+  pivot_longer(3:5, # Choose which columns to pivot
+               names_to = "year", # Name the variable
+               values_to = "projection") # Name the data value
+
+
+dec_2020 <- c("2020", 261593) # 2020 Decennial Census
+
+
+cv_proj <- projections %>% 
+  group_by(year) %>% 
+  summarise(count = sum(projection)) %>% 
+  rbind(dec_2020) %>% 
+  arrange(year) 
+
+cv_proj$type <- c("Census count", "Projection", "Projection", "Projection") # Add column to describe count type.
+
+cv_proj <- cv_proj %>% 
+  transform(count = as.numeric(count))
+
+ggplot(cv_proj,
+       aes(x = year,
+           y = count,
+           fill = type)) +
+  geom_col() + 
+  theme_hfv() + 
+  scale_fill_hfv() +
+  geom_text(aes(label = scales::comma(count)), 
+            size = 4, 
+            vjust = 1.5, 
+            color = "white", 
+            fontface = "bold") +
+  labs(title = "Population projection",
+       caption = "**Source:** University of Virginia, Weldon Cooper Center.") +
+  scale_y_continuous(labels = label_comma())
+
 
 
 ```
@@ -301,6 +337,38 @@ write_rds(b25003_data, "data/b25003_data.rds")
 ```
 
 ```{r}
+#| label: fig-tenure
+
+b25003_data <- read_rds("data/b25003_data.rds")
+
+cv_tenure <- b25003_data %>% 
+  group_by(year, tenure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  mutate(year = as.character(year))
+
+ggplot(cv_tenure,
+       aes(x = year, 
+           y = pct,
+           fill = tenure)) +
+  geom_col() +
+  facet_wrap(~tenure) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
+  labs(title = "Household tenure",
+       subtitle = "Percent of occupied households")
+
+  
+
+
+
+
+```
+
+```{r}
 #| label: age
 #| eval: false
 
@@ -341,7 +409,7 @@ b25007_data <- b25007_raw %>%
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
            TRUE ~ NAME),
          age = case_when(
-    age == "Householder 15 to 24 years" ~ "Under 25 years old",
+    age == "Householder 15 to 24 years" ~ "24 years and under",
     age == "Householder 25 to 34 years" ~ "25 to 44 years old",
     age == "Householder 35 to 44 years" ~ "25 to 44 years old",
     age == "Householder 45 to 54 years" ~ "45 to 64 years old",
@@ -355,6 +423,37 @@ b25007_data <- b25007_raw %>%
 write_rds(b25007_data, "data/b25007_data.rds")
 
 ```
+
+```{r}
+#| label: fig-age
+
+b25007_data <- read_rds("data/b25007_data.rds")
+
+cv_age <- b25007_data %>% 
+  group_by(year, tenure, age) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  mutate(year = as.character(year))
+
+ggplot(cv_age,
+       aes(x = year, 
+           y = pct,
+           fill = age))  +
+  facet_grid(tenure ~ age) +
+  geom_col(position = "dodge") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
+  labs(title = "Households by age",
+       subtitle = "Percent of total occupied households")
+
+
+
+
+```
+
 
 ```{r}
 #| label: hhtype-data
