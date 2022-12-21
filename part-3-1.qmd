@@ -26,6 +26,7 @@ library(httr)
 library(readxl)
 library(hdatools)
 library(ggiraph)
+library(tidytext)
 
 # Create a vector of FIPS codes of the region in order to easily pull localities from data sets.
 
@@ -231,7 +232,8 @@ ggplot(cv_change,
   scale_fill_hfv() + 
   labs(title = "Components of population change",
        subtitle = "From 2010 to 2021") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
 
 
@@ -345,22 +347,25 @@ b25003_data <- read_rds("data/b25003_data.rds")
 cv_tenure <- b25003_data %>% 
   group_by(year, tenure) %>% 
   summarise(estimate = sum(estimate)) %>% 
-  group_by(year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+  group_by(tenure) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
   mutate(year = as.character(year))
 
 ggplot(cv_tenure,
        aes(x = year, 
-           y = pct,
+           y = run_diff,
            fill = tenure)) +
   geom_col() +
   facet_wrap(~tenure) +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
-  labs(title = "Household tenure",
-       subtitle = "Percent of occupied households")
+  labs(title = "Cumulative change in households by tenure",
+       subtitle = "From 2010 to 2021")
 
   
 
@@ -431,26 +436,31 @@ write_rds(b25007_data, "data/b25007_data.rds")
 b25007_data <- read_rds("data/b25007_data.rds")
 
 cv_age <- b25007_data %>% 
-  group_by(year, tenure, age) %>% 
+  group_by(NAME, year, tenure, age) %>% 
   summarise(estimate = sum(estimate)) %>% 
-  group_by(year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
-  mutate(year = as.character(year))
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  select(tenure, age, `2010`, `2021`) %>% 
+  transform(change = `2021` - `2010`) %>% 
+  group_by(NAME, tenure, age) %>% 
+  summarise(change = sum(change)) %>% 
+  mutate(age = fct_relevel(age, "Under 25 years old")) %>% 
+  group_by(tenure, age) %>% 
+  summarise(change = sum(change))
 
 ggplot(cv_age,
-       aes(x = year, 
-           y = pct,
-           fill = age))  +
-  facet_grid(tenure ~ age) +
+       aes(x = tenure, 
+           y = change,
+           fill = tenure))  +
+  facet_wrap(~age, nrow =1) +
   geom_col(position = "dodge") +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(labels = percent_format()) +
-  theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
-  labs(title = "Households by age",
-       subtitle = "Percent of total occupied households")
-
-
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
+  theme(axis.text.x = element_blank(),
+        legend.position = "bottom") +
+  labs(title = "Change in households by age and tenure",
+       subtitle = "From 2010 to 2021")
 
 
 ```
@@ -514,7 +524,28 @@ write_rds(b11001_data, "data/b11001_data.rds")
 ```{r}
 #| label: fig-hhtype
 
+b11001_data <- read_rds("data/b11001_data.rds")
 
+cv_hhtype <- b11001_data %>% 
+  group_by(year, hhtype) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  select(hhtype, `2010`, `2021`) %>% 
+  transform(change = `2021` - `2010`) 
+
+
+ggplot(cv_hhtype,
+       aes(x = reorder(hhtype, change),
+           y = change,
+           fill = hhtype)) +
+  geom_col() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) + 
+   scale_x_discrete(labels = function(x) str_wrap(x, width = 16)) +
+  labs(title = "Change in household type",
+       subtitle = "From 2010 to 2021")
 
 
 
@@ -562,16 +593,46 @@ b25009_data <- b25009_raw %>%
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
            TRUE ~ NAME)) %>% 
   mutate(size = case_when(
-    size == "1-person household" ~ size,
-    size == "2-person household" ~ size,
-    size == "3-person household" ~ size,
-    TRUE ~ "4 or more person household"
+    size == "1-person household" ~ "1-person",
+    size == "2-person household" ~ "2-person",
+    size == "3-person household" ~ "3-person",
+    TRUE ~ "4 or more persons"
   )) 
 
 write_rds(b25009_data, "data/b25009_data.rds")
 
 ```
 
+```{r}
+#| label: fig-hhsize
+
+b25009_data <- read_rds("data/b25009_data.rds")
+
+cv_hhsize <- b25009_data %>% 
+  group_by(year, tenure, size) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  select(tenure, size, `2010`, `2021`) %>% 
+  transform(change = `2021` - `2010`) 
+  
+
+ggplot(cv_hhsize,
+       aes(x = tenure,
+           y = change,
+           fill = tenure)) +
+  geom_col() +
+  facet_wrap(~size, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Change in household size by tenure",
+       subtitle = "From 2010 to 2021") +
+  theme(axis.text.x = element_blank(),
+        legend.position = "bottom") +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
+  
+
+```
 
 ```{r}
 #| label: hh-seniors-data
@@ -632,6 +693,47 @@ write_rds(b09020_data, "data/b09020_data.rds")
 ```
 
 ```{r}
+#| label: fig-seniors
+
+b09020_data <- read_rds("data/b09020_data.rds")
+
+cv_seniors <- b09020_data %>% 
+  group_by(year, family, relationship) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  transform(change = `2021` - `2012`) %>% 
+  mutate(family = str_replace(family, "Group quarters", " "),
+         family = fct_relevel(family, "Family", "Nonfamily", " "))
+
+
+ggplot(cv_seniors,
+       aes(y = reorder_within(relationship, change, family),
+           x = change,
+           fill = family,
+           data_id = change,
+           tooltip = label_comma()(change))) +
+  geom_col(position = "dodge") +
+  facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
+  scale_y_reordered() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Change in senior population by living arrangement",
+       subtitle = "2016 to 2020",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.") +
+  theme(strip.placement = "outside",
+        strip.text.y = element_text(angle = 0),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#e2e4e3",
+                                          size = 0.05),
+        plot.title.position = "plot",
+        plot.caption.position = "plot"
+        ) +
+   scale_x_continuous(labels = label_comma())
+```
+
+
+```{r}
 #| label: hh-subfam-data
 #| eval: false
 
@@ -678,6 +780,33 @@ b11013_data <- b11013_raw |>
            TRUE ~ NAME))
 
 write_rds(b11013_data, "data/b11013_data.rds")
+
+```
+
+
+```{r}
+#| label: fig-subfam
+
+b11013_data <- read_rds("data/b11013_data.rds") 
+
+cv_subfam <- b11013_data %>% 
+  group_by(year, subfamily, children) %>%  
+  summarise(estimate = sum(estimate)) %>% 
+  mutate(year = as.character(year))
+
+ggplot(cv_subfam,
+       aes(x = year,
+           y = estimate,
+           fill = children)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~subfamily) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Subfamilies by type and presence of own children",
+       subtitle = "From 2010 to 2021") +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = .2))
+  
 
 ```
 
@@ -778,6 +907,37 @@ write_rds(multigen_data, "data/multigen_data.rds")
 ```
 
 ```{r}
+#| label: fig-multigen
+
+multigen_data <- read_rds("data/multigen_data.rds")
+
+
+ggplot(multigen_data,
+       aes(x = YEAR,
+           y = pct,
+           color = geography,
+           group = 1)) +
+  geom_line(size = 1) +
+  geom_point_interactive(
+    aes(data_id = pct,
+        tooltip = label_percent(accuracy = 0.1)(pct)),
+    size = 0.5) +
+  facet_wrap(~geography, nrow = 1) +
+  scale_y_continuous(labels = label_percent(),
+                     breaks = c((1:9)/100),
+                     limits = c(0.005,0.09)) +
+  labs(title = "Percent of population living in multiple generation households",
+       subtitle = "2016 to 2020",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, Public Use Microdata Sample.") +
+  scale_color_pha() +
+  theme_pha() +
+  theme(axis.text.x = element_text(angle = 90))
+
+
+
+```
+
+```{r}
 #| label: hh-adultchild-data
 #| eval: false
 
@@ -822,6 +982,41 @@ b09021_data <- b09021_raw |>
 
 write_rds(b09021_data, "data/b09021_data.rds")
 ```
+
+
+```{r}
+#| label: fig-adultchild
+
+b09021_data <- read_rds("data/b09021_data.rds") 
+
+cv_adultchild <- b09021_data %>% 
+  group_by(year, arrangement) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year %in% c(2015, 2021)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  mutate(change = `2021` - `2015`,
+         pct_change = change/`2015`)
+
+ggplot(cv_adultchild,
+       aes(x = reorder(arrangement, pct_change),
+           y = pct_change,
+           fill = arrangement,
+           label = label_percent()(pct_change),
+           data_id = pct_change,
+           tooltip = label_percent(accuracy = 0.1)(pct_change))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  labs(title = "Change in 18-34 year old population by living arrangement",
+       subtitle="2015 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09021.") +
+  scale_y_continuous(labels = percent_format())
+
+```
+
 
 ## Economic trends
 
@@ -879,6 +1074,14 @@ b25118_data <- b25118_raw |>
   
 write_rds(b25118_data, "data/b25118_data.rds")
 ```
+
+```{r}
+
+
+
+```
+
+
 
 ```{r}
 
