@@ -46,7 +46,7 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 # Get population estimates from the Population Estimates Program (PEP) from 2010 to 2019. 2021 data are set to be released in March 2023. 
 
-pep_total_raw <- get_estimates(
+pep_total_raw <- get_estimates( 
   geography = "county",
   state = "VA",
   variables = "POP",
@@ -56,7 +56,7 @@ pep_total_raw <- get_estimates(
 
 # Get decennial Census estimates.
 
-census_raw <- get_decennial(
+census_raw <- get_decennial( 
   geography = "county",
   state = "VA",
   year = 2020,
@@ -121,13 +121,13 @@ cv_pop <- read_rds("data/pop_data.rds") %>%
 
 # Create bar chart showing the change in population from 2010 to 2020
 
-pop_bar <- ggplot(cv_pop,
-                  aes(x = year,
-                      y = value,
-                      fill = value,
+pop_bar <- ggplot(cv_pop, # Read in the data.
+                  aes(x = year, # Plot the x-axis.
+                      y = value, # Plot the y-axis.
+                      fill = value, # Set the variable that will be colored.
                       data_id = value,
                       tooltip = label_comma()(value))) +
-  geom_col() +
+  geom_col() + # Set as a bar chart. 
   geom_col_interactive(size = 2) +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
@@ -250,19 +250,20 @@ projections <- read_csv("data/uva_proj.csv") %>%
                values_to = "projection") # Name the data value
 
 
-dec_2020 <- c("2020", 261593) # 2020 Decennial Census
+dec_2020 <- c("2020", 261593) # 2020 Decennial Census for context.
 
+# Aggregate the data to the region. 
 
 cv_proj <- projections %>% 
   group_by(year) %>% 
   summarise(count = sum(projection)) %>% 
-  rbind(dec_2020) %>% 
-  arrange(year) 
+  rbind(dec_2020) %>% # Add 2020 Decennial Census data to data frame.
+  arrange(year) # Arrange in ascending year order to visualize properly. 
 
 cv_proj$type <- c("Census count", "Projection", "Projection", "Projection") # Add column to describe count type.
 
 cv_proj <- cv_proj %>% 
-  transform(count = as.numeric(count))
+  transform(count = as.numeric(count)) 
 
 ggplot(cv_proj,
        aes(x = year,
@@ -509,6 +510,16 @@ b11001_data <- b11001_raw |>
 write_rds(b11001_data, "data/b11001_data.rds")
 
 ```
+
+```{r}
+#| label: fig-hhtype
+
+
+
+
+
+```
+
 
 ```{r}
 #| label: hhsize-data
