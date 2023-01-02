@@ -27,6 +27,8 @@ library(readxl)
 library(hdatools)
 library(ggiraph)
 library(tidytext)
+library(ggpattern)
+library(zoo)
 
 # Create a vector of FIPS codes of the region in order to easily pull localities from data sets.
 
@@ -342,11 +344,15 @@ write_rds(b25003_data, "data/b25003_data.rds")
 ```{r}
 #| label: fig-tenure
 
-b25003_data <- read_rds("data/b25003_data.rds")
+# Read in saved data. 
+
+b25003_data <- read_rds("data/b25003_data.rds") 
+
+# Aggregate data and conduct analysis to identify the cumulative change.
 
 cv_tenure <- b25003_data %>% 
-  group_by(year, tenure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+  group_by(year, tenure) %>% # Group by year and tenure to aggregate to region.
+  summarise(estimate = sum(estimate)) %>% # Summarize data for the aggregation.
   group_by(tenure) %>% 
   mutate(diff = estimate - lag(estimate),
          diff = replace_na(diff, 0)) %>% 
@@ -1065,7 +1071,7 @@ b25118_data <- b25118_raw |>
     income == "$5,000 to $9,999" ~ "Less than $15,000",
     income == "$10,000 to $14,999" ~ "Less than $15,000",
     income == "$15,000 to $19,999" ~ "$15,000 to $24,999",
-    income == "$$20,000 to $24,999" ~ "$15,000 to $24,999",
+    income == "$20,000 to $24,999" ~ "$15,000 to $24,999",
     income == "$25,000 to $34,999" ~ "$25,000 to $49,999",
     income == "$35,000 to $49,999" ~ "$25,000 to $49,999",
     income == "$50,000 to $74,999" ~ "$50,000 to $74,999",
@@ -1077,19 +1083,133 @@ write_rds(b25118_data, "data/b25118_data.rds")
 
 ```{r}
 
+b25118_data <- read_rds("data/b25118_data.rds") 
+
+inc_dist <- b25118_data %>% 
+  group_by(year, tenure, income) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2010 | year == 2021) %>% 
+  mutate(year = as.character(year)) 
+
+level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
+
+ggplot(inc_dist,
+       aes(x = factor(income, level = level_order),
+           y = estimate,
+           fill = tenure)) +
+  geom_col(position = "dodge") +
+  facet_grid(tenure~year) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2),
+        strip.text.y = element_blank(),
+        legend.position = "bottom") +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Income distribution",
+       subtitle = "In 2010 and 2021") 
+
+
+
+```
+```{r}
+#| label: med-income-msa
+#| eval: false
+
+
+# "metropolitan statistical area/micropolitan statistical area"
+
+years <- 2010:2021 
+
+b25119_vars <- load_variables(2021, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25119")
+
+
+b25119_raw <- map_dfr(years, function(yr){
+  b25119_pull <- get_acs(
+    geography = "cbsa",
+    table = "B25119",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) %>%
+    mutate(year = yr)
+  })  
+
+
+b25119_msa <- b25119_raw %>% 
+  filter(NAME == "Lynchburg, VA Metro Area")
+
+b25119_vars_cleaned <- b25119_vars %>% 
+  separate(label, into = c("est", "income", "total", "tenure"), sep = "!!") %>% 
+  select(variable = name, tenure) %>% 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied (dollars)" ~ "Homeowner",
+    tenure == "Renter occupied (dollars)" ~ "Renter"
+  ))
+
+b25119_vars_cleaned$tenure <- b25119_vars_cleaned$tenure %>%  
+  replace_na('All households')
+
+b25119_data <- b25119_msa %>% 
+  right_join(b25119_vars_cleaned, by = "variable") |> 
+  select(NAME, year, tenure, estimate, moe)
+
+library(readxl)
+
+cpi <- read_excel("data/CPI_U_RS.xlsx")
+
+cpi <- cpi %>% 
+  rename(year = Year,
+         priceindex = Index) |> 
+  transform(year = as.numeric(year))
+
+b25119_cpi_msa <- b25119_data |> 
+  left_join(cpi, by = 'year') |> 
+  transform(dollars21 = ((399/priceindex)*estimate)) |> 
+  select(NAME, year, tenure, dollars21, cdollars = estimate) |>
+  filter(tenure != "All households") |> 
+  select(year, NAME, tenure, dollars21, cdollars)
+
+write_rds(b25119_cpi_msa, "data/b25119_cpi_msa.rds")
+
+```
+
+```{r}
+
+b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") %>% 
+  pivot_longer(4:5,
+               names_to = "value",
+               values_to = "estimate") %>% 
+  mutate(value = case_when(
+    value == "dollars21" ~ "2021 inflation-adjusted",
+    value == "cdollars" ~ "Current dollars"
+  ))
+
+ggplot(b25119_cpi_msa,
+       aes(x = year,
+           y = estimate,
+           color = tenure,
+           linetype = value)) +
+  geom_line(size = .5) +
+  geom_point(size = 1) +
+  facet_wrap(~tenure) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Median household income by tenure",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-Year Estimates, Table B25119.")
 
 
 ```
 
 
-
 ```{r}
-
-#| label: med-income-data
+#| label: med-income-county
 #| eval: false
 
 
-years <- 2014:2021 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+years <- 2010:2021 #Including Bedford City, but be mindful that you cannot aggregate medians.
 
 b25119_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25119")
@@ -1134,11 +1254,7 @@ cpi <- cpi |>
 b25119_cpi <- b25119_data |> 
   left_join(cpi, by = 'year') |> 
   transform(dollars21 = ((399/priceindex)*estimate)) |> 
-  select(NAME, GEOID, year, tenure, dollars21, cdollars = estimate) |> 
-  mutate(NAME = str_remove_all(NAME, ", Virginia"),
-         NAME = case_when(
-           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
-           TRUE ~ NAME)) |>
+  select(NAME, GEOID, year, tenure, dollars21, cdollars = estimate) |>
   filter(tenure != "All households") |> 
   select(year, NAME, tenure, dollars21, cdollars)
 
@@ -1147,10 +1263,107 @@ write_rds(b25119_cpi, "data/b25119_cpi.rds")
 ```
 
 ```{r}
-#| label: inc-race-data
+#| label: inc-race-msa
 #| eval: false
 
-years <- 2014:2021 # Not including pre-2014 to avoid Bedford city. Cannot aggregate medians.
+years <- 2010:2021 
+
+b19013 <- paste0("B19013", LETTERS[2:9])
+
+b19013_defns <- load_variables(2020, "acs5") %>%
+  filter(str_sub(name, end = 7) %in% b19013) %>%
+  filter(str_detect(name, "PR") == FALSE)
+
+concept_to_race <- function(x) {
+  out <- x %>%
+    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") %>%
+    str_to_title()
+}
+
+b19013_cleaned <- b19013_defns %>%
+  mutate(race = concept_to_race(concept)) %>%
+  separate(label, c("estimate", "medhhincome"), sep = "!!") %>%
+  select(variable = name, medhhincome, race) %>%
+  mutate(across(.fns = ~replace_na(.x, "All")),
+          across(.fns = ~str_remove_all(.x, ":")))
+
+b19013_raw_msa <- map_dfr(b19013, function(tb) {
+  yearly_data <- map_dfr(years, function(yr) {
+    acs_pull <- get_acs(
+      geography = "cbsa",
+      table = tb,
+      year = yr
+    ) %>%
+    left_join(b19013_cleaned, by = "variable")
+    acs_rearranged <- acs_pull %>%
+      mutate(year = yr) %>%
+      select(variable, year, NAME, GEOID, race, medhhincome,
+             estimate, moe)
+    acs_rearranged
+  })
+  yearly_data
+}) %>% 
+  filter(NAME == "Lynchburg, VA Metro Area")
+
+cpi <- read_excel("data/CPI_U_RS.xlsx") |> 
+  rename(year = Year,
+         priceindex = Index) |> 
+  transform(year = as.numeric(year))
+
+b19013_msa <- b19013_raw_msa %>% 
+  mutate(across(.fns = ~str_remove_all(.x, "Alone Householder")),
+         across(.fns = ~trimws(.x))) |> 
+  select(year, NAME, race, estimate, moe) |> 
+  transform(year = as.numeric(year),
+            estimate = as.numeric(estimate))|> 
+  left_join(cpi, by = 'year')|> 
+  select(year, NAME, race, estimate, moe, priceindex) |> 
+  transform(dollars21 = ((399/priceindex)*estimate)) |> 
+  mutate(race = case_when(
+    race == "Black Or African American" ~ "Black",
+    race == "Two Or More Races Householder" ~ "Multiracial",
+    race == "White Alone, Not Hispanic Or Latino Householder" ~ "White, non-Hispanic",
+    race == "Hispanic Or Latino Householder" ~ "Hispanic or Latino",
+    TRUE ~ race
+  )) |> 
+  filter(race %in% c("White, non-Hispanic", "Black", "Asian", "Multiracial", "Hispanic or Latino"))
+
+write_rds(b19013_msa, "data/b19013_msa.rds")
+```
+
+```{r}
+#| label: fig-inc-race-msa
+
+b19013_msa <- read_rds("data/b19013_msa.rds") %>% 
+  select(NAME, year, race, cdollars = estimate, dollars21) %>% 
+  pivot_longer(4:5,
+               names_to = "value",
+               values_to = "estimate"
+               ) %>% 
+  mutate(value = case_when(
+    value == "dollars21" ~ "2021 inflation-adjusted",
+    value == "cdollars" ~ "Current dollars"))
+
+ggplot(b19013_msa,
+       aes(x = year,
+           y = estimate,
+           fill = race)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  facet_wrap(~value) +
+  theme(legend.position = "bottom")
+
+
+
+```
+
+```{r}
+#| label: inc-race-county
+#| eval: false
+
+years <- 2010:2021 
 
 b19013 <- paste0("B19013", LETTERS[2:9])
 
@@ -1217,7 +1430,6 @@ b19013_data <- b19013_raw |>
 write_rds(b19013_data, "data/b19013_data.rds")
 ```
 
-
 ## Housing stock
 
 ```{r}
@@ -1280,6 +1492,56 @@ write_rds(b25127_data, "data/b25127_data.rds")
 
 ```
 
+```{r}
+#| label: fig-structure
+
+b25127_data <- read_rds("data/b25127_data.rds")
+
+cv_structure <- b25127_data %>% 
+  group_by(year, tenure, structure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  mutate(year = as.character(year))
+
+ggplot(cv_structure,
+       aes(x = year,
+           y = pct,
+           fill = structure)) +
+  geom_col(position = "stack") +
+  facet_wrap(~tenure) +
+  scale_y_continuous(labels = percent_format()) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Housing stock by structure type",
+       subtitle = "Percent of total from 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, 5-Year ACS, Table B25127.")
+
+```
+
+```{r}
+#| label: fig-yrbuilt
+
+cv_yrbuilt <- b25127_data %>% 
+  filter(year == 2021) %>% 
+  group_by(tenure, yrbuilt) %>% 
+  summarise(estimate = sum(estimate))
+
+ggplot(cv_yrbuilt,
+       aes(x = yrbuilt,
+           y = estimate,
+           fill = yrbuilt)) +
+  geom_col() +
+  facet_wrap(~tenure) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Housing stock by year built and tenure",
+       caption = "U.S. Census Bureau, 5-year ACS, Table B25127.") + 
+  scale_x_discrete(labels = function(x)str_wrap(x, width = 9)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = .5))
+
+```
 
 ```{r}
 #| label: beds-data
@@ -1330,6 +1592,42 @@ b25042_data <- b25042_raw |>
 write_rds(b25042_data, "data/b25042_data.rds")
 ```
 
+```{r}
+#| label: fig-beds
+
+b25042_data <- read_rds("data/b25042_data.rds")
+
+cv_beds <- b25042_data %>% 
+  mutate(br = case_when(
+    br == "4 bedrooms" ~ "4 or more bedrooms",
+    br == "5 or more bedrooms" ~ "4 or more bedrooms",
+    TRUE ~ br
+  )) %>% 
+  group_by(year, tenure, br) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(
+    names_from = year,
+    values_from = estimate
+  ) %>% 
+  mutate(chg = `2021` - `2010`)
+
+
+ggplot(cv_beds,
+       aes(x = br,
+           y = chg,
+           fill = br)) +
+  geom_col(position = "stack") +
+  facet_wrap(~tenure) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Change in bedrooms by tenure",
+       subtitle = "From 2010 to 2021") +
+  scale_x_discrete(labels = function(x)str_wrap(x, width = 8)) +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
+  
+
+
+```
 
 ```{r}
 
@@ -1342,6 +1640,26 @@ library(leaflet)
 leaflet(mhc) |> 
   addTiles() |> 
   addCircleMarkers()
+
+
+```
+```{r}
+#| label: fig-mhc-county
+
+
+cv_mhc <- mhc  %>% 
+  group_by(COUNTY, SIZE) %>% 
+  summarise(count = n_distinct(OBJECTID)) %>% 
+  st_drop_geometry() %>% 
+  mutate(COUNTY = str_to_sentence(COUNTY))
+
+ggplot(cv_mhc,
+       aes(x = reorder(COUNTY,count),
+           y = count,
+           fill = SIZE)) +
+  geom_col(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv()
 
 
 ```
@@ -1380,9 +1698,9 @@ cbps_raw <- map_df(bps_years, ~{
 })
 
 
-# Read in latest 2022 cumulative data (through September)
+# Read in latest 2022 cumulative data (through November)
 
-cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2210y.txt", 
+cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2211y.txt", 
                      col_names = FALSE,
                      skip = 2) |> 
   select(X1:X18) |> 
@@ -1417,22 +1735,61 @@ cv_cbps <- cbps_data %>%
 write_rds(cv_cbps, "data/cv_cbps.rds")
 ```
 
+```{r}
+#| label: fig-permits
+
+cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
+  group_by(year, type) %>% 
+  summarise(units = sum(units))
+
+ggplot(cv_cbps,
+       aes(x = year,
+           y = units,
+           fill = forcats::fct_rev(type))) +
+  geom_col(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "New residential building permits",
+       subtitle = "From 2000 through November 2022")
+
+
+```
+
 ## Homeownership market
 
 ```{r}
 #| label: ho-rate-data
 
+# Read in tenure data via Table B25003.
+
 b25003_data <- read_rds("data/b25003_data.rds")
+
+# Aggregate data to the regional level.
 
 ho_rate <- b25003_data %>%
   select(year, tenure, estimate) %>% 
   group_by(year, tenure) %>% 
   summarise(estimate = sum(estimate))
 
+# Calculate the percent of total by year and tenure.
+
 cv_ho <- ho_rate %>% 
   group_by(year) %>% 
   mutate(pct = estimate/sum(estimate)) %>%  
-  filter(tenure == "Homeowner")
+  filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
+
+ggplot(cv_ho,
+       aes(x = year, 
+           y = pct)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
+  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
+  labs(title = "Homeownership rate",
+       subtitle = "From 2010 to 2021")
 
 ```
 
@@ -1442,11 +1799,31 @@ cv_ho <- ho_rate %>%
 ```{r}
 #| label: rent
 
-# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
+# Utilize CoStar properties search for Multi-Family. Filter by MSA - Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
 
 # Download data for current rent and inflation-adjusted rent into a single csv - name cvpdc_rent.csv
 
-# Note the download date of data here: 
+# Note the download date of data here: 1/1/2023
+
+cvpdc_rent <- read_csv("data/cvpdc_rent.csv") %>%
+  filter(!str_detect(period, "QTD")) %>% 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
+  pivot_longer(2:3,
+               names_to = "value",
+               values_to = "estimate") %>% 
+  arrange(desc(value))
+
+ggplot(cvpdc_rent,
+       aes(x = period,
+           y = estimate,
+           linetype = value)) + 
+  geom_line(size = 0.5) +
+  scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) +
+  scale_linetype_manual(values = c(2,1)) +
+  theme_hfv() +
+  scale_color_hfv() +
+  theme(legend.position = "bottom") + 
+  labs(title = "Average quarterly market asking rent")
 
 
 
@@ -1545,6 +1922,9 @@ walk(tables, function(table) {
 })
 
 ```
+
+
+
 ```{r}
 #| label: cb7-clean
 #| eval: false
