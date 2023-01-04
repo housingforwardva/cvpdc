@@ -1793,6 +1793,30 @@ ggplot(cv_ho,
 
 ```
 
+```{r}
+#| label: fig-mls-price
+
+# Utilize Lynchburg MLS data. Need median sales price for the entire region from 2000 to 2022 or at least 2010. Monthly median sales price is preferred.
+
+
+
+```
+
+
+```{r}
+#| label: fig-mls-sales
+
+# Utilzie Lynchburg MLS data. Need mumber of closed sales for the entire region from 2000 to 2022 or at least 2010. Monthly number is preferred.
+
+
+```
+
+```{r}
+#| label: fig-mls-ratio
+
+# Utilize Lynchburg MLS data. Need close-to-list ratio for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
+
+```
 
 ## Rental market
 
@@ -1832,13 +1856,24 @@ ggplot(cvpdc_rent,
 ```{r}
 #| label: vacancy
 
-# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
+# Utilize CoStar properties search for Multi-Family. Filter by Market for Lynchburg MSA- VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
 
 # Download data into csv - name cvpdc_vacancy.csv
 
 # Note the download date of data here: 
 
+cvpdc_vacancy <- read_csv("data/cvpdc_vacancy.csv") %>% 
+  select(period, vacancy = overall_vacancy) %>% 
+  filter(!str_detect(period, "QTD")) %>% 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1))
 
+ggplot(cvpdc_vacancy,
+       aes(x = period,
+           y = vacancy)) +
+  geom_line(size = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  labs(title = "Rental vacancy rate")
 
 
 ```
@@ -1964,5 +1999,54 @@ cb_7 <- read_csv("data/Table7_2012to2019.csv") %>%
   ))
 
 write_rds(cb_7, "data/cb_7.rds")
+
+```
+
+```{r}
+#| label: fig-cb-tenure
+
+
+cb_7 <- read_rds("data/cb_7.rds")
+  
+cb_region <- cb_7 %>% 
+  filter(fips %in% cv,
+         cb_group == "Cost-burdened") |> 
+  group_by(year, tenure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(tenure) |> 
+  mutate(change = estimate - lag(estimate)) |> 
+  drop_na() |> 
+  mutate(run_diff = cumsum(change))
+  
+cb_diff <- ggplot(cb_region,
+       aes(x = year, 
+           y = run_diff, 
+           fill = tenure,
+           data_id = run_diff,
+           tooltip = run_diff)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Cumulative change in cost-burdened households by tenure",
+       subtitle = "2012 to 2019",
+       fill = "Tenure",
+       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  theme(legend.position = "right") +
+  add_zero_line(axis = "y")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cb_diff,
+         height_svg = 4) 
+  
+} else {
+  
+  cb_diff
+  
+  }
+
 
 ```

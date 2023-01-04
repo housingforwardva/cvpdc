@@ -14,6 +14,9 @@ library(ggtext)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
+cv_names <- list_counties("VA") %>% 
+  mutate(GEOID = paste0("51", county_code))
+
 ```
 
 ## Takeaways
@@ -25,6 +28,21 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 pop_data <- read_rds("data/pop_data.rds")
 
+local_pop <- pop_data %>% 
+  left_join(cv_names, by = "GEOID") %>% 
+  select(year, county, counttype, value) 
+
+local_pop$county <- factor(local_pop$county, levels = c("Lynchburg city", "Bedford", "Campbell", "Amherst", "Appomattox"))
+
+ggplot(local_pop,
+       aes(x = year,
+           y = value,
+           fill = counttype)) +
+  geom_col() +
+  facet_wrap(~county, nrow = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  theme(axis.text.x = element_text(angle = 90))
 
 
 ```
