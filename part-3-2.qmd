@@ -24,25 +24,44 @@ cv_names <- list_counties("VA") %>%
 ## Population trends
 
 ```{r}
-#| label: pop
+#| label: pop-2020
 
 pop_data <- read_rds("data/pop_data.rds")
 
 local_pop <- pop_data %>% 
   left_join(cv_names, by = "GEOID") %>% 
-  select(year, county, counttype, value) 
+  select(year, county, counttype, value) %>% 
+  group_by(county) %>% 
+  mutate(pchg = (value - first(value))/first(value)) %>% 
+  filter(year == 2020) %>% 
+  select(county, value, pchg)
 
-local_pop$county <- factor(local_pop$county, levels = c("Lynchburg city", "Bedford", "Campbell", "Amherst", "Appomattox"))
 
 ggplot(local_pop,
-       aes(x = year,
+       aes(x = reorder(county, -value),
            y = value,
-           fill = counttype)) +
+           fill = county)) +
   geom_col() +
-  facet_wrap(~county, nrow = 1) +
   theme_hfv() +
-  scale_color_hfv() +
-  theme(axis.text.x = element_text(angle = 90))
+  scale_fill_hfv() +
+  labs(title = "2020 Census population") +
+  scale_y_continuous(labels = label_comma(), limits = c(0, 100000))
+
+
+```
+
+```{r}
+
+ggplot(local_pop,
+       aes(x = reorder(county, -pchg),
+           y = pchg,
+           fill = county)) +
+  geom_col() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = percent_format(), limits = c(-.05, .2)) +
+  labs(title = "Population growth",
+       subtitle = "Percent change in population from 2010")
 
 
 ```
