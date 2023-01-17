@@ -128,16 +128,17 @@ pop_bar <- ggplot(cv_pop, # Read in the data.
                   aes(x = year, # Plot the x-axis.
                       y = value, # Plot the y-axis.
                       fill = value, # Set the variable that will be colored.
-                      data_id = value,
-                      tooltip = label_comma()(value))) +
+                      data_id = value, # Set the variable that will be used in interactive plot.
+                      tooltip = label_comma()(value))) + # Set the format of the data label on hover.
   geom_col() + # Set as a bar chart. 
   geom_col_interactive(size = 2) +
-  theme_hfv() + 
-  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  theme_hfv() + # Apply custom HFV theme.
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
   labs(title = "Total population",
        subtitle = "From 2010 to 2020") +
-  scale_y_continuous(label = label_comma()) 
+  scale_y_continuous(label = label_comma()) # Format the y-axis to show commas.
 
+# Apply if-else statement to print interactive plot if in html or simply print the visualization static plot if anything else.
   
 if (knitr::is_html_output()) {
   
@@ -213,6 +214,7 @@ cv_comp_change <- pep_change_clean %>%
 write_rds(cv_comp_change, "data/comp_data.rds")
 
 ```
+
 ```{r}
 
 # Read in saved data. 
@@ -225,11 +227,14 @@ cv_change <- cv_comp_change %>%
   group_by(year, component) %>% # Group by year and component of change.
   summarise(value = sum(value)) # Sum values.
 
-ggplot(cv_change,
+cv_change_plot <- ggplot(cv_change,
        aes(x = year,
            y = value,
-           fill = component)) +
+           fill = component,
+           data_id = value,
+           tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(value))) +
   geom_col(position = "stack") +
+  geom_col_interactive(size = 2) +
   theme_hfv() +
   scale_fill_hfv() + 
   labs(title = "Components of population change",
@@ -237,7 +242,14 @@ ggplot(cv_change,
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_change_plot,
+         height_svg = 4)
+} else {
+  
+  cv_change_plot
+}
 
 ```
 
@@ -269,7 +281,7 @@ cv_proj$type <- c("Census count", "Projection", "Projection", "Projection") # Ad
 cv_proj <- cv_proj %>% 
   transform(count = as.numeric(count)) 
 
-ggplot(cv_proj,
+cv_proj_plot <- ggplot(cv_proj,
        aes(x = year,
            y = count,
            fill = type)) +
@@ -285,6 +297,8 @@ ggplot(cv_proj,
        caption = "**Source:** University of Virginia, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma())
 
+
+cv_proj_plot
 
 
 ```
@@ -360,11 +374,14 @@ cv_tenure <- b25003_data %>%
   filter(run_diff != 0) %>% 
   mutate(year = as.character(year))
 
-ggplot(cv_tenure,
+cv_tenure_plot <- ggplot(cv_tenure,
        aes(x = year, 
            y = run_diff,
-           fill = tenure)) +
+           fill = tenure,
+           data_id = run_diff,
+           tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(run_diff))) +
   geom_col() +
+  geom_col_interactive(size = 2) +
   facet_wrap(~tenure) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -373,10 +390,14 @@ ggplot(cv_tenure,
   labs(title = "Cumulative change in households by tenure",
        subtitle = "From 2010 to 2021")
 
+if (knitr::is_html_output()) {
   
-
-
-
+  girafe(ggobj = cv_tenure_plot,
+         height_svg = 4)
+} else {
+  
+  cv_tenure_plot
+}
 
 ```
 
@@ -454,12 +475,15 @@ cv_age <- b25007_data %>%
   group_by(tenure, age) %>% 
   summarise(change = sum(change))
 
-ggplot(cv_age,
+cv_age_plot <- ggplot(cv_age,
        aes(x = tenure, 
            y = change,
-           fill = tenure))  +
+           fill = tenure,
+           data_id = change,
+           tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(change)))  +
   facet_wrap(~age, nrow =1) +
   geom_col(position = "dodge") +
+  geom_col_interactive(size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
@@ -467,6 +491,15 @@ ggplot(cv_age,
         legend.position = "bottom") +
   labs(title = "Change in households by age and tenure",
        subtitle = "From 2010 to 2021")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_age_plot,
+         height_svg = 4)
+} else {
+  
+  cv_age_plot
+}
 
 
 ```
@@ -541,7 +574,7 @@ cv_hhtype <- b11001_data %>%
   transform(change = `2021` - `2010`) 
 
 
-ggplot(cv_hhtype,
+cv_hhtype_plot <-ggplot(cv_hhtype,
        aes(x = reorder(hhtype, change),
            y = change,
            fill = hhtype)) +
@@ -553,7 +586,14 @@ ggplot(cv_hhtype,
   labs(title = "Change in household type",
        subtitle = "From 2010 to 2021")
 
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_tenure_plot,
+         height_svg = 4)
+} else {
+  
+  cv_tenure_plot
+}
 
 ```
 
@@ -623,11 +663,14 @@ cv_hhsize <- b25009_data %>%
   transform(change = `2021` - `2010`) 
   
 
-ggplot(cv_hhsize,
+cv_hhsize_plot <- ggplot(cv_hhsize,
        aes(x = tenure,
            y = change,
-           fill = tenure)) +
+           fill = tenure,
+           data_id = change,
+           tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(change))) +
   geom_col() +
+  geom_col_interactive(size = 2)
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -637,6 +680,14 @@ ggplot(cv_hhsize,
         legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_hhsize_plot,
+         height_svg = 4)
+} else {
+  
+  cv_hhsize_plot
+}
 
 ```
 
@@ -713,7 +764,7 @@ cv_seniors <- b09020_data %>%
          family = fct_relevel(family, "Family", "Nonfamily", " "))
 
 
-ggplot(cv_seniors,
+cv_seniors_plot <- ggplot(cv_seniors,
        aes(y = reorder_within(relationship, change, family),
            x = change,
            fill = family,
@@ -736,6 +787,15 @@ ggplot(cv_seniors,
         plot.caption.position = "plot"
         ) +
    scale_x_continuous(labels = label_comma())
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_seniors_plot,
+         height_svg = 4)
+} else {
+  
+  cv_seniors_plot
+}
 ```
 
 
@@ -800,10 +860,12 @@ cv_subfam <- b11013_data %>%
   summarise(estimate = sum(estimate)) %>% 
   mutate(year = as.character(year))
 
-ggplot(cv_subfam,
+cv_subfam_plot <- ggplot(cv_subfam,
        aes(x = year,
            y = estimate,
-           fill = children)) +
+           fill = children,
+           data_id = estimate,
+           tooltip = label_comma()(estimate))) +
   geom_col(position = "dodge") +
   facet_wrap(~subfamily) +
   theme_hfv() +
@@ -812,6 +874,15 @@ ggplot(cv_subfam,
        subtitle = "From 2010 to 2021") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = .2))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_subfam_plot,
+         height_svg = 4)
+} else {
+  
+  cv_subfam_plot
+}
   
 
 ```
@@ -918,7 +989,7 @@ write_rds(multigen_data, "data/multigen_data.rds")
 multigen_data <- read_rds("data/multigen_data.rds")
 
 
-ggplot(multigen_data,
+multigen_plot <- ggplot(multigen_data,
        aes(x = YEAR,
            y = pct,
            color = geography,
@@ -927,7 +998,7 @@ ggplot(multigen_data,
   geom_point_interactive(
     aes(data_id = pct,
         tooltip = label_percent(accuracy = 0.1)(pct)),
-    size = 0.5) +
+    size = 1) +
   facet_wrap(~geography, nrow = 1) +
   scale_y_continuous(labels = label_percent(),
                      breaks = c((1:9)/100),
@@ -939,6 +1010,14 @@ ggplot(multigen_data,
   theme_pha() +
   theme(axis.text.x = element_text(angle = 90))
 
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = multigen_plot,
+         height_svg = 4)
+} else {
+  
+  multigen_plot
+}
 
 
 ```
@@ -1004,7 +1083,7 @@ cv_adultchild <- b09021_data %>%
   mutate(change = `2021` - `2015`,
          pct_change = change/`2015`)
 
-ggplot(cv_adultchild,
+cv_adultchild_plot <- ggplot(cv_adultchild,
        aes(x = reorder(arrangement, pct_change),
            y = pct_change,
            fill = arrangement,
@@ -1020,6 +1099,15 @@ ggplot(cv_adultchild,
        subtitle="2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09021.") +
   scale_y_continuous(labels = percent_format())
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_adultchild_plot,
+         height_svg = 4)
+} else {
+  
+  cv_adultchild_plot
+}
 
 ```
 
@@ -1093,24 +1181,35 @@ inc_dist <- b25118_data %>%
 
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
 
-ggplot(inc_dist,
+inc_dist_plot <- ggplot(inc_dist,
        aes(x = factor(income, level = level_order),
            y = estimate,
-           fill = tenure)) +
+           fill = tenure,
+           data_id = estimate,
+           tooltip = label_comma()(estimate))) +
   geom_col(position = "dodge") +
+  geom_col_interactive(size = 1) +
   facet_grid(tenure~year) +
   scale_fill_hfv() +
   theme_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = .2),
+  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8),
         strip.text.y = element_blank(),
         legend.position = "bottom") +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "Income distribution",
        subtitle = "In 2010 and 2021") 
 
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = inc_dist_plot,
+         height_svg = 4)
+} else {
+  
+  inc_dist_plot
+}
 
 ```
+
 ```{r}
 #| label: med-income-msa
 #| eval: false
@@ -1185,13 +1284,16 @@ b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") %>%
     value == "cdollars" ~ "Current dollars"
   ))
 
-ggplot(b25119_cpi_msa,
+med_inc_plot <- ggplot(b25119_cpi_msa,
        aes(x = year,
            y = estimate,
            color = tenure,
            linetype = value)) +
   geom_line(size = .5) +
-  geom_point(size = 1) +
+  geom_point_interactive(
+    aes(data_id = estimate,
+        tooltip = dollar_format()(estimate)),
+    size = 1) +
   facet_wrap(~tenure) +
   theme_hfv() +
   scale_color_hfv() +
@@ -1200,6 +1302,14 @@ ggplot(b25119_cpi_msa,
        subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-Year Estimates, Table B25119.")
 
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = med_inc_plot,
+         height_svg = 4)
+} else {
+  
+  med_inc_plot
+}
 
 ```
 
@@ -1344,18 +1454,31 @@ b19013_msa <- read_rds("data/b19013_msa.rds") %>%
     value == "dollars21" ~ "2021 inflation-adjusted",
     value == "cdollars" ~ "Current dollars"))
 
-ggplot(b19013_msa,
+race_inc_plot <- ggplot(b19013_msa,
        aes(x = year,
            y = estimate,
-           fill = race)) +
+           color = race)) +
   geom_line(size = 0.5) +
-  geom_point(size = 1) +
+  geom_point_interactive(
+    aes(data_id = estimate,
+        tooltip = dollar_format()(estimate)),
+    size = 1) +
   theme_hfv() +
   scale_color_hfv() +
   facet_wrap(~value) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  labs(title = "Median household income by race or ethnicity",
+       subtitle = "From 2010 to 2021") +
+  scale_y_continuous(labels = dollar_format())
 
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = race_inc_plot,
+         height_svg = 4)
+} else {
+  
+  race_inc_plot
+}
 
 ```
 
@@ -1504,18 +1627,32 @@ cv_structure <- b25127_data %>%
   mutate(pct = estimate/sum(estimate)) %>% 
   mutate(year = as.character(year))
 
-ggplot(cv_structure,
+cv_structure_plot <- ggplot(cv_structure,
        aes(x = year,
            y = pct,
-           fill = structure)) +
+           fill = structure,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   facet_wrap(~tenure) +
   scale_y_continuous(labels = percent_format()) +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Housing stock by structure type",
-       subtitle = "Percent of total from 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, 5-Year ACS, Table B25127.")
+       subtitle = "Percent of total occupied housing from 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, 5-Year ACS, Table B25127.") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_structure_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_structure_plot
+}
 
 ```
 
@@ -1527,11 +1664,14 @@ cv_yrbuilt <- b25127_data %>%
   group_by(tenure, yrbuilt) %>% 
   summarise(estimate = sum(estimate))
 
-ggplot(cv_yrbuilt,
+cv_yrbuilt_plot <- ggplot(cv_yrbuilt,
        aes(x = yrbuilt,
            y = estimate,
-           fill = yrbuilt)) +
+           fill = yrbuilt,
+           data_id = estimate,
+           tooltip = label_comma()(estimate))) +
   geom_col() +
+  geom_col_interactive() +
   facet_wrap(~tenure) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -1539,7 +1679,16 @@ ggplot(cv_yrbuilt,
   labs(title = "Housing stock by year built and tenure",
        caption = "U.S. Census Bureau, 5-year ACS, Table B25127.") + 
   scale_x_discrete(labels = function(x)str_wrap(x, width = 9)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = .5))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_yrbuilt_plot,
+         height_svg = 4)
+} else {
+  
+  cv_yrbuilt_plot
+}
 
 ```
 
@@ -1612,11 +1761,14 @@ cv_beds <- b25042_data %>%
   mutate(chg = `2021` - `2010`)
 
 
-ggplot(cv_beds,
+cv_beds_plot <- ggplot(cv_beds,
        aes(x = br,
            y = chg,
-           fill = br)) +
+           fill = br,
+           data_id = chg,
+           tooltip = label_comma()(chg))) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   facet_wrap(~tenure) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -1625,11 +1777,19 @@ ggplot(cv_beds,
   scale_x_discrete(labels = function(x)str_wrap(x, width = 8)) +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_beds_plot,
+         height_svg = 4)
+} else {
+  
+  cv_beds_plot
+}
 
 ```
 
 ```{r}
+#| label: fig-mhc-map
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
@@ -1640,26 +1800,6 @@ library(leaflet)
 leaflet(mhc) |> 
   addTiles() |> 
   addCircleMarkers()
-
-
-```
-```{r}
-#| label: fig-mhc-county
-
-
-cv_mhc <- mhc  %>% 
-  group_by(COUNTY, SIZE) %>% 
-  summarise(count = n_distinct(OBJECTID)) %>% 
-  st_drop_geometry() %>% 
-  mutate(COUNTY = str_to_sentence(COUNTY))
-
-ggplot(cv_mhc,
-       aes(x = reorder(COUNTY,count),
-           y = count,
-           fill = SIZE)) +
-  geom_col(position = "stack") +
-  theme_hfv() +
-  scale_fill_hfv()
 
 
 ```
@@ -1742,16 +1882,28 @@ cv_cbps <- read_rds("data/cv_cbps.rds") %>%
   group_by(year, type) %>% 
   summarise(units = sum(units))
 
-ggplot(cv_cbps,
+cv_cbps_plot <- ggplot(cv_cbps,
        aes(x = year,
            y = units,
-           fill = forcats::fct_rev(type))) +
+           fill = forcats::fct_rev(type),
+           data_id = units,
+           tooltip = label_comma()(units))) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "New residential building permits",
        subtitle = "From 2000 through November 2022")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cbps_plot,
+         height_svg = 4)
+} else {
+  
+  cv_cbps_plot
+}
 
 
 ```
@@ -1779,17 +1931,30 @@ cv_ho <- ho_rate %>%
   mutate(pct = estimate/sum(estimate)) %>%  
   filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
 
-ggplot(cv_ho,
+cv_ho_plot <- ggplot(cv_ho,
        aes(x = year, 
            y = pct)) +
   geom_line(size = 0.5) +
-  geom_point(size = 1) +
+  geom_point_interactive(
+    aes(data_id = estimate,
+        tooltip = dollar_format()(estimate)),
+    size = 1) +
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
   labs(title = "Homeownership rate",
-       subtitle = "From 2010 to 2021")
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_ho_plot,
+         height_svg = 4)
+} else {
+  
+  cv_ho_plot
+}
 
 ```
 
@@ -1842,6 +2007,10 @@ ggplot(cvpdc_rent,
            y = estimate,
            linetype = value)) + 
   geom_line(size = 0.5) +
+  geom_point_interactive(
+    aes(data_id = estimate,
+        tooltip = dollar_format()(estimate)),
+    size = 1) +
   scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) +
   scale_linetype_manual(values = c(2,1)) +
   theme_hfv() +
@@ -2003,12 +2172,56 @@ write_rds(cb_7, "data/cb_7.rds")
 ```
 
 ```{r}
-#| label: fig-cb-tenure
+#| label: fig-cb-total
 
 
 cb_7 <- read_rds("data/cb_7.rds")
   
-cb_region <- cb_7 %>% 
+cb_total <- cb_7 %>% 
+  filter(fips %in% cv) %>% 
+  group_by(tenure, household_income, cb_group) %>% 
+  
+  
+cb_total <- ggplot(cb_region,
+       aes(x = year, 
+           y = run_diff, 
+           fill = tenure,
+           data_id = run_diff,
+           tooltip = run_diff)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Cumulative change in cost-burdened households by tenure",
+       subtitle = "2012 to 2019",
+       fill = "Tenure",
+       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  theme(legend.position = "right") +
+  add_zero_line(axis = "y")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cb_total,
+         height_svg = 4) 
+  
+} else {
+  
+  cb_total
+  
+  }
+
+
+```
+
+```{r}
+#| label: fig-cb-change
+
+
+cb_7 <- read_rds("data/cb_7.rds")
+  
+cb_change <- cb_7 %>% 
   filter(fips %in% cv,
          cb_group == "Cost-burdened") |> 
   group_by(year, tenure) |> 
@@ -2050,3 +2263,5 @@ if (knitr::is_html_output()) {
 
 
 ```
+
+

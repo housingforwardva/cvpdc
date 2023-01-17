@@ -67,13 +67,13 @@ ggplot(local_pop,
 ```
 
 ```{r}
-#| label: pop-change
+#| label: fig-local-chg
 
-comp_data <- read_rds("data/comp_data.rds")
+local_change <- read_rds("data/comp_data.rds")
 
 # Create group bar chart showing population change by locality.
 
-ggplot(comp_data,
+ggplot(local_change,
        aes(x = year, 
            y = value,
            fill = component)) +
@@ -95,7 +95,20 @@ ggplot(comp_data,
 
 
 projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% cv)
+  subset(FIPS %in% cv) %>% 
+  mutate(Difference = as.numeric(Difference))
+
+ggplot(projections,
+       aes(x = reorder(NAME, -Difference),
+           y = Difference,
+           fill = NAME)) +
+  geom_col() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Projected growth",
+       subtitle = "Change from 2030 to 2050") +
+  scale_y_continuous(labels = label_comma())
+  
 
 
 ```
@@ -107,6 +120,28 @@ projections <- read_csv("data/uva_proj.csv") %>%
 
 b25003_data <- read_rds("data/b25003_data.rds")
 
+local_tenure <- b25003_data %>%
+  select(county = NAME, year, tenure, estimate) %>% 
+  group_by(county, year, tenure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(county, tenure) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
+  mutate(year = as.character(year))
+
+
+ggplot(local_tenure,
+       aes(x = year,
+           y = run_diff,
+           fill = tenure)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~county, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2))
+
 
 ```
 
@@ -114,6 +149,8 @@ b25003_data <- read_rds("data/b25003_data.rds")
 #| label: age
 
 b25007_data <- read_rds("data/b25007_data.rds")
+
+local_age <- b25007_data %>% 
 
 
 ```
@@ -205,6 +242,27 @@ mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/servic
   filter(STATE == "VA") %>% 
   filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL|LYNCHBURG"))
 
+
+
+```
+
+```{r}
+#| label: fig-mhc-county
+
+
+cv_mhc <- mhc  %>% 
+  group_by(COUNTY, SIZE) %>% 
+  summarise(count = n_distinct(OBJECTID)) %>% 
+  st_drop_geometry() %>% 
+  mutate(COUNTY = str_to_sentence(COUNTY))
+
+ggplot(cv_mhc,
+       aes(x = reorder(COUNTY,count),
+           y = count,
+           fill = SIZE)) +
+  geom_col(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv()
 
 
 ```
