@@ -11,6 +11,7 @@ library(hdatools)
 library(ggiraph)
 library(scales)
 library(ggtext)
+library(tidytext)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -310,6 +311,39 @@ local_senior <- b09020_data %>%
   select(county = NAME, year, family, relationship, estimate) %>% 
   group_by(county, year, family, relationship) %>% 
   summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  transform(change = `2021` - `2012`) %>% 
+  select(county, family, relationship, change) %>% 
+  mutate(family = str_replace(family, "Group quarters", " "),
+         family = fct_relevel(family, "Family", "Nonfamily", " ")) %>% 
+  filter(relationship == "Living alone")
+
+local_senior_plot <- ggplot(local_senior,
+                            aes(x = county,
+                                y = change,
+                                fill = county,
+                                data_id = change,
+                                tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))) +
+  geom_col(position = "dodge") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) + 
+   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  labs(title = "Change in senior population living alone",
+       subtitle = "From 2012 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_senior_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_senior_plot
+
+}
   
 
 ```
@@ -319,6 +353,52 @@ local_senior <- b09020_data %>%
 
 b11013_data <- read_rds("data/b11013_data.rds")
 
+local_sub <- b11013_data %>% 
+  select(county = NAME, year, subfamily, children, estimate) %>% 
+  mutate(subfamily = case_when(
+    subfamily == "Single father" ~ "Single parent",
+    subfamily == "Single mother" ~ "Single parent",
+    TRUE ~ subfamily
+  )) %>% 
+  group_by(county, year, subfamily, children) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(county, subfamily, children) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
+  filter(year == 2021) 
+
+local_sub_plot <- ggplot(local_sub,
+                         aes(x = county,
+                             y = run_diff,
+                             fill = county,
+                             data_id = run_diff,
+                             tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(run_diff))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  facet_wrap(children~subfamily) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
+  theme(legend.position = "right",
+        axis.text.x = element_blank()) +
+  labs(title = "Change in families living with others",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_sub_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_sub_plot
+  
+}
+
 
 ```
 
@@ -326,6 +406,45 @@ b11013_data <- read_rds("data/b11013_data.rds")
 #| label: achild
 
 b09021_data <- read_rds("data/b09021_data.rds")
+
+local_achild <- b09021_data %>% 
+  select(county = NAME, year, arrangement, estimate) %>% 
+  filter(arrangement == "Child of householder") %>% 
+  group_by(county, arrangement) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) 
+
+
+local_achild_plot <- ggplot(local_achild,
+                            aes(x = year,
+                                y = run_diff,
+                                fill = county,
+                                data_id = run_diff,
+                                tooltip = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")(run_diff))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  facet_wrap(~county, nrow = 1) +
+  labs(title = "Cumulative change in adult children living parents",
+       subtitle = "From 2015 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
+  theme(legend.position = "right")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(local_achild_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_achild_plot
+}
+
 
 
 
@@ -339,13 +458,84 @@ b09021_data <- read_rds("data/b09021_data.rds")
 
 b25118_data <- read_rds("data/b25118_data.rds")
 
+local_dist <- b25118_data %>% 
+  select(county = NAME, year, tenure, income, estimate) %>% 
+  group_by(county, year, tenure, income) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2021)
+
+
+level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
+
+
+local_dist_plot <- ggplot(local_dist,
+       aes(x = factor(income, level = level_order),
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+           tooltip = label_comma()(estimate))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  facet_grid(tenure~county) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Income distribution",
+       subtitle = "In 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") 
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_dist_plot,
+         height_svg = 4)
+} else {
+  
+  local_dist_plot
+  
+}
 
 ```
 
 ```{r}
 #| label: med-inc
 
-b25118_data <- read_rds("data/b25119_cpi.rds")
+b25119_data <- read_rds("data/b25119_cpi.rds")
+
+local_inc <- b25119_data %>% 
+  select(county = NAME, year, tenure, dollars21, cdollars) %>% 
+  mutate(county = str_remove_all(county, ", Virginia")) %>% 
+  filter(county != "Bedford city")
+
+
+local_inc_plot <- ggplot(local_inc,
+                         aes(x = year,
+                             y = dollars21,
+                             color= tenure)) +
+  geom_line() +
+  geom_point_interactive(
+    aes(data_id = dollars21,
+        tooltip = dollar_format()(dollars21)),
+    size = 1) +
+  facet_wrap(~county, nrow = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Median household income by tenure",
+       subtitle = "From 2010 to 2021 in 2021 adjusted dollars",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_inc_plot,
+         height_svg = 4)
+} else {
+  
+  local_inc_plot
+
+}
 
 
 ```
@@ -354,6 +544,41 @@ b25118_data <- read_rds("data/b25119_cpi.rds")
 #| label: race-inc
 
 b19013_data <- read_rds("data/b19013_data.rds")
+
+local_rinc <- b19013_data %>% 
+  select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
+  filter(year == 2021) %>% 
+  drop_na() %>% 
+  mutate(label = paste(county, "-", race))
+  
+local_rinc_plot <- ggplot(local_rinc,
+       aes(x = reorder_within(county, cdollars, race),
+           y = cdollars,
+           fill = race,
+           data_id = cdollars,
+           tooltip = dollar_format()(cdollars))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "right") +
+  scale_x_reordered() +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Median household income by race and ethnicity",
+       subtitle = "In 2021 inflation-adjusted dollars",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B19013B - I.")
+
+if (knitr::is_html_output()){
+  
+  girafe(ggobj = local_rinc_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_rinc_plot
+}
+  
 
 
 ```
@@ -364,7 +589,33 @@ b19013_data <- read_rds("data/b19013_data.rds")
 ```{r}
 #| label: structure
 
-b25127_data <- read_rds("data/b25127_data.rds")
+b25127_data <- read_rds("data/b25127_data.rds") 
+
+local_str <- b25127_data %>% 
+  select(county = NAME, year, tenure, structure, estimate) %>% 
+  group_by(county, year, tenure, structure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2010 | year == 2021) %>% 
+  group_by(year, tenure) %>% 
+  transform(pct = estimate/sum(estimate)) %>% 
+  mutate(county = fct_reorder(county, pct, .desc = TRUE))
+
+level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
+
+ggplot(local_str,
+       aes(x = factor(structure, level = level_order),
+           y = pct,
+           fill = county)) +
+  geom_col(position = "stack") +
+  facet_wrap(~tenure, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() + 
+  scale_y_continuous(labels = percent_format()) +
+  theme(legend.position = "right") + 
+   scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
+  lab(title = "Distribution of housing stock in the region by structure",
+      subtitle = "Percent of total occupied housing in 2021",
+      caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
 
 
 ```
