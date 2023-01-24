@@ -602,7 +602,7 @@ local_str <- b25127_data %>%
 
 level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
 
-ggplot(local_str,
+local_str_plot <- ggplot(local_str,
        aes(x = factor(structure, level = level_order),
            y = pct,
            fill = county)) +
@@ -616,6 +616,17 @@ ggplot(local_str,
   lab(title = "Distribution of housing stock in the region by structure",
       subtitle = "Percent of total occupied housing in 2021",
       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_str_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_str_plot
+  
+}
 
 
 ```
@@ -675,16 +686,58 @@ b25003_data <- read_rds("data/b25003_data.rds")
 ```{r}
 #| label: rent
 
-# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All. Combine Bedford City and Bedford County.
 
 # Download data for current rent and inflation-adjusted rent into a single csv - name [locality_abbv]_rent.csv --- for example amherst_rent.csv or lburg_rent.csv
 
 # Merge all data into a single csv named - local_rent.csv
 
-# Note the download date of data here: 
+# Note the download date of data here: 1/23/2023
 
+lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+  mutate(county = "Lynchburg city")
 
+amherst_rent <- read_csv("data/amherst_rent.csv") %>% 
+  mutate(county = "Amherst County")
 
+appomattox_rent <- read_csv("data/appomattox_rent.csv") %>% 
+  mutate(county = "Appomattox County")
+
+bedford_rent <- read_csv("data/bedford_rent.csv") %>% 
+  mutate(county = "Bedford County")
+
+campbell_rent <- read_csv("data/campbell_rent.csv") %>% 
+  mutate(county = "Campbell County")
+
+library(zoo)
+
+local_rent <- rbind(lburg_rent, amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
+  filter(!str_detect(period, "QTD")) %>% 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
+  select(county, period, current, inf) %>% 
+  pivot_longer(3:4,
+               names_to = "value",
+               values_to = "rent") %>% 
+  mutate(value = case_when(
+    value == "current" ~ "Current dollars",
+    value == "inf" ~ "Inflation-adjusted dollars"
+  ))
+
+ggplot(local_rent,
+       aes(x = period,
+           y = rent,
+           group = value,
+           color = county)) +
+  geom_line(aes(linetype = value)) + 
+  facet_wrap(~county, nrow = 1) +
+  scale_linetype_manual(values = c("dotted", "solid")) +
+  theme_hfv() +
+  scale_color_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Quarterly average rent",
+       subtitle = "Market asking rent from 2000 through 2022",
+       caption = "**Source:** CoStar Group Inc.")
 
 
 

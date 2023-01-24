@@ -2177,28 +2177,30 @@ write_rds(cb_7, "data/cb_7.rds")
 
 cb_7 <- read_rds("data/cb_7.rds")
   
-cb_total <- cb_7 %>% 
-  filter(fips %in% cv) %>% 
-  group_by(tenure, household_income, cb_group) %>% 
-  
-  
-cb_total <- ggplot(cb_region,
-       aes(x = year, 
+cbhh_region <- cb_7 %>% 
+  group_by(year, tenure, household_income, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year, tenure) %>% 
+  mutate(pct = estimate/sum(estimate)) 
+
+cbhh_region_plot <- ggplot(cbhh_region,
+       aes(x = household_income, 
            y = run_diff, 
-           fill = tenure,
+           fill = household_income,
            data_id = run_diff,
-           tooltip = run_diff)) +
+           tooltip = label_number(big.mark = ",")(run_diff))) +
   geom_col(position = "dodge") +
   geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
+  facet_wrap(~tenure, nrow = 1) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Cumulative change in cost-burdened households by tenure",
+  labs(title = "Cumulative change in cost-burdened households by income",
        subtitle = "2012 to 2019",
        fill = "Tenure",
        caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
-  theme(legend.position = "right") +
-  add_zero_line(axis = "y")
+  add_zero_line(axis = "y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 
 if (knitr::is_html_output()) {
@@ -2231,7 +2233,7 @@ cb_change <- cb_7 %>%
   drop_na() |> 
   mutate(run_diff = cumsum(change))
   
-cb_diff <- ggplot(cb_region,
+cb_diff <- ggplot(cb_change,
        aes(x = year, 
            y = run_diff, 
            fill = tenure,
@@ -2265,3 +2267,48 @@ if (knitr::is_html_output()) {
 ```
 
 
+```{r}
+#| label: cb9-clean
+#| eval: false
+
+cb_9 <- read_csv("data/Table9_2012to2019.csv") %>% 
+  clean_names() %>% 
+  filter(line_type == "Detail")  %>% 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  )) %>% 
+  mutate(race = case_when(
+    race_ethnicity == "White alone, non-Hispanic" ~ "White, non-Hispanic",
+    race_ethnicity == "Black or African-American alone, non-Hispanic" ~ "Black",
+    race_ethnicity == "Asian alone, non-Hispanic" ~ "Asian",
+    race_ethnicity == "Hispanic, any race" ~ "Hispanic or Latino",
+    TRUE ~ "Another race, including multiracial"
+  ))   %>% 
+  mutate(cost_burden = case_when(
+    cost_burden == "less than or equal to 30%" ~ "Not cost-burdened",
+    cost_burden == "greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
+    cost_burden == "greater than 50%" ~ "Severely cost-burdened",
+    cost_burden == "not computed (no/negative income)" ~ "No or negative income"
+  )) %>% 
+  mutate(cb_group = case_when(
+    cost_burden == "Cost-burdened" ~ "Cost-burdened",
+    cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
+    TRUE ~ cost_burden
+  )) %>% 
+  select(county, year, race, cost_burden, cb_group, estimate)
+
+write_rds(cb_9, "data/cb_9.rds")
+
+```
+
+```{r}
+#| label: cb-race
+
+cb_9 <- read_rds("data/cb_9.rds") 
+
+cv_cb9 <- cb_9 %>% 
+  group_by(year, race, cost_burden, cb_group) %>% 
+  summarise(estimate = sum(estimate))
+
+```
