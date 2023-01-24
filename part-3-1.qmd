@@ -2178,23 +2178,29 @@ write_rds(cb_7, "data/cb_7.rds")
 cb_7 <- read_rds("data/cb_7.rds")
   
 cbhh_region <- cb_7 %>% 
-  group_by(year, tenure, household_income, cb_group) %>% 
+  group_by(year, household_income, cb_group) %>% 
   summarise(estimate = sum(estimate)) %>% 
-  group_by(year, tenure) %>% 
+  group_by(year, household_income) %>% 
   mutate(pct = estimate/sum(estimate)) 
 
+%>% 
+  filter(cb_group == "Cost-burdened")
+
+cbhh_region$household_income <- factor(cbhh_region$household_income,
+                                       levels = c("30% AMI or less", "31 to 50% AMI", "51 to 80% AMI", "81 to 100% AMI", "101% AMI or greater"))
+
 cbhh_region_plot <- ggplot(cbhh_region,
-       aes(x = household_income, 
-           y = run_diff, 
+       aes(x = year, 
+           y = pct, 
            fill = household_income,
-           data_id = run_diff,
-           tooltip = label_number(big.mark = ",")(run_diff))) +
-  geom_col(position = "dodge") +
-  geom_col_interactive(position = "dodge", size = 2) +
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
-  facet_wrap(~tenure, nrow = 1) +
-  scale_y_continuous(labels = label_comma()) +
+  facet_wrap(~household_income, nrow = 1) +
+  scale_y_continuous(labels = percent_format()) +
   labs(title = "Cumulative change in cost-burdened households by income",
        subtitle = "2012 to 2019",
        fill = "Tenure",
@@ -2205,12 +2211,12 @@ cbhh_region_plot <- ggplot(cbhh_region,
 
 if (knitr::is_html_output()) {
   
-  girafe(ggobj = cb_total,
+  girafe(ggobj = cbhh_region_plot,
          height_svg = 4) 
   
 } else {
   
-  cb_total
+  cbhh_region_plot
   
   }
 
@@ -2309,6 +2315,7 @@ cb_9 <- read_rds("data/cb_9.rds")
 
 cv_cb9 <- cb_9 %>% 
   group_by(year, race, cost_burden, cb_group) %>% 
-  summarise(estimate = sum(estimate))
+  summarise(estimate = sum(estimate)) %>% 
+  
 
 ```
