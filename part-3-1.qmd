@@ -2181,9 +2181,7 @@ cbhh_region <- cb_7 %>%
   group_by(year, household_income, cb_group) %>% 
   summarise(estimate = sum(estimate)) %>% 
   group_by(year, household_income) %>% 
-  mutate(pct = estimate/sum(estimate)) 
-
-%>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
   filter(cb_group == "Cost-burdened")
 
 cbhh_region$household_income <- factor(cbhh_region$household_income,
@@ -2201,9 +2199,8 @@ cbhh_region_plot <- ggplot(cbhh_region,
   scale_fill_hfv() +
   facet_wrap(~household_income, nrow = 1) +
   scale_y_continuous(labels = percent_format()) +
-  labs(title = "Cumulative change in cost-burdened households by income",
-       subtitle = "2012 to 2019",
-       fill = "Tenure",
+  labs(title = "Cost-burdened households by household income",
+       subtitle = "Percent of cost-burdened households by household income from 2012 to 2019",
        caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   add_zero_line(axis = "y") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
