@@ -11,6 +11,10 @@ library(ggplot2)
 library(leaflet)
 library(tigris)
 library(sf)
+library(ggiraph)
+library(hdatools)
+library(scales)
+library(readxl)
 
 lburg <- "51680"
 
@@ -461,12 +465,12 @@ if (knitr::is_html_output()) {
 #| label: med-inc
 
 b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
-  filter(NAME != "Lynchburg city")
+  mutate(NAME = str_remove_all(NAME, ", Virginia")) %>% 
+  filter(NAME == "Lynchburg city")
 
 local_inc <- b25119_data %>% 
-  select(county = NAME, year, tenure, dollars21, cdollars) %>% 
-  mutate(county = str_remove_all(county, ", Virginia")) %>% 
-  filter(county != "Bedford city")
+  select(county = NAME, year, tenure, dollars21, cdollars)
+
 
 
 local_inc_plot <- ggplot(local_inc,
@@ -478,7 +482,6 @@ local_inc_plot <- ggplot(local_inc,
     aes(data_id = dollars21,
         tooltip = dollar_format()(dollars21)),
     size = 1) +
-  facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = dollar_format()) +
@@ -505,27 +508,27 @@ if (knitr::is_html_output()) {
 #| label: race-inc
 
 b19013_data <- read_rds("data/b19013_data.rds") %>% 
-  filter(NAME != "Lynchburg city")
+  filter(NAME == "Lynchburg city")
 
 local_rinc <- b19013_data %>% 
   select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
-  filter(year == 2021) %>% 
-  drop_na() %>% 
-  mutate(label = paste(county, "-", race))
+  filter(year == 2021 | year == 2010) %>% 
+  drop_na()
   
 local_rinc_plot <- ggplot(local_rinc,
-       aes(x = reorder_within(county, cdollars, race),
-           y = cdollars,
+       aes(x = reorder_within(race, dollars21, year),
+           y = dollars21,
            fill = race,
-           data_id = cdollars,
-           tooltip = dollar_format()(cdollars))) +
-  geom_col(position = "dodge") +
+           data_id = dollars21,
+           tooltip = dollar_format()(dollars21))) +
+  geom_col(stat = "identity", position = "dodge") +
   geom_col_interactive() +
   theme_hfv() +
-  scale_fill_hfv() +
+  scale_fill_hfv() + 
+  scale_x_reordered() +
+  facet_wrap(~year, scales = "free_x") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         legend.position = "right") +
-  scale_x_reordered() +
   scale_y_continuous(labels = dollar_format()) +
   labs(title = "Median household income by race and ethnicity",
        subtitle = "In 2021 inflation-adjusted dollars",
@@ -636,7 +639,10 @@ ggplot(lburg_mhc,
 ```{r}
 #| label: bps
 
-cv_cbps <- read_rds("data/cv_cbps.rds")
+lburg_cbps <- read_rds("data/cv_cbps.rds") %>% 
+  filter(NAMELSAD == "Lynchburg city")
+
+ggplot(lburg_cbps)
 
 ```
 

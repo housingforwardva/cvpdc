@@ -1352,7 +1352,6 @@ b25119_data <- b25119_raw |>
   right_join(b25119_vars_cleaned, by = "variable") |> 
   select(NAME, GEOID, year, tenure, estimate, moe)
 
-library(readxl)
 
 cpi <- read_excel("data/CPI_U_RS.xlsx")
 
