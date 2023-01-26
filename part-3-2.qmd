@@ -1,6 +1,6 @@
 # County Housing Market Assessment
 
-The following provides a locality-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been disaggregated to show the differences between localities
+The following provides a county-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been disaggregated to show the differences between localities.
 
 ```{r}
 #| label: setup
@@ -13,7 +13,7 @@ library(scales)
 library(ggtext)
 library(tidytext)
 
-cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
+cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
 
 cv_names <- list_counties("VA") %>% 
   mutate(GEOID = paste0("51", county_code))
@@ -27,7 +27,8 @@ cv_names <- list_counties("VA") %>%
 ```{r}
 #| label: pop-2020
 
-pop_data <- read_rds("data/pop_data.rds")
+pop_data <- read_rds("data/pop_data.rds") %>% 
+  subset(GEOID %in% cnty)
 
 local_pop <- pop_data %>% 
   left_join(cv_names, by = "GEOID") %>% 
@@ -94,7 +95,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: fig-local-chg
 
-local_change <- read_rds("data/comp_data.rds")
+local_change <- read_rds("data/comp_data.rds") %>% 
+  filter(NAMELSAD != "Lynchburg city")
 
 # Create group bar chart showing population change by locality.
 
@@ -130,8 +132,8 @@ if (knitr::is_html_output()) {
 
 
 projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% cv) %>% 
-  mutate(Difference = as.numeric(Difference))
+  subset(FIPS %in% cnty) %>% 
+  mutate(Difference = as.numeric(Difference)) 
 
 local_proj_plot <- ggplot(projections,
        aes(x = reorder(NAME, -Difference),
@@ -163,7 +165,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: tenure
 
-b25003_data <- read_rds("data/b25003_data.rds")
+b25003_data <- read_rds("data/b25003_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_tenure <- b25003_data %>%
   select(county = NAME, year, tenure, estimate) %>% 
@@ -187,7 +190,8 @@ local_tenure_plot <- ggplot(local_tenure,
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
+        legend.position = "bottom") +
   labs(title = "Cumulative change in households by tenure",
        subtitle = "From 2010 to 2021",
        caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
@@ -200,6 +204,7 @@ if (knitr::is_html_output()) {
 } else {
   
   local_tenure_plot
+  
 }
   
 
@@ -208,7 +213,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: age
 
-b25007_data <- read_rds("data/b25007_data.rds")
+b25007_data <- read_rds("data/b25007_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
   
 local_age <- b25007_data %>% 
   group_by(county = NAME, year, tenure, age) %>% 
@@ -250,7 +256,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: type
 
-b11001_data <- read_rds("data/b11001_data.rds")
+b11001_data <- read_rds("data/b11001_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 
 ```
@@ -258,7 +265,8 @@ b11001_data <- read_rds("data/b11001_data.rds")
 ```{r}
 #| label: size
 
-b25009_data <- read_rds("data/b25009_data.rds")
+b25009_data <- read_rds("data/b25009_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_size <- b25009_data %>% 
   select(county = NAME, year, tenure, size, estimate) %>% 
@@ -305,7 +313,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: senior
 
-b09020_data <- read_rds("data/b09020_data.rds")
+b09020_data <- read_rds("data/b09020_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_senior <- b09020_data %>% 
   select(county = NAME, year, family, relationship, estimate) %>% 
@@ -351,7 +360,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: subfam
 
-b11013_data <- read_rds("data/b11013_data.rds")
+b11013_data <- read_rds("data/b11013_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_sub <- b11013_data %>% 
   select(county = NAME, year, subfamily, children, estimate) %>% 
@@ -405,7 +415,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: achild
 
-b09021_data <- read_rds("data/b09021_data.rds")
+b09021_data <- read_rds("data/b09021_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_achild <- b09021_data %>% 
   select(county = NAME, year, arrangement, estimate) %>% 
@@ -429,7 +440,7 @@ local_achild_plot <- ggplot(local_achild,
   theme_hfv() +
   scale_fill_hfv() +
   facet_wrap(~county, nrow = 1) +
-  labs(title = "Cumulative change in adult children living parents",
+  labs(title = "Cumulative change in adult children living with parents",
        subtitle = "From 2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
   theme(legend.position = "right")
@@ -456,7 +467,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: inc-dist
 
-b25118_data <- read_rds("data/b25118_data.rds")
+b25118_data <- read_rds("data/b25118_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_dist <- b25118_data %>% 
   select(county = NAME, year, tenure, income, estimate) %>% 
@@ -500,7 +512,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: med-inc
 
-b25119_data <- read_rds("data/b25119_cpi.rds")
+b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_inc <- b25119_data %>% 
   select(county = NAME, year, tenure, dollars21, cdollars) %>% 
@@ -543,7 +556,8 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: race-inc
 
-b19013_data <- read_rds("data/b19013_data.rds")
+b19013_data <- read_rds("data/b19013_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
 
 local_rinc <- b19013_data %>% 
   select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
@@ -596,9 +610,11 @@ local_str <- b25127_data %>%
   group_by(county, year, tenure, structure) %>% 
   summarise(estimate = sum(estimate)) %>% 
   filter(year == 2010 | year == 2021) %>% 
-  group_by(year, tenure) %>% 
+  group_by(year) %>% 
   transform(pct = estimate/sum(estimate)) %>% 
-  mutate(county = fct_reorder(county, pct, .desc = TRUE))
+  mutate(county = fct_reorder(county, pct, .desc = TRUE)) %>% 
+  filter(year == 2021) %>% 
+  filter(county != "Lynchburg city")
 
 level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
 
@@ -613,7 +629,7 @@ local_str_plot <- ggplot(local_str,
   scale_y_continuous(labels = percent_format()) +
   theme(legend.position = "right") + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
-  lab(title = "Distribution of housing stock in the region by structure",
+  labs(title = "Distribution of the housing stock in the region",
       subtitle = "Percent of total occupied housing in 2021",
       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
 
@@ -637,7 +653,7 @@ if (knitr::is_html_output()) {
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
-  filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL|LYNCHBURG"))
+  filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL"))
 
 
 
@@ -676,7 +692,7 @@ cv_cbps <- read_rds("data/cv_cbps.rds")
 ```{r}
 #| label: ho
 
-b25003_data <- read_rds("data/b25003_data.rds")
+b25003_data <- read_rds("data/b25003_data.rds") 
 
 ```
 
@@ -694,8 +710,8 @@ b25003_data <- read_rds("data/b25003_data.rds")
 
 # Note the download date of data here: 1/23/2023
 
-lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
-  mutate(county = "Lynchburg city")
+# lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+#  mutate(county = "Lynchburg city")
 
 amherst_rent <- read_csv("data/amherst_rent.csv") %>% 
   mutate(county = "Amherst County")

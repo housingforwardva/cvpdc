@@ -16,6 +16,718 @@ lburg <- "51680"
 
 ```
 
+## Takeaways
+
+## Population trends
+
+```{r}
+#| label: pop-2020
+
+pop_data <- read_rds("data/pop_data.rds") %>% 
+  subset(GEOID %in% lburg)
+
+local_pop <- pop_data %>% 
+  left_join(cv_names, by = "GEOID") %>% 
+  select(year, counttype, value) 
+
+projections <- read_csv("data/uva_proj.csv") %>% 
+  subset(FIPS %in% lburg) %>% 
+  select(`2030`, `2040`, `2050`) %>% 
+  pivot_longer(1:3,
+               names_to = "year",
+               values_to = "value") %>% 
+  mutate(counttype = "Projection") %>% 
+  select(year, counttype, value)
+
+lburg_pop <- rbind(local_pop, projections)
+  
+local_pop_plot <- ggplot(lburg_pop,
+       aes(x = year,
+           y = value,
+           fill = counttype)) +
+  geom_col() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "City of Lynchburg: Population",
+       caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
+  scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
+  theme(legend.position = "right")
+
+if (knitr::is_html_output()) {
+  
+  girage(ggobj = local_pop_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_pop_plot
+  
+}
+
+
+```
+
+```{r}
+#| label: fig-local-chg
+
+local_change <- read_rds("data/comp_data.rds") %>% 
+  filter(NAMELSAD == "Lynchburg city")
+
+# Create group bar chart showing population change by locality.
+
+local_change_plot <- ggplot(local_change,
+       aes(x = year, 
+           y = value,
+           fill = component)) +
+  geom_col(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(size = 6, angle = 90),
+        legend.position = "bottom") +
+  labs(title = "City of Lynchburg: Components of population change",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_change_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_change_plot
+  
+}
+
+
+```
+
+## Household trends
+
+```{r}
+#| label: tenure
+
+b25003_data <- read_rds("data/b25003_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_tenure <- b25003_data %>%
+  select(county = NAME, year, tenure, estimate) %>% 
+  group_by(county, year, tenure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(county, tenure) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
+  mutate(year = as.character(year))
+
+
+local_tenure_plot <- ggplot(local_tenure,
+       aes(x = year,
+           y = run_diff,
+           fill = tenure,
+           data_id = run_diff,
+           tooltip )) +
+  geom_col(position = "dodge") +
+  facet_wrap(~county, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
+        legend.position = "bottom") +
+  labs(title = "Cumulative change in households by tenure",
+       subtitle = "From 2010 to 2021",
+       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_tenure_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_tenure_plot
+  
+}
+  
+
+```
+
+```{r}
+#| label: age
+
+b25007_data <- read_rds("data/b25007_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+  
+local_age <- b25007_data %>% 
+  group_by(county = NAME, year, tenure, age) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2010 | year == 2021) %>% 
+  group_by(county, year, tenure) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  mutate(year = as.character(year))
+
+local_age_plot <- ggplot(local_age,
+       aes(x = year, 
+           y = pct,
+           fill = age,
+           data_id = pct,
+           tooltip = percent_format()(pct)))  +
+  geom_col(position = "dodge") +
+  facet_grid(~tenure) +
+  geom_col_interactive(size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = percent_format()) +
+  theme(legend.position = "bottom") +
+  labs(title = "City of Lynchburg: households by age and tenure",
+       subtitle = "In 2010 and 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_age_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_age_plot
+}
+
+```
+
+```{r}
+#| label: type
+
+b11001_data <- read_rds("data/b11001_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
+
+
+```
+
+```{r}
+#| label: size
+
+b25009_data <- read_rds("data/b25009_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_size <- b25009_data %>% 
+  select(county = NAME, year, tenure, size, estimate) %>% 
+  group_by(county, year, tenure, size) %>% 
+  summarise(estimate = sum(estimate))  %>%
+  group_by(county, tenure, size) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
+  mutate(year = as.character(year))
+
+
+local_size_plot <- ggplot(local_size,
+       aes(x = year,
+           y = run_diff,
+           fill = tenure,
+           data_id = run_diff,
+           tooltip )) +
+  geom_col(position = "dodge") +
+  facet_grid(tenure~size) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
+  labs(title = "City of Lynchburg: Cumulative change in households by size and tenure",
+       subtitle = "From 2010 to 2021",
+       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_size_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_size_plot
+}
+  
+
+
+```
+
+```{r}
+#| label: senior
+
+b09020_data <- read_rds("data/b09020_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_senior <- b09020_data %>% 
+  select(county = NAME, year, family, relationship, estimate) %>% 
+  group_by(county, year, family, relationship) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  pivot_wider(names_from = year,
+              values_from = estimate) %>% 
+  transform(change = `2021` - `2012`) %>% 
+  select(county, family, relationship, change) %>% 
+  mutate(family = str_replace(family, "Group quarters", " "),
+         family = fct_relevel(family, "Family", "Nonfamily", " "))
+
+
+local_senior_plot <- ggplot(local_senior,
+       aes(y = reorder_within(relationship, change, family),
+           x = change,
+           fill = family,
+           data_id = change,
+           tooltip = change)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_reordered() +
+  scale_x_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
+  facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
+  #scale_y_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  labs(title = "City of Lynchburg: Change in senior population by living arrangement",
+       subtitle="2016 to 2020",
+       fill="Tenure",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.")  +
+  theme(strip.placement = "outside",
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#e2e4e3",
+                                          size = 0.05)) +
+  add_zero_line(axis = "x")
+                              
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_senior_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_senior_plot
+
+}
+  
+
+```
+
+```{r}
+#| label: subfam
+
+b11013_data <- read_rds("data/b11013_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_sub <- b11013_data %>% 
+  select(county = NAME, year, subfamily, children, estimate) %>% 
+  mutate(subfamily = case_when(
+    subfamily == "Single father" ~ "Single parent",
+    subfamily == "Single mother" ~ "Single parent",
+    TRUE ~ subfamily
+  )) %>% 
+  group_by(county, year, subfamily, children) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(county, subfamily, children) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0)
+
+local_sub_plot <- ggplot(local_sub,
+                         aes(x = year,
+                             y = run_diff,
+                             fill = subfamily,
+                             data_id = run_diff,
+                             tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(run_diff))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  facet_wrap(~children) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_blank()) +
+  labs(title = "City of Lynchburg: Change in families living with others",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_sub_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_sub_plot
+  
+}
+
+
+```
+
+```{r}
+#| label: achild
+
+b09021_data <- read_rds("data/b09021_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_achild <- b09021_data %>% 
+  select(county = NAME, year, arrangement, estimate) %>% 
+  filter(arrangement == "Child of householder") %>% 
+  group_by(county, arrangement) %>% 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) %>% 
+  mutate(run_diff = cumsum(diff)) %>%  
+  filter(run_diff != 0) %>% 
+  mutate(year = as.character(year))
+
+
+local_achild_plot <- ggplot(local_achild,
+                            aes(x = year,
+                                y = run_diff,
+                                fill = run_diff,
+                                data_id = run_diff,
+                                tooltip = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")(run_diff))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "City of Lynchburg: Cumulative change in adult children living with parents",
+       subtitle = "From 2015 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E"))
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(local_achild_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_achild_plot
+}
+
+
+```
+
+
+## Economic trends
+
+```{r}
+#| label: inc-dist
+
+b25118_data <- read_rds("data/b25118_data.rds") %>% 
+  filter(NAME == "Lynchburg city")
+
+local_dist <- b25118_data %>% 
+  select(county = NAME, year, tenure, income, estimate) %>% 
+  group_by(county, year, tenure, income) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2010 | year == 2021) %>% 
+  mutate(year = as.character(year))
+
+
+level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
+
+
+local_dist_plot <- ggplot(local_dist,
+       aes(x = factor(income, level = level_order),
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+           tooltip = label_comma()(estimate))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  facet_grid(tenure~year) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "City of Lynchburg: Income distribution",
+       subtitle = "In 2010 and 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") 
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_dist_plot,
+         height_svg = 4)
+} else {
+  
+  local_dist_plot
+  
+}
+
+```
+
+```{r}
+#| label: med-inc
+
+b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
+  filter(NAME != "Lynchburg city")
+
+local_inc <- b25119_data %>% 
+  select(county = NAME, year, tenure, dollars21, cdollars) %>% 
+  mutate(county = str_remove_all(county, ", Virginia")) %>% 
+  filter(county != "Bedford city")
+
+
+local_inc_plot <- ggplot(local_inc,
+                         aes(x = year,
+                             y = dollars21,
+                             color= tenure)) +
+  geom_line() +
+  geom_point_interactive(
+    aes(data_id = dollars21,
+        tooltip = dollar_format()(dollars21)),
+    size = 1) +
+  facet_wrap(~county, nrow = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Median household income by tenure",
+       subtitle = "From 2010 to 2021 in 2021 adjusted dollars",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_inc_plot,
+         height_svg = 4)
+} else {
+  
+  local_inc_plot
+
+}
+
+
+```
+
+```{r}
+#| label: race-inc
+
+b19013_data <- read_rds("data/b19013_data.rds") %>% 
+  filter(NAME != "Lynchburg city")
+
+local_rinc <- b19013_data %>% 
+  select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
+  filter(year == 2021) %>% 
+  drop_na() %>% 
+  mutate(label = paste(county, "-", race))
+  
+local_rinc_plot <- ggplot(local_rinc,
+       aes(x = reorder_within(county, cdollars, race),
+           y = cdollars,
+           fill = race,
+           data_id = cdollars,
+           tooltip = dollar_format()(cdollars))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "right") +
+  scale_x_reordered() +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Median household income by race and ethnicity",
+       subtitle = "In 2021 inflation-adjusted dollars",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B19013B - I.")
+
+if (knitr::is_html_output()){
+  
+  girafe(ggobj = local_rinc_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_rinc_plot
+}
+  
+
+
+```
+
+
+## Housing stock
+
+```{r}
+#| label: structure
+
+b25127_data <- read_rds("data/b25127_data.rds") 
+
+local_str <- b25127_data %>% 
+  select(county = NAME, year, tenure, structure, estimate) %>% 
+  group_by(year, county, tenure, structure) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  filter(year == 2010 | year == 2021) %>% 
+  group_by(year) %>% 
+  transform(pct = estimate/sum(estimate)) %>% 
+  mutate(county = fct_reorder(county, pct, .desc = TRUE)) %>% 
+  filter(year == 2021) %>% 
+  filter(county == "Lynchburg city")
+
+level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
+
+local_str_plot <- ggplot(local_str,
+       aes(x = factor(structure, level = level_order),
+           y = pct,
+           fill = tenure)) +
+  geom_col(position = "stack") +
+  facet_wrap(~tenure, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() + 
+  scale_y_continuous(labels = percent_format()) +
+  theme(legend.position = "right",
+        strip.text = element_blank()) + 
+   scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
+  labs(title = "Distribution of housing stock in Lynchburg in relation to the region",
+      subtitle = "Percent of total occupied housing in 2021",
+      caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_str_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_str_plot
+  
+}
+
+
+```
+
+```{r}
+#| label: mhc
+
+
+mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
+  filter(STATE == "VA") %>% 
+  filter(str_detect(COUNTY, "LYNCHBURG"))
+
+leaflet(mhc) %>% 
+  addTiles() %>% 
+  addCircleMarkers()
+
+
+
+```
+
+```{r}
+#| label: fig-mhc-county
+
+
+lburg_mhc <- mhc%>% 
+  group_by(SIZE) %>% 
+  summarise(count = n_distinct(OBJECTID)) %>% 
+  st_drop_geometry()
+
+ggplot(lburg_mhc,
+       aes(x = SIZE,
+           y = count,
+           fill = SIZE)) +
+  geom_col(position = "dodge") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,15))
+
+
+```
+
+```{r}
+#| label: bps
+
+cv_cbps <- read_rds("data/cv_cbps.rds")
+
+```
+
+## Homeownership market
+
+```{r}
+#| label: ho
+
+b25003_data <- read_rds("data/b25003_data.rds") 
+
+```
+
+
+## Rental market
+
+```{r}
+#| label: rent
+
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All. Combine Bedford City and Bedford County.
+
+# Download data for current rent and inflation-adjusted rent into a single csv - name [locality_abbv]_rent.csv --- for example amherst_rent.csv or lburg_rent.csv
+
+# Merge all data into a single csv named - local_rent.csv
+
+# Note the download date of data here: 1/23/2023
+
+# lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+#  mutate(county = "Lynchburg city")
+
+amherst_rent <- read_csv("data/amherst_rent.csv") %>% 
+  mutate(county = "Amherst County")
+
+appomattox_rent <- read_csv("data/appomattox_rent.csv") %>% 
+  mutate(county = "Appomattox County")
+
+bedford_rent <- read_csv("data/bedford_rent.csv") %>% 
+  mutate(county = "Bedford County")
+
+campbell_rent <- read_csv("data/campbell_rent.csv") %>% 
+  mutate(county = "Campbell County")
+
+library(zoo)
+
+local_rent <- rbind(lburg_rent, amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
+  filter(!str_detect(period, "QTD")) %>% 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
+  select(county, period, current, inf) %>% 
+  pivot_longer(3:4,
+               names_to = "value",
+               values_to = "rent") %>% 
+  mutate(value = case_when(
+    value == "current" ~ "Current dollars",
+    value == "inf" ~ "Inflation-adjusted dollars"
+  ))
+
+ggplot(local_rent,
+       aes(x = period,
+           y = rent,
+           group = value,
+           color = county)) +
+  geom_line(aes(linetype = value)) + 
+  facet_wrap(~county, nrow = 1) +
+  scale_linetype_manual(values = c("dotted", "solid")) +
+  theme_hfv() +
+  scale_color_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Quarterly average rent",
+       subtitle = "Market asking rent from 2000 through 2022",
+       caption = "**Source:** CoStar Group Inc.")
+
+
+
+```
+
+```{r}
+#| label: vacancy
+
+# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
+
+# Download data into csv - name [locality_abbv]_vacancy.csv --- for example amherst_vacancy.csv or lburg_vacancy.csv
+
+# Note the download date of data here: 
+
+
+
+
+```
+
+
+
 
 ```{r}
 #| label: parcel-data
