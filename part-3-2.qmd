@@ -774,5 +774,25 @@ ggplot(local_rent,
 ```
 
 
+```{r}
+#| label: nhpd
+
+nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
+  clean_names() %>% 
+  filter(subsidy_status != "Inactive") %>% 
+  filter(grepl("amherst", city, ignore.case = TRUE) |
+           grepl("bedford", city, ignore.case = TRUE) |
+           grepl("campbell", city, ignore.case = TRUE) |
+           grepl("appomattox", city, ignore.case = TRUE)) %>% 
+  select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude)
+
+
+cnty_nhpd <- nhpd_subsidies %>% 
+  group_by(city, subsidy_name) %>% 
+  summarise(units = sum(units))
+
+```
+
+
 
 

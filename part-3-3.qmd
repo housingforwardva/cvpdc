@@ -642,7 +642,32 @@ ggplot(lburg_mhc,
 lburg_cbps <- read_rds("data/cv_cbps.rds") %>% 
   filter(NAMELSAD == "Lynchburg city")
 
-ggplot(lburg_cbps)
+lburg_cbps_plot <- ggplot(lburg_cbps,
+       aes(x = year,
+           y = units, 
+           fill = type, 
+           data_id = units,
+           tooltip = label_comma()(units))) +
+  geom_col(position = "dodge") + 
+  geom_col_interactive() +
+  facet_grid(~type) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous(breaks = seq(from = 2000, to = 2022, by = 2.0)) +
+  labs(title = "Residential building permits by unit type",
+       subtitle = "From 2000 through 2022",
+       caption = "**Source:** U.S. Census Bureau, Building Permits Survey.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = lburg_cbps_plot,
+         height_svg = 4)
+  
+} else {
+  
+  lburg_cbps_plot
+}
 
 ```
 
@@ -651,7 +676,44 @@ ggplot(lburg_cbps)
 ```{r}
 #| label: ho
 
+# Read in saved tenure data.
+
 b25003_data <- read_rds("data/b25003_data.rds") 
+
+# Clean the data and calculate homeownership rate.
+
+ho_rate <- b25003_data %>%
+  select(county = NAME, year, tenure, estimate) %>% # Change "NAME" field to "county".
+  filter(county == "Lynchburg city") %>% # Filter for Lynchburg only.
+  group_by(year) %>% # Calculate percent of total by year to get homeownership rate.
+  mutate(pct = estimate/sum(estimate)) %>%  
+  filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
+
+cv_ho_plot <- ggplot(cv_ho,
+       aes(x = year, 
+           y = pct)) +
+  geom_line(size = 0.5) +
+  geom_point_interactive(
+    aes(data_id = estimate,
+        tooltip = dollar_format()(estimate)),
+    size = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
+  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
+  labs(title = "Homeownership rate",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_ho_plot,
+         height_svg = 4)
+} else {
+  
+  cv_ho_plot
+}
+
 
 ```
 
@@ -669,50 +731,55 @@ b25003_data <- read_rds("data/b25003_data.rds")
 
 # Note the download date of data here: 1/23/2023
 
-# lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
-#  mutate(county = "Lynchburg city")
+# Read in downloaded data for Lynchburg rent.
 
-amherst_rent <- read_csv("data/amherst_rent.csv") %>% 
-  mutate(county = "Amherst County")
+ lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+  mutate(county = "Lynchburg city") # Create a field for the locality name.
 
-appomattox_rent <- read_csv("data/appomattox_rent.csv") %>% 
-  mutate(county = "Appomattox County")
-
-bedford_rent <- read_csv("data/bedford_rent.csv") %>% 
-  mutate(county = "Bedford County")
-
-campbell_rent <- read_csv("data/campbell_rent.csv") %>% 
-  mutate(county = "Campbell County")
 
 library(zoo)
 
-local_rent <- rbind(lburg_rent, amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
-  filter(!str_detect(period, "QTD")) %>% 
-  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
+local_rent_plot <- lburg_rent %>% 
+  filter(!str_detect(period, "QTD")) %>% # Remove QTD values.
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>%  # Convert quarter dates to readable dates.
   select(county, period, current, inf) %>% 
-  pivot_longer(3:4,
+  pivot_longer(3:4, # Pivot data to create tabular data.
                names_to = "value",
                values_to = "rent") %>% 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
-    value == "inf" ~ "Inflation-adjusted dollars"
-  ))
+    value == "inf" ~ "Inflation-adjusted dollars"))
 
-ggplot(local_rent,
+local_rent_plot <- ggplot(local_rent,
        aes(x = period,
            y = rent,
-           group = value,
-           color = county)) +
-  geom_line(aes(linetype = value)) + 
-  facet_wrap(~county, nrow = 1) +
+           linetype = value,
+           color = value)) +
+  geom_line(size = 0.5) + 
+  geom_point_interactive(aes(
+    data_id = rent,
+    tooltip = dollar_format()(rent))) +
   scale_linetype_manual(values = c("dotted", "solid")) +
   theme_hfv() +
   scale_color_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "bottom") +
   scale_y_continuous(labels = dollar_format()) +
   labs(title = "Quarterly average rent",
        subtitle = "Market asking rent from 2000 through 2022",
        caption = "**Source:** CoStar Group Inc.")
+  
+
+  
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_rent_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_rent_plot
+}
 
 
 
@@ -734,7 +801,6 @@ ggplot(local_rent,
 
 
 
-
 ```{r}
 #| label: parcel-data
 #| eval: false
@@ -749,6 +815,9 @@ write_rds(parcels, "data/parcels.rds")
 
 
 ```{r}
+#| label: sfr
+
+# The following investigates the number of single-family detached homes that are being utilized as rentals. There is a growing concern over homeownership rates in the city. The current market incentivizes the rental of single-family homes over the sale.
 
 wards <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPStatic/MapServer/62/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE)
 
@@ -757,7 +826,7 @@ parcels <- read_rds("data/parcels.rds")
 residential <- parcels %>%
   clean_names() %>% 
   select(parcel_id, loc_addr, loc_city, loc_zip, owner1, mail_addr, mail_city, mail_stat, mail_zip, pc_desc, yr_built, current_land, current_imp) %>% 
-  filter(str_detect(pc_desc, "RESIDENTIAL")) %>% 
+  filter(str_detect(pc_desc, "DETACHED SNG FAM")) %>% 
   st_join(left = FALSE, wards["Designation"])
 
 library(stringdist)
@@ -788,13 +857,25 @@ res_own <- residential %>%
 sfr <- res_own %>% 
   filter(ownership == "SFR")
 
+hex_grid <- st_make_grid(sfr, n = c(25,25),
+                         what = "polygons", square = FALSE)
+
+hex_grid_sf <- st_sf(hex_grid) %>% 
+  mutate(grid_id = 1:length(lengths(hex_grid)))
+
+hex_grid_sf$n_pts <- lengths(st_intersects(hex_grid_sf, sfr))
+
+hex_count <- filter(hex_grid_sf, n_pts > 4)
+
+library(mapview)
+
+mapview(hex_count,
+        zcol = "n_pts")
+
 sfr_ward <- sfr %>% 
   group_by(Designation) %>% 
   summarise(count = n_distinct(parcel_id))
-         
-leaflet(sfr) %>% 
-  addTiles() %>% 
-  addCircleMarkers(radius = .1)
+
 
 unique(parcels$PCDesc)
 
@@ -816,6 +897,9 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>%
   filter(grepl("lynchburg", city, ignore.case = TRUE))
 
 ```
+
+
+
 ```{r}
 #| label: gap-data
 

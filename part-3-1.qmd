@@ -2004,7 +2004,8 @@ cvpdc_rent <- read_csv("data/cvpdc_rent.csv") %>%
 ggplot(cvpdc_rent,
        aes(x = period,
            y = estimate,
-           linetype = value)) + 
+           linetype = value,
+           color = value)) + 
   geom_line(size = 0.5) +
   geom_point_interactive(
     aes(data_id = estimate,
