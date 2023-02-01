@@ -2311,8 +2311,23 @@ write_rds(cb_9, "data/cb_9.rds")
 cb_9 <- read_rds("data/cb_9.rds") 
 
 cv_cb9 <- cb_9 %>% 
-  group_by(year, race, cost_burden, cb_group) %>% 
+  group_by(year, race, cb_group) %>% 
   summarise(estimate = sum(estimate)) %>% 
-  
+  group_by(year, race) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  filter(cb_group == "Cost-burdened") %>% 
+  group_by(race) %>% 
+  mutate(change = pct - lag(pct)) %>% 
+  drop_na() 
+
+ggplot(cv_cb9,
+       aes(x = year, 
+           y = change,
+           fill = race)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~race, nrow = 1) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_hfv() +
+  theme_hfv()
 
 ```
