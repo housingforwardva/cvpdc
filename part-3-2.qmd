@@ -12,6 +12,7 @@ library(ggiraph)
 library(scales)
 library(ggtext)
 library(tidytext)
+library(janitor)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
 
@@ -27,8 +28,12 @@ cv_names <- list_counties("VA") %>%
 ```{r}
 #| label: pop-2020
 
+# Read in population data and filter for only the counties using the county list.
+
 pop_data <- read_rds("data/pop_data.rds") %>% 
   subset(GEOID %in% cnty)
+
+# Join the data to the names list and clean.
 
 local_pop <- pop_data %>% 
   left_join(cv_names, by = "GEOID") %>% 
@@ -790,6 +795,14 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>%
 cnty_nhpd <- nhpd_subsidies %>% 
   group_by(city, subsidy_name) %>% 
   summarise(units = sum(units))
+
+ggplot(cnty_nhpd,
+       aes(x = city, 
+           y = units,
+           fill = subsidy_name)) +
+  geom_col(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv()
 
 ```
 
