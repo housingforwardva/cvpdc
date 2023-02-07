@@ -1,5 +1,7 @@
 # City of Lynchburg Housing Market Analysis
 
+The following provides an analysis of major trends impacting housing within the City of Lynchburg. 
+
 
 ```{r}
 #| label: setup
@@ -15,6 +17,7 @@ library(ggiraph)
 library(hdatools)
 library(scales)
 library(readxl)
+library(ggtext)
 
 lburg <- "51680"
 
@@ -27,12 +30,18 @@ lburg <- "51680"
 ```{r}
 #| label: pop-2020
 
+# Read in population data and filter for Lynchburg.
+
 pop_data <- read_rds("data/pop_data.rds") %>% 
   subset(GEOID %in% lburg)
+
+# Join to names data frame (just in case) then select only the fields needed.
 
 local_pop <- pop_data %>% 
   left_join(cv_names, by = "GEOID") %>% 
   select(year, counttype, value) 
+
+# Read in projections data to include in visualization and clean the data.
 
 projections <- read_csv("data/uva_proj.csv") %>% 
   subset(FIPS %in% lburg) %>% 
@@ -43,7 +52,11 @@ projections <- read_csv("data/uva_proj.csv") %>%
   mutate(counttype = "Projection") %>% 
   select(year, counttype, value)
 
+# Combine population estimates and projections into single data frame.
+
 lburg_pop <- rbind(local_pop, projections)
+
+# Visualize as colored bar chart. Showing different colors for count type (Census, estimate, and projection).
   
 local_pop_plot <- ggplot(lburg_pop,
        aes(x = year,
@@ -73,6 +86,9 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-local-chg
+
+
+# Read in components of population change data and filter for Lynchburg.
 
 local_change <- read_rds("data/comp_data.rds") %>% 
   filter(NAMELSAD == "Lynchburg city")
@@ -110,8 +126,12 @@ if (knitr::is_html_output()) {
 ```{r}
 #| label: tenure
 
+# Read in household tenure data and filter for Lynchburg.
+
 b25003_data <- read_rds("data/b25003_data.rds") %>% 
   filter(NAME == "Lynchburg city")
+
+# Clean data and calculate cumulative change in households by tenure.
 
 local_tenure <- b25003_data %>%
   select(county = NAME, year, tenure, estimate) %>% 
@@ -124,17 +144,19 @@ local_tenure <- b25003_data %>%
   filter(run_diff != 0) %>% 
   mutate(year = as.character(year))
 
+# Create bar chart visualization that shows the cumulative change from 2010 to 2021.
 
 local_tenure_plot <- ggplot(local_tenure,
        aes(x = year,
            y = run_diff,
            fill = tenure,
            data_id = run_diff,
-           tooltip )) +
+           tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
         legend.position = "bottom") +
   labs(title = "Cumulative change in households by tenure",
@@ -870,14 +892,32 @@ hex_count <- filter(hex_grid_sf, n_pts > 4)
 library(mapview)
 
 mapview(hex_count,
-        zcol = "n_pts")
+        zcol = "n_pts",
+        layer.name = "Estimate")
+
+```
+
+```{r}
+#| label: sfr-ward
 
 sfr_ward <- sfr %>% 
   group_by(Designation) %>% 
-  summarise(count = n_distinct(parcel_id))
+  summarise(count = n_distinct(parcel_id)) %>% 
+  st_drop_geometry()
+
+ggplot(sfr_ward,
+       aes(x = Designation,
+           y = count,
+           fill = Designation,
+           data_id = count,
+           tooltip = number_format(big.mark = ",")(count))) +
+  geom_col(position = "dodge") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Estimate of single-family detached rentals",
+       caption = "**Source:** Lynchburg city parcel data") 
 
 
-unique(parcels$PCDesc)
 
 
 ```
@@ -1020,13 +1060,12 @@ palette <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_uni
 leaflet(hcv) %>% 
   addTiles() %>% 
   addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
-              opacity = 1)
+              fillOpacity = 1)
 
 
 ```
 
 
-## Rental market
 
 ```{r}
 #| label: rprops

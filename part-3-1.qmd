@@ -135,7 +135,8 @@ pop_bar <- ggplot(cv_pop, # Read in the data.
   theme_hfv() + # Apply custom HFV theme.
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
   labs(title = "Total population",
-       subtitle = "From 2010 to 2020") +
+       subtitle = "From 2010 to 2020",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program (PEP).") +
   scale_y_continuous(label = label_comma()) # Format the y-axis to show commas.
 
 # Apply if-else statement to print interactive plot if in html or simply print the visualization static plot if anything else.
@@ -238,7 +239,8 @@ cv_change_plot <- ggplot(cv_change,
   theme_hfv() +
   scale_fill_hfv() + 
   labs(title = "Components of population change",
-       subtitle = "From 2010 to 2021") +
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program (PEP).") +
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
@@ -387,8 +389,8 @@ cv_tenure_plot <- ggplot(cv_tenure,
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
-  labs(title = "Cumulative change in households by tenure",
-       subtitle = "From 2010 to 2021")
+  labs(title = "Cumulative change in households by tenure", 
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
 
 if (knitr::is_html_output()) {
   
@@ -490,7 +492,7 @@ cv_age_plot <- ggplot(cv_age,
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
   labs(title = "Change in households by age and tenure",
-       subtitle = "From 2010 to 2021")
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
 
 if (knitr::is_html_output()) {
   
@@ -584,7 +586,7 @@ cv_hhtype_plot <-ggplot(cv_hhtype,
   scale_y_continuous(labels = label_comma()) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 16)) +
   labs(title = "Change in household type",
-       subtitle = "From 2010 to 2021")
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11001.")
 
 if (knitr::is_html_output()) {
   
@@ -675,7 +677,7 @@ cv_hhsize_plot <- ggplot(cv_hhsize,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Change in household size by tenure",
-       subtitle = "From 2010 to 2021") +
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") +
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
@@ -776,7 +778,6 @@ cv_seniors_plot <- ggplot(cv_seniors,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Change in senior population by living arrangement",
-       subtitle = "2016 to 2020",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.") +
   theme(strip.placement = "outside",
         strip.text.y = element_text(angle = 0),
@@ -871,7 +872,7 @@ cv_subfam_plot <- ggplot(cv_subfam,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Subfamilies by type and presence of own children",
-       subtitle = "From 2010 to 2021") +
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B11013.") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = .2))
 
@@ -2222,6 +2223,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-cb-change
+#| fig-cap: "Change in cost-burdened households by tenure"
 
 
 cb_7 <- read_rds("data/cb_7.rds")
@@ -2306,9 +2308,10 @@ write_rds(cb_9, "data/cb_9.rds")
 ```
 
 ```{r}
-#| label: cb-race
+#| label: fig-cb-race
+#| fig-cap: "Percent of cost-burdened households by race and ethnicity"
 
-cb_9 <- read_rds("data/cb_9.rds") 
+cb_9 <- read_rds("data/cb_9.rds")
 
 cv_cb9 <- cb_9 %>% 
   group_by(year, race, cb_group) %>% 
@@ -2318,16 +2321,35 @@ cv_cb9 <- cb_9 %>%
   filter(cb_group == "Cost-burdened") %>% 
   group_by(race) %>% 
   mutate(change = pct - lag(pct)) %>% 
-  drop_na() 
+  mutate(year = as.character(year))
 
-ggplot(cv_cb9,
+cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = year, 
-           y = change,
-           fill = race)) +
+           y = pct,
+           fill = race,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
   geom_col(position = "dodge") +
-  facet_wrap(~race, nrow = 1) +
+  geom_col_interactive() +
+  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen()) +
   scale_y_continuous(labels = percent_format()) +
   scale_fill_hfv() +
-  theme_hfv()
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.text = element_text(size = 8)) +
+  labs(title = "Cost burden by race and ethnicity",
+       subtitle = "Percent of cost-burdened households",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb9_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_cb9_plot
+  
+}
 
 ```
