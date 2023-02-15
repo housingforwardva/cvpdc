@@ -43,6 +43,8 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 ## Population trends
 
+From 2010 to 2020, the Lynchburg region only grew by six percent, an increase of just over 15,000 people. This slow but steady growth across the last decade was punctuated by a slight decrease in population between 2019 and 2020. 
+
 ```{r}
 #| label: pop-data
 #| eval: false
@@ -1963,6 +1965,69 @@ if (knitr::is_html_output()) {
 
 # Utilize Lynchburg MLS data. Need median sales price for the entire region from 2000 to 2022 or at least 2010. Monthly median sales price is preferred.
 
+cv_price <- read_excel("data/cv_mls_data.xlsx", sheet = "Median Sales Price By Month") %>% 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  filter(Property_Type == "RESI") %>% 
+  mutate(price = as.numeric(Median_Sales_Price)) %>% 
+  select(date, price)
+
+library(FredR)
+library(dotenv)
+
+load_dot_env()
+
+
+fred <- FredR(api.key = Sys.getenv("api.key"))
+
+cpi_ls <- fred$series.observations(series_id = 'CUUR0000SA0L2') %>% 
+  select(date, value) %>% 
+  mutate(date = as.Date(date)) %>% 
+  mutate(value = as.numeric(value))
+
+cv_price_adj <- cv_price %>% 
+  left_join(cpi_ls, by = "date") %>% 
+  transform(price_adj = ((272.711/value)*price)) %>% 
+  select(date, price, price_adj) %>% 
+  pivot_longer(2:3,
+               names_to = "type",
+               values_to = "price") %>% 
+  mutate(type = case_when(
+    type == "price" ~ "Current dollars",
+    type == "price_adj" ~ "Inflation-adjusted dollars"
+  ))
+  
+
+cv_price_plot <- ggplot(cv_price_adj,
+       aes(x = date,
+           y = price,
+           color = type)) +
+  geom_line(size = 1) +
+  geom_point_interactive(
+    aes(data_id = price,
+        tooltip = dollar_format()(price)),
+    size = 2) +
+  theme_hfv() +
+  scale_color_hfv() +
+  scale_y_continuous(labels = dollar_format()) +
+  geom_smooth(method = lm, col = "#B1005F") +
+  labs(title = "Median residential sales price",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)") +
+  theme(legend.position = "bottom")
+
+  
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_price_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_price_plot
+  
+}
 
 
 ```
@@ -1973,13 +2038,49 @@ if (knitr::is_html_output()) {
 
 # Utilzie Lynchburg MLS data. Need mumber of closed sales for the entire region from 2000 to 2022 or at least 2010. Monthly number is preferred.
 
+cv_sold <- read_excel("data/cv_mls_data.xlsx", sheet = "Number Sold Per Month") %>% 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  filter(Property_Type == "RESI") %>% 
+  mutate(count = as.numeric(Quantity)) %>% 
+  select(date, count)
+
+ggplot(cv_sold,
+       aes(x = date,
+           y = count,
+           fill = count)) +
+  geom_col() +
+  theme_hfv() + 
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Number of closed sales",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
+  
+
 
 ```
 
 ```{r}
-#| label: fig-mls-ratio
+#| label: fig-mls-dom
 
-# Utilize Lynchburg MLS data. Need close-to-list ratio for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
+# Utilize Lynchburg MLS data. Need days on market for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
+
+cv_dom <- read_excel("data/cv_mls_data.xlsx", sheet = "Average DOM Per Month") %>% 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  filter(Property_Type == "RESI") %>% 
+  mutate(dom = as.numeric(`Average DOM`)) %>% 
+  select(date, dom)
+
+
+ggplot(cv_dom,
+       aes(x = date,
+           y = dom,
+           fill = dom)) +
+  geom_col() +
+  theme_hfv() + 
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Average days on market",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
 
 ```
 
