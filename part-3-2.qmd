@@ -48,8 +48,11 @@ local_pop <- pop_data %>%
 local_pop_plot <- ggplot(local_pop,
        aes(x = reorder(county, -value),
            y = value,
-           fill = county)) +
+           fill = county,
+           data_id = value,
+           tooltip = label_number(big.mark = ",")(value))) +
   geom_col() +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "2020 Census population",
@@ -67,7 +70,6 @@ if (knitr::is_html_output()) {
   
 }
 
-
 ```
 
 ```{r}
@@ -75,8 +77,11 @@ if (knitr::is_html_output()) {
 local_growth_plot <- ggplot(local_pop,
        aes(x = reorder(county, -pchg),
            y = pchg,
-           fill = county)) +
+           fill = county,
+           data_id = pchg,
+           tooltip = percent_format()(pchg))) +
   geom_col() +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = percent_format(), limits = c(-.05, .2)) +
@@ -109,8 +114,11 @@ local_change <- read_rds("data/comp_data.rds") %>%
 local_change_plot <- ggplot(local_change,
        aes(x = year, 
            y = value,
-           fill = component)) +
+           fill = component,
+           data_id = value,
+           tooltip = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")(value))) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   facet_wrap(~NAMELSAD, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -144,8 +152,13 @@ projections <- read_csv("data/uva_proj.csv") %>%
 local_proj_plot <- ggplot(projections,
        aes(x = reorder(NAME, -Difference),
            y = Difference,
-           fill = NAME)) +
+           fill = NAME,
+           data_id = Difference,
+           tooltip = label_number(big.mark = ",",
+                                  style_positive = "plus",
+                                  style_negative = "minus")(Difference))) +
   geom_col() +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Projected growth",
@@ -191,7 +204,8 @@ local_tenure_plot <- ggplot(local_tenure,
            y = run_diff,
            fill = tenure,
            data_id = run_diff,
-           tooltip )) +
+           tooltip = label_number(big.mark = ",", style_positive = "plus",
+                                  style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
