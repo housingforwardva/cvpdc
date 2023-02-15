@@ -2045,15 +2045,28 @@ cv_sold <- read_excel("data/cv_mls_data.xlsx", sheet = "Number Sold Per Month") 
   mutate(count = as.numeric(Quantity)) %>% 
   select(date, count)
 
-ggplot(cv_sold,
+cv_sold_plot <- ggplot(cv_sold,
        aes(x = date,
            y = count,
-           fill = count)) +
+           fill = count,
+           data_id = count,
+           tooltip = label_number(big.mark = ",")(count))) +
   geom_col() +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
   labs(title = "Number of closed sales",
        caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_sold_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_sold_plot
+  
+}
   
 
 
@@ -2072,7 +2085,7 @@ cv_dom <- read_excel("data/cv_mls_data.xlsx", sheet = "Average DOM Per Month") %
   select(date, dom)
 
 
-ggplot(cv_dom,
+cv_dom_plot <- ggplot(cv_dom,
        aes(x = date,
            y = dom,
            fill = dom)) +
@@ -2081,6 +2094,17 @@ ggplot(cv_dom,
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
   labs(title = "Average days on market",
        caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_dom_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_dom_plot
+  
+}
 
 ```
 
@@ -2103,7 +2127,7 @@ cvpdc_rent <- read_csv("data/cvpdc_rent.csv") %>%
                values_to = "estimate") %>% 
   arrange(desc(value))
 
-ggplot(cvpdc_rent,
+cvpdc_rent_plot <- ggplot(cvpdc_rent,
        aes(x = period,
            y = estimate,
            linetype = value,
@@ -2118,7 +2142,19 @@ ggplot(cvpdc_rent,
   theme_hfv() +
   scale_color_hfv() +
   theme(legend.position = "bottom") + 
-  labs(title = "Average quarterly market asking rent")
+  labs(title = "Average quarterly market asking rent",
+       caption = "**Source:** CoStar Group, Inc.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cvpdc_rent_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cvpdc_rent_plot
+  
+}
 
 
 
@@ -2138,13 +2174,31 @@ cvpdc_vacancy <- read_csv("data/cvpdc_vacancy.csv") %>%
   filter(!str_detect(period, "QTD")) %>% 
   mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1))
 
-ggplot(cvpdc_vacancy,
+cvpdc_vacancy_plot <- ggplot(cvpdc_vacancy,
        aes(x = period,
-           y = vacancy)) +
+           y = vacancy,
+           color = vacancy)) +
   geom_line(size = 1) +
   theme_hfv() +
   scale_color_hfv() +
-  labs(title = "Rental vacancy rate")
+  geom_point_interactive(
+    aes(data_id = vacancy,
+        tooltip = percent_format()(vacancy))) +
+      scale_y_continuous(labels = percent_format()) +
+  labs(title = "Rental vacancy rate",
+       caption = "**Source:** CoStar Group, Inc.") + 
+  scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) 
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cvpdc_vacancy_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cvpdc_vacancy_plot
+  
+}
 
 
 ```

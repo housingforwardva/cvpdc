@@ -38,13 +38,21 @@ book:
     - part: "Appendix"
 
 knitr:
-  opts_chunk:
+  opts_chunk: 
     echo: false
     warning: false
     message: false
 
 format:
   html:
-    theme: lumen
+    theme:
+      - lumen
+    fontsize: "100%"
   pdf:
     documentclass: scrreprt
+    mainfont: "Noto Sans"
+    fig-pos: "H"
+    include-in-header:
+      text: |
+        \usepackage{float}
+        \raggedbottom
