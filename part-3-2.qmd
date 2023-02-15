@@ -275,6 +275,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: type
+#| eval: false
 
 b11001_data <- read_rds("data/b11001_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -308,6 +309,7 @@ local_size_plot <- ggplot(local_size,
            data_id = run_diff,
            tooltip )) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -355,6 +357,7 @@ local_senior_plot <- ggplot(local_senior,
                                 data_id = change,
                                 tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(change))) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) + 
@@ -410,7 +413,7 @@ local_sub_plot <- ggplot(local_sub,
   facet_wrap(children~subfamily) +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(legend.position = "right",
         axis.text.x = element_blank()) +
   labs(title = "Change in families living with others",
@@ -507,20 +510,20 @@ local_dist_plot <- ggplot(local_dist,
            data_id = estimate,
            tooltip = label_comma()(estimate))) +
   geom_col(position = "dodge") +
-  geom_col_interactive() +
+  geom_col_interactive(size = 1) +
   facet_grid(tenure~county) +
   scale_fill_hfv() +
   theme_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Income distribution",
-       subtitle = "In 2021",
+  labs(title = "Income distribution in 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") 
 
 if (knitr::is_html_output()) {
   
   girafe(ggobj = local_dist_plot,
          height_svg = 4)
+  
 } else {
   
   local_dist_plot
@@ -592,7 +595,7 @@ local_rinc_plot <- ggplot(local_rinc,
            data_id = cdollars,
            tooltip = dollar_format()(cdollars))) +
   geom_col(position = "dodge") +
-  geom_col_interactive() +
+  geom_col_interactive(size = 1) +
   theme_hfv() +
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
@@ -643,6 +646,7 @@ local_str_plot <- ggplot(local_str,
            y = pct,
            fill = county)) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   facet_wrap(~tenure, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() + 
@@ -674,7 +678,6 @@ if (knitr::is_html_output()) {
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
   filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL"))
-
 
 
 ```
