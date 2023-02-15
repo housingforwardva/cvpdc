@@ -18,6 +18,7 @@ library(hdatools)
 library(scales)
 library(readxl)
 library(ggtext)
+library(tidytext)
 
 lburg <- "51680"
 
@@ -38,7 +39,6 @@ pop_data <- read_rds("data/pop_data.rds") %>%
 # Join to names data frame (just in case) then select only the fields needed.
 
 local_pop <- pop_data %>% 
-  left_join(cv_names, by = "GEOID") %>% 
   select(year, counttype, value) 
 
 # Read in projections data to include in visualization and clean the data.
@@ -72,7 +72,7 @@ local_pop_plot <- ggplot(lburg_pop,
 
 if (knitr::is_html_output()) {
   
-  girage(ggobj = local_pop_plot,
+  girafe(ggobj = local_pop_plot,
          height_svg = 4)
   
 } else {
@@ -711,17 +711,17 @@ ho_rate <- b25003_data %>%
   mutate(pct = estimate/sum(estimate)) %>%  
   filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
 
-cv_ho_plot <- ggplot(cv_ho,
+cv_ho_plot <- ggplot(ho_rate,
        aes(x = year, 
            y = pct)) +
   geom_line(size = 0.5) +
   geom_point_interactive(
-    aes(data_id = estimate,
-        tooltip = dollar_format()(estimate)),
+    aes(data_id = pct,
+        tooltip = percent_format()(pct)),
     size = 1) +
   theme_hfv() +
   scale_color_hfv() +
-  scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
+  scale_y_continuous(labels = percent_format()) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
   labs(title = "Homeownership rate",
        subtitle = "From 2010 to 2021",
@@ -760,8 +760,9 @@ if (knitr::is_html_output()) {
 
 
 library(zoo)
+library(lubridate)
 
-local_rent_plot <- lburg_rent %>% 
+local_rent <- lburg_rent %>% 
   filter(!str_detect(period, "QTD")) %>% # Remove QTD values.
   mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>%  # Convert quarter dates to readable dates.
   select(county, period, current, inf) %>% 
@@ -770,7 +771,10 @@ local_rent_plot <- lburg_rent %>%
                values_to = "rent") %>% 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
-    value == "inf" ~ "Inflation-adjusted dollars"))
+    value == "inf" ~ "Inflation-adjusted dollars")) %>% 
+  mutate(year = year(period)) %>% 
+  filter(year >= 2015)
+  
 
 local_rent_plot <- ggplot(local_rent,
        aes(x = period,
@@ -788,7 +792,6 @@ local_rent_plot <- ggplot(local_rent,
         legend.position = "bottom") +
   scale_y_continuous(labels = dollar_format()) +
   labs(title = "Quarterly average rent",
-       subtitle = "Market asking rent from 2000 through 2022",
        caption = "**Source:** CoStar Group Inc.")
   
 
@@ -801,6 +804,7 @@ if (knitr::is_html_output()) {
 } else {
   
   local_rent_plot
+  
 }
 
 
@@ -1079,7 +1083,7 @@ leaflet(hcv) %>%
 
 
 ```{r}
-#| label: rent
+#| label: costar-rent
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
 

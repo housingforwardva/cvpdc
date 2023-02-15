@@ -13,6 +13,7 @@ library(scales)
 library(ggtext)
 library(tidytext)
 library(janitor)
+library(sf)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
 
@@ -57,7 +58,7 @@ local_pop_plot <- ggplot(local_pop,
 
 if (knitr::is_html_output()) {
   
-  girage(ggobj = local_pop_plot,
+  girafe(ggobj = local_pop_plot,
          height_svg = 4)
   
 } else {
@@ -338,7 +339,7 @@ local_senior_plot <- ggplot(local_senior,
                                 y = change,
                                 fill = county,
                                 data_id = change,
-                                tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))) +
+                                tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(change))) +
   geom_col(position = "dodge") +
   theme_hfv() +
   scale_fill_hfv() +
@@ -697,7 +698,45 @@ cv_cbps <- read_rds("data/cv_cbps.rds")
 ```{r}
 #| label: ho
 
-b25003_data <- read_rds("data/b25003_data.rds") 
+b25003_data <- read_rds("data/b25003_data.rds") %>% 
+  filter(NAME != "Lynchburg city") %>% 
+  group_by(NAME, year, tenure) %>% 
+  summarise(estimate = sum(estimate))
+
+local_ho <- b25003_data %>% 
+  group_by(NAME, year) %>% 
+  mutate(pct = estimate/sum(estimate)) %>%  
+  filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
+
+local_ho_plot <- ggplot(local_ho,
+       aes(x = year, 
+           y = pct,
+           group = 1,
+           color = NAME)) +
+  geom_line(size = 0.5) +
+  geom_point_interactive(
+    aes(data_id = pct,
+        tooltip = percent_format()(pct)),
+    size = 1) +
+  theme_hfv() +
+  scale_color_hfv() +
+  facet_wrap(~NAME, nrow = 1) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
+  labs(title = "Homeownership rate",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_ho_plot,
+         height_svg = 4)
+} else {
+  
+  local_ho_plot
+  
+}
+
 
 ```
 
@@ -732,7 +771,7 @@ campbell_rent <- read_csv("data/campbell_rent.csv") %>%
 
 library(zoo)
 
-local_rent <- rbind(lburg_rent, amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
+local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
   filter(!str_detect(period, "QTD")) %>% 
   mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
   select(county, period, current, inf) %>% 

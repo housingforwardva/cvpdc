@@ -592,11 +592,11 @@ cv_hhtype_plot <-ggplot(cv_hhtype,
 
 if (knitr::is_html_output()) {
   
-  girafe(ggobj = cv_tenure_plot,
+  girafe(ggobj = cv_hhtype_plot,
          height_svg = 4)
 } else {
   
-  cv_tenure_plot
+  cv_hhtype_plot
 }
 
 ```
@@ -674,7 +674,7 @@ cv_hhsize_plot <- ggplot(cv_hhsize,
            data_id = change,
            tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(change))) +
   geom_col() +
-  geom_col_interactive(size = 2)
+  geom_col_interactive(size = 2) +
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -1938,8 +1938,8 @@ cv_ho_plot <- ggplot(cv_ho,
            y = pct)) +
   geom_line(size = 0.5) +
   geom_point_interactive(
-    aes(data_id = estimate,
-        tooltip = dollar_format()(estimate)),
+    aes(data_id = pct,
+        tooltip = percent_format()(pct)),
     size = 1) +
   theme_hfv() +
   scale_color_hfv() +
@@ -2207,6 +2207,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: cb-data
+#| eval: false
 
 years <- 2012:2019
 

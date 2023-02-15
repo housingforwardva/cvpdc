@@ -20,7 +20,7 @@ book:
       chapters:
         - part-1-1.qmd # Introduction
         - part-1-2.qmd # Background research
-      - part: "PART 2: Engagement summary"
+    - part: "PART 2: Engagement summary"
       chapters:
         - part-2-1.qmd # Methods and themes
     - part: "Part 3: Findings"
