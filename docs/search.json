@@ -81,7 +81,7 @@
     "href": "part-3-2.html#household-trends",
     "title": "6  County Housing Market Assessment",
     "section": "6.3 Household trends",
-    "text": "6.3 Household trends\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nList of 5\n $ axis.text.x    : list()\n  ..- attr(*, \"class\")= chr [1:2] \"element_blank\" \"element\"\n $ legend.position: chr \"right\"\n $ title          : chr \"Change in families living with others\"\n $ subtitle       : chr \"From 2010 to 2021\"\n $ caption        : chr \"**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.\"\n - attr(*, \"class\")= chr [1:2] \"theme\" \"gg\"\n - attr(*, \"complete\")= logi FALSE\n - attr(*, \"validate\")= logi TRUE"
+    "text": "6.3 Household trends"
   },
   {
     "objectID": "part-3-2.html#economic-trends",
