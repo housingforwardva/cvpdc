@@ -707,7 +707,21 @@ ggplot(cv_mhc,
 ```{r}
 #| label: bps
 
-cv_cbps <- read_rds("data/cv_cbps.rds")
+cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
+  filter(NAMELSAD != "Lynchburg city")
+
+ggplot(cv_cbps,
+       aes(x = year,
+           y = units,
+           fill = type,
+           data_id = units,
+           tooltip = units)) +
+  geom_col(position = "stack") +
+  geom_col_interactive() +
+  facet_wrap(~NAMELSAD) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Residential building permits by type")
 
 ```
 
@@ -788,6 +802,7 @@ campbell_rent <- read_csv("data/campbell_rent.csv") %>%
   mutate(county = "Campbell County")
 
 library(zoo)
+library(lubridate)
 
 local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
   filter(!str_detect(period, "QTD")) %>% 
@@ -799,14 +814,21 @@ local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
     value == "inf" ~ "Inflation-adjusted dollars"
-  ))
+  )) %>% 
+  filter(value == "Inflation-adjusted dollars") %>% 
+  mutate(year = year(period)) %>% 
+  filter(year >= 2015)
 
-ggplot(local_rent,
+local_rent_plot <- ggplot(local_rent,
        aes(x = period,
            y = rent,
            group = value,
-           color = county)) +
-  geom_line(aes(linetype = value)) + 
+           color = county,
+           data_id = rent,
+           tooltip = dollar_format()(rent)
+           )) +
+  geom_line() + 
+  geom_point_interactive(size = 1) +
   facet_wrap(~county, nrow = 1) +
   scale_linetype_manual(values = c("dotted", "solid")) +
   theme_hfv() +
@@ -817,7 +839,16 @@ ggplot(local_rent,
        subtitle = "Market asking rent from 2000 through 2022",
        caption = "**Source:** CoStar Group Inc.")
 
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_rent_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_rent_plot
+  
+}
 
 ```
 
@@ -846,20 +877,39 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>%
            grepl("bedford", city, ignore.case = TRUE) |
            grepl("campbell", city, ignore.case = TRUE) |
            grepl("appomattox", city, ignore.case = TRUE)) %>% 
-  select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude)
+  select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude) %>% 
+  mutate(city = str_to_title(city))
 
 
 cnty_nhpd <- nhpd_subsidies %>% 
   group_by(city, subsidy_name) %>% 
   summarise(units = sum(units))
 
-ggplot(cnty_nhpd,
+cnty_nhpd_plot <- ggplot(cnty_nhpd,
        aes(x = city, 
            y = units,
-           fill = subsidy_name)) +
+           fill = subsidy_name,
+           data_id = units,
+           tooltip = units)) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   theme_hfv() +
-  scale_fill_hfv()
+  scale_fill_hfv() +
+  labs(title= "Federally-assisted rental homes",
+       caption = "**Source:** National Housing Preservation Database (NHPD).") +
+  theme(legend.position = "right")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cnty_nhpd_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cnty_nhpd_plot
+  
+}
 
 ```
 

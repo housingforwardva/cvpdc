@@ -581,11 +581,14 @@ cv_hhtype <- b11001_data %>%
 cv_hhtype_plot <-ggplot(cv_hhtype,
        aes(x = reorder(hhtype, change),
            y = change,
-           fill = hhtype)) +
-  geom_col() +
+           fill = hhtype,
+           data_id = change,
+           tooltip = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")(change))) +
+  geom_col() + 
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(labels = label_comma()) + 
+  scale_y_continuous(labels = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 16)) +
   labs(title = "Change in household type",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11001.")
@@ -775,6 +778,7 @@ cv_seniors_plot <- ggplot(cv_seniors,
            data_id = change,
            tooltip = label_comma()(change))) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
   scale_y_reordered() +
   theme_hfv() +
@@ -870,6 +874,7 @@ cv_subfam_plot <- ggplot(cv_subfam,
            data_id = estimate,
            tooltip = label_comma()(estimate))) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   facet_wrap(~subfamily) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -882,6 +887,7 @@ if (knitr::is_html_output()) {
   
   girafe(ggobj = cv_subfam_plot,
          height_svg = 4)
+  
 } else {
   
   cv_subfam_plot
@@ -1896,7 +1902,8 @@ cv_cbps_plot <- ggplot(cv_cbps,
   scale_fill_hfv() +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "New residential building permits",
-       subtitle = "From 2000 through November 2022")
+       subtitle = "From 2000 through November 2022") +
+  theme(legend.position = "right")
 
 if (knitr::is_html_output()) {
   
@@ -1945,8 +1952,7 @@ cv_ho_plot <- ggplot(cv_ho,
   scale_color_hfv() +
   scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
-  labs(title = "Homeownership rate",
-       subtitle = "From 2010 to 2021",
+  labs(title = "Regional homeownership rate",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
 
 if (knitr::is_html_output()) {
@@ -2119,13 +2125,21 @@ if (knitr::is_html_output()) {
 
 # Note the download date of data here: 1/1/2023
 
+library(lubridate)
+
 cvpdc_rent <- read_csv("data/cvpdc_rent.csv") %>%
   filter(!str_detect(period, "QTD")) %>% 
   mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
   pivot_longer(2:3,
                names_to = "value",
                values_to = "estimate") %>% 
-  arrange(desc(value))
+  arrange(desc(value)) %>% 
+  mutate(year = year(period)) %>% 
+  filter(year >= 2010) %>% 
+  mutate(value = case_when(
+    value == "current" ~ "Current dollars",
+    value == "infl_adj" ~ "Inflation-adjusted dollars"
+  ))
 
 cvpdc_rent_plot <- ggplot(cvpdc_rent,
        aes(x = period,
@@ -2137,7 +2151,7 @@ cvpdc_rent_plot <- ggplot(cvpdc_rent,
     aes(data_id = estimate,
         tooltip = dollar_format()(estimate)),
     size = 1) +
-  scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) +
+  scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) + 
   scale_linetype_manual(values = c(2,1)) +
   theme_hfv() +
   scale_color_hfv() +
