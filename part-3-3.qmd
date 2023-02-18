@@ -423,7 +423,7 @@ local_achild_plot <- ggplot(local_achild,
 
 if (knitr::is_html_output()) {
   
-  girafe(local_achild_plot,
+  girafe(ggobj = local_achild_plot,
          height_svg = 4)
   
 } else {
