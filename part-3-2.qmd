@@ -27,7 +27,8 @@ cv_names <- list_counties("VA") %>%
 ## Population trends
 
 ```{r}
-#| label: pop-2020
+#| label: fig-localpop
+#| fig-cap: "2020 Census population by county"
 
 # Read in population data and filter for only the counties using the county list.
 
@@ -73,6 +74,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
+#| label: fig-local-pchg
+#| fig-cap: "Population growth by county"
 
 local_growth_plot <- ggplot(local_pop,
        aes(x = reorder(county, -pchg),
@@ -100,11 +103,11 @@ if (knitr::is_html_output()) {
   
 }
 
-
 ```
 
 ```{r}
 #| label: fig-local-chg
+#| fig-cap: "Components of population change by county"
 
 local_change <- read_rds("data/comp_data.rds") %>% 
   filter(NAMELSAD != "Lynchburg city")
@@ -142,7 +145,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: fig-projections
+#| label: fig-localproj
+#| fig-cap: "Projected population growth 2030 to 2050 by county"
 
 
 projections <- read_csv("data/uva_proj.csv") %>% 
@@ -182,7 +186,8 @@ if (knitr::is_html_output()) {
 ## Household trends
 
 ```{r}
-#| label: tenure
+#| label: fig-localtenure
+#| fig-cap: "Local cumulative change in households by tenure"
 
 b25003_data <- read_rds("data/b25003_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -231,7 +236,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: age
+#| label: fig-localage
+#| fig-cap: "Local percent of households by age and tenure"
 
 b25007_data <- read_rds("data/b25007_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -284,7 +290,8 @@ b11001_data <- read_rds("data/b11001_data.rds") %>%
 ```
 
 ```{r}
-#| label: size
+#| label: fig-localsize
+#| fig-cap: "Local cumulative change in households by size and tenure"
 
 b25009_data <- read_rds("data/b25009_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -316,7 +323,8 @@ local_size_plot <- ggplot(local_size,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
   labs(title = "Cumulative change in households by size and tenure",
        subtitle = "From 2010 to 2021",
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.")
+       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") + 
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus"))
 
 if (knitr::is_html_output()) {
   
@@ -333,7 +341,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: senior
+#| label: fig-localsenior
+#| fig-cap: "Local change in senior population living alone"
 
 b09020_data <- read_rds("data/b09020_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -381,7 +390,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: subfam
+#| label: fig-localsubfam
+#| fig-cap: "Local change in families living with others"
 
 b11013_data <- read_rds("data/b11013_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -436,7 +446,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: achild
+#| label: fig-localachild
+#| fig-cap: "Local cumulative change in adult children living with parents"
 
 b09021_data <- read_rds("data/b09021_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -484,7 +495,8 @@ if (knitr::is_html_output()) {
 ## Economic trends
 
 ```{r}
-#| label: inc-distribution
+#| label: fig-localinc-distribution
+#| fig-cap: "Local income distribution by tenure"
 
 b25118_data <- read_rds("data/b25118_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -529,7 +541,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: med-inc
+#| label: fig-med-inc
+#| fig-cap: "Local median household income by tenure"
 
 b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
   filter(NAME != "Lynchburg city, Virginia")
@@ -573,7 +586,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: race-inc
+#| label: fig-localrace-inc
+#| fig-cap: "Local median household income by race and ethnicity"
 
 b19013_data <- read_rds("data/b19013_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -620,7 +634,8 @@ if (knitr::is_html_output()){
 ## Housing stock
 
 ```{r}
-#| label: structure
+#| label: fig-localstructure
+#| fig-cap: "Distribution of house stock in the region"
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
@@ -671,6 +686,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: mhc
+#| eval: false
 
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
@@ -683,6 +699,7 @@ write_rds(mhc, "data/mhc_cnty.rds")
 
 ```{r}
 #| label: fig-mhc-county
+#| fig-cap: "Local manufactured home communities by size"
 
 mhc <- read_rds("data/mhc_cnty.rds")
 
@@ -692,24 +709,40 @@ cv_mhc <- mhc  %>%
   st_drop_geometry() %>% 
   mutate(COUNTY = str_to_sentence(COUNTY))
 
-ggplot(cv_mhc,
+cv_mhc_plot <- ggplot(cv_mhc,
        aes(x = reorder(COUNTY,count),
            y = count,
            fill = SIZE)) +
   geom_col(position = "stack") +
   theme_hfv() +
-  scale_fill_hfv()
+  scale_fill_hfv() +
+  labs(title = "Manfactured home communities by size",
+       caption = "**Source:** U.S. Department of Homeland Security, Homeland Infrastructure Foundation-Level Data (HIFLD).") +
+  theme(legend.position = "right")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_mhc_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_mhc_plot
+  
+}
 
 
 ```
 
 ```{r}
-#| label: bps
+#| label: fig-localbps
+#| fig-cap: "Local esidential building permits by type"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
   filter(NAMELSAD != "Lynchburg city")
 
-ggplot(cv_cbps,
+cv_cbps_plot <- ggplot(cv_cbps,
        aes(x = year,
            y = units,
            fill = type,
@@ -720,14 +753,27 @@ ggplot(cv_cbps,
   facet_wrap(~NAMELSAD) +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "Residential building permits by type")
+  labs(title = "Residential building permits by type",
+       caption = "**Source:** U.S. Census Bureau, Building Permits Survey.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cbps_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_cbps_plot
+  
+}
 
 ```
 
 ## Homeownership market
 
 ```{r}
-#| label: ho
+#| label: fig-localho
+#| fig-cap: "Local homeownership rates"
 
 b25003_data <- read_rds("data/b25003_data.rds") %>% 
   filter(NAME != "Lynchburg city") %>% 
@@ -775,7 +821,8 @@ if (knitr::is_html_output()) {
 ## Rental market
 
 ```{r}
-#| label: rent
+#| label: fig-localrent
+#| fig-cap: "Local quarterly average market asking rents"
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All. Combine Bedford City and Bedford County.
 
@@ -867,7 +914,8 @@ if (knitr::is_html_output()) {
 
 
 ```{r}
-#| label: nhpd
+#| label: fig-nhpd
+#| fig-cap: "Federally assisted rental homes by county"
 
 nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
   clean_names() %>% 
@@ -912,6 +960,96 @@ if (knitr::is_html_output()) {
 
 ```
 
+```{r}
+#| label: fig-cb-tenure
+#| fig-cap: "Local cost burden by tenure"
+
+cb_tenure <- read_rds("data/cb_7.rds") %>% 
+  subset(fips %in% cnty) %>% 
+  filter(cb_group == "Cost-burdened") %>% 
+  group_by(year, county, tenure, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(county, tenure) |> 
+  mutate(change = estimate - lag(estimate)) |> 
+  drop_na() |> 
+  mutate(run_diff = cumsum(change))
+
+cb_diff <- ggplot(cb_tenure,
+       aes(x = year, 
+           y = run_diff, 
+           fill = tenure,
+           data_id = run_diff,
+           tooltip = run_diff)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  facet_wrap(~county, nrow = 1) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Cumulative change in cost-burdened households by tenure",
+       subtitle = "2012 to 2019",
+       fill = "Tenure",
+       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  theme(legend.position = "right") +
+  add_zero_line(axis = "y")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cb_diff,
+         height_svg = 4) 
+  
+} else {
+  
+  cb_diff
+  
+  }
+  
 
 
 
+
+```
+```{r}
+
+cb_9 <- read_rds("data/cb_9.rds")
+
+cv_cb9 <- cb_9 %>% 
+  subset(fips %in% cnty) %>% 
+  group_by(year, county, race, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year, county, race) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  filter(cb_group == "Cost-burdened")
+
+cv_cb9_plot <- ggplot(cv_cb9,
+       aes(x = year, 
+           y = pct,
+           fill = race,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col(position = "stack") +
+  geom_col_interactive() +
+  facet_grid(race~county, labeller = label_wrap_gen()) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.text = element_text(size = 8)) +
+  labs(title = "Cost burden by race and ethnicity",
+       subtitle = "Percent of cost-burdened households",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb9_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_cb9_plot
+  
+}
+
+
+```

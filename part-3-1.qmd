@@ -219,6 +219,8 @@ write_rds(cv_comp_change, "data/comp_data.rds")
 ```
 
 ```{r}
+#| label: fig-pchange
+#| fig-cap: "Regional components of population change"
 
 # Read in saved data. 
 
@@ -259,6 +261,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-projections
+#| fig-cap: "Regional population projections"
 
 # Read in saved UVA Projections data.
 
@@ -361,6 +364,7 @@ write_rds(b25003_data, "data/b25003_data.rds")
 
 ```{r}
 #| label: fig-tenure
+#| fig-cap: "Regional change in household tenure"
 
 # Read in saved data. 
 
@@ -463,6 +467,7 @@ write_rds(b25007_data, "data/b25007_data.rds")
 
 ```{r}
 #| label: fig-age
+#| fig-cap: "Regional change in households by age and tenure"
 
 b25007_data <- read_rds("data/b25007_data.rds")
 
@@ -500,6 +505,7 @@ if (knitr::is_html_output()) {
   
   girafe(ggobj = cv_age_plot,
          height_svg = 4)
+  
 } else {
   
   cv_age_plot
@@ -566,6 +572,7 @@ write_rds(b11001_data, "data/b11001_data.rds")
 
 ```{r}
 #| label: fig-hhtype
+#| fig-cap: "Regional change in households by type"
 
 b11001_data <- read_rds("data/b11001_data.rds")
 
@@ -658,6 +665,7 @@ write_rds(b25009_data, "data/b25009_data.rds")
 
 ```{r}
 #| label: fig-hhsize
+#| fig-cap: "Regional change in households by size and tenure"
 
 b25009_data <- read_rds("data/b25009_data.rds")
 
@@ -758,6 +766,7 @@ write_rds(b09020_data, "data/b09020_data.rds")
 
 ```{r}
 #| label: fig-seniors
+#| fig-cap: "Regional change in senior population"
 
 b09020_data <- read_rds("data/b09020_data.rds")
 
@@ -859,6 +868,7 @@ write_rds(b11013_data, "data/b11013_data.rds")
 
 ```{r}
 #| label: fig-subfam
+#| fig-cap: "Regional change in families living with others"
 
 b11013_data <- read_rds("data/b11013_data.rds") 
 
@@ -994,6 +1004,7 @@ write_rds(multigen_data, "data/multigen_data.rds")
 
 ```{r}
 #| label: fig-multigen
+#| fig-cap: "Regional percentage of multigenerational households"
 
 multigen_data <- read_rds("data/multigen_data.rds")
 
@@ -1023,6 +1034,7 @@ if (knitr::is_html_output()) {
   
   girafe(ggobj = multigen_plot,
          height_svg = 4)
+  
 } else {
   
   multigen_plot
@@ -1080,6 +1092,7 @@ write_rds(b09021_data, "data/b09021_data.rds")
 
 ```{r}
 #| label: fig-adultchild
+#| fig-cap: "Regional change in young adult population by living arrangement"
 
 b09021_data <- read_rds("data/b09021_data.rds") 
 
@@ -1179,6 +1192,8 @@ write_rds(b25118_data, "data/b25118_data.rds")
 ```
 
 ```{r}
+#| label: fig-incdist
+#| fig-cap: "Regional income distribution by tenure"
 
 b25118_data <- read_rds("data/b25118_data.rds") 
 
@@ -1283,6 +1298,8 @@ write_rds(b25119_cpi_msa, "data/b25119_cpi_msa.rds")
 ```
 
 ```{r}
+#| label: fig-medinc
+#| fig-cap: "Regional median household income by tenure"
 
 b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") %>% 
   pivot_longer(4:5,
@@ -1451,6 +1468,7 @@ write_rds(b19013_msa, "data/b19013_msa.rds")
 
 ```{r}
 #| label: fig-inc-race-msa
+#| fig-cap: "Regional median household income by race and ethnicity"
 
 b19013_msa <- read_rds("data/b19013_msa.rds") %>% 
   select(NAME, year, race, cdollars = estimate, dollars21) %>% 
@@ -1625,6 +1643,7 @@ write_rds(b25127_data, "data/b25127_data.rds")
 
 ```{r}
 #| label: fig-structure
+#| fig-cap: "Regional housing stock by structure type"
 
 b25127_data <- read_rds("data/b25127_data.rds")
 
@@ -1666,6 +1685,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-yrbuilt
+#| fig-cap: "Regional housing stock by year built"
 
 cv_yrbuilt <- b25127_data %>% 
   filter(year == 2021) %>% 
@@ -1751,6 +1771,7 @@ write_rds(b25042_data, "data/b25042_data.rds")
 
 ```{r}
 #| label: fig-beds
+#| fig-cap: "Change in regional housing stock by bedroom count"
 
 b25042_data <- read_rds("data/b25042_data.rds")
 
@@ -1798,6 +1819,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-mhc-map
+#| fig-cap: "Map of manufactured home communities"
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") %>% 
@@ -1885,6 +1907,7 @@ write_rds(cv_cbps, "data/cv_cbps.rds")
 
 ```{r}
 #| label: fig-permits
+#| fig-cap: "Regional residential building permits"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
   group_by(year, type) %>% 
@@ -1920,7 +1943,8 @@ if (knitr::is_html_output()) {
 ## Homeownership market
 
 ```{r}
-#| label: ho-rate-data
+#| label: fig-ho-rate
+#| fig-cap: "Regional homeownership rate"
 
 # Read in tenure data via Table B25003.
 
@@ -1968,6 +1992,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-mls-price
+#| fig-cap: "Regional median residential sales price"
 
 # Utilize Lynchburg MLS data. Need median sales price for the entire region from 2000 to 2022 or at least 2010. Monthly median sales price is preferred.
 
@@ -1978,15 +2003,12 @@ cv_price <- read_excel("data/cv_mls_data.xlsx", sheet = "Median Sales Price By M
   mutate(price = as.numeric(Median_Sales_Price)) %>% 
   select(date, price)
 
-library(FredR)
-library(dotenv)
 
-load_dot_env()
+library(fredr)
 
-
-fred <- FredR(api.key = Sys.getenv("api.key"))
-
-cpi_ls <- fred$series.observations(series_id = 'CUUR0000SA0L2') %>% 
+cpi_ls <- fredr(
+  series_id = "CUUR0000SA0L2"
+) %>% 
   select(date, value) %>% 
   mutate(date = as.Date(date)) %>% 
   mutate(value = as.numeric(value))
@@ -2021,8 +2043,6 @@ cv_price_plot <- ggplot(cv_price_adj,
        caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)") +
   theme(legend.position = "bottom")
 
-  
-
 
 if (knitr::is_html_output()) {
   
@@ -2041,6 +2061,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-mls-sales
+#| fig-cap: "Regional number of closed home sales"
 
 # Utilzie Lynchburg MLS data. Need mumber of closed sales for the entire region from 2000 to 2022 or at least 2010. Monthly number is preferred.
 
@@ -2060,7 +2081,7 @@ cv_sold_plot <- ggplot(cv_sold,
   geom_col() +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Number of closed sales",
+  labs(title = "Number of closed home sales",
        caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
 
 if (knitr::is_html_output()) {
@@ -2080,6 +2101,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-mls-dom
+#| fig-cap: "Regional average days on market"
 
 # Utilize Lynchburg MLS data. Need days on market for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
 
@@ -2098,7 +2120,7 @@ cv_dom_plot <- ggplot(cv_dom,
   geom_col() +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Average days on market",
+  labs(title = "Average days on market for residential",
        caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
 
 if (knitr::is_html_output()) {
@@ -2117,7 +2139,8 @@ if (knitr::is_html_output()) {
 ## Rental market
 
 ```{r}
-#| label: rent
+#| label: fig-rent
+#| fig-cap: "Regional average market asking rent"
 
 # Utilize CoStar properties search for Multi-Family. Filter by MSA - Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
 
@@ -2175,7 +2198,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: vacancy
+#| label: fig-vacancy
+#| fig-cap: "Regional rental vacancy rate"
 
 # Utilize CoStar properties search for Multi-Family. Filter by Market for Lynchburg MSA- VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
 
@@ -2344,6 +2368,7 @@ write_rds(cb_7, "data/cb_7.rds")
 
 ```{r}
 #| label: fig-cb-total
+#| fig-cap: "Total regional housing cost burden by household area median income"
 
 
 cb_7 <- read_rds("data/cb_7.rds")
@@ -2370,7 +2395,7 @@ cbhh_region_plot <- ggplot(cbhh_region,
   scale_fill_hfv() +
   facet_wrap(~household_income, nrow = 1) +
   scale_y_continuous(labels = percent_format()) +
-  labs(title = "Cost-burdened households by household income",
+  labs(title = "Cost-burdened households by household area median income",
        subtitle = "Percent of cost-burdened households by household income from 2012 to 2019",
        caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   add_zero_line(axis = "y") +
@@ -2393,7 +2418,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-cb-change
-#| fig-cap: "Change in cost-burdened households by tenure"
+#| fig-cap: "Regional change in cost-burdened households by tenure"
 
 
 cb_7 <- read_rds("data/cb_7.rds")
@@ -2471,7 +2496,7 @@ cb_9 <- read_csv("data/Table9_2012to2019.csv") %>%
     cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
     TRUE ~ cost_burden
   )) %>% 
-  select(county, year, race, cost_burden, cb_group, estimate)
+  select(county, fips, year, race, cost_burden, cb_group, estimate)
 
 write_rds(cb_9, "data/cb_9.rds")
 
@@ -2479,7 +2504,7 @@ write_rds(cb_9, "data/cb_9.rds")
 
 ```{r}
 #| label: fig-cb-race
-#| fig-cap: "Percent of cost-burdened households by race and ethnicity"
+#| fig-cap: "Regional percent of cost-burdened households by race and ethnicity"
 
 cb_9 <- read_rds("data/cb_9.rds")
 
@@ -2521,5 +2546,20 @@ if (knitr::is_html_output()) {
   cv_cb9_plot
   
 }
+
+```
+
+```{r}
+
+cb_7 <- read_rds("data/cb_7.rds")
+  
+cbhh_region <- cb_7 %>% 
+  subset(fips %in% cnty) %>% 
+  group_by(year, county, household_type, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year, county, household_type) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  filter(cb_group == "Cost-burdened")
+
 
 ```

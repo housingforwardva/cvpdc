@@ -19,6 +19,7 @@ library(scales)
 library(readxl)
 library(ggtext)
 library(tidytext)
+library(lubridate)
 
 lburg <- "51680"
 
@@ -29,7 +30,8 @@ lburg <- "51680"
 ## Population trends
 
 ```{r}
-#| label: pop-2020
+#| label: fig-pop-2020
+#| fig-cap: "Lynchburg estimated and projected population"
 
 # Read in population data and filter for Lynchburg.
 
@@ -65,7 +67,7 @@ local_pop_plot <- ggplot(lburg_pop,
   geom_col() +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "City of Lynchburg: Population",
+  labs(title = "Estimated and projected population in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
   theme(legend.position = "right")
@@ -86,6 +88,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-local-chg
+#| fig-cap: "Lynchburg
 
 
 # Read in components of population change data and filter for Lynchburg.
@@ -104,7 +107,7 @@ local_change_plot <- ggplot(local_change,
   scale_fill_hfv() +
   theme(axis.text.x = element_text(size = 6, angle = 90),
         legend.position = "bottom") +
-  labs(title = "City of Lynchburg: Components of population change",
+  labs(title = "Components of population change in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
 
 if (knitr::is_html_output()) {
@@ -118,13 +121,13 @@ if (knitr::is_html_output()) {
   
 }
 
-
 ```
 
 ## Household trends
 
 ```{r}
-#| label: tenure
+#| label: fig-tenure
+#| fig-cap: "Change in households by tenure in Lynchburg"
 
 # Read in household tenure data and filter for Lynchburg.
 
@@ -159,7 +162,7 @@ local_tenure_plot <- ggplot(local_tenure,
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
         legend.position = "bottom") +
-  labs(title = "Cumulative change in households by tenure",
+  labs(title = "Cumulative change in households by tenure in Lynchburg",
        subtitle = "From 2010 to 2021",
        caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
 
@@ -178,7 +181,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: age
+#| label: fig-age
+#| fig-cap: "Households by tenure and age in Lynchburg"
 
 b25007_data <- read_rds("data/b25007_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -204,7 +208,7 @@ local_age_plot <- ggplot(local_age,
   scale_fill_hfv() +
   scale_y_continuous(labels = percent_format()) +
   theme(legend.position = "bottom") +
-  labs(title = "City of Lynchburg: households by age and tenure",
+  labs(title = "Households by age and tenure in Lynchburg",
        subtitle = "In 2010 and 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
 
@@ -222,6 +226,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: type
+#| eval: false
 
 b11001_data <- read_rds("data/b11001_data.rds") %>% 
   filter(NAME != "Lynchburg city")
@@ -230,7 +235,8 @@ b11001_data <- read_rds("data/b11001_data.rds") %>%
 ```
 
 ```{r}
-#| label: size
+#| label: figsize
+#| fig-cap: "Change in households by size and tenure in Lynchburg"
 
 b25009_data <- read_rds("data/b25009_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -258,7 +264,7 @@ local_size_plot <- ggplot(local_size,
   theme_hfv() +
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
-  labs(title = "City of Lynchburg: Cumulative change in households by size and tenure",
+  labs(title = "Cumulative change in households by size and tenure in Lynchburg",
        subtitle = "From 2010 to 2021",
        caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.")
 
@@ -277,7 +283,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: senior
+#| label: fig-senior
+#| fig-cap: "Change in senior population in Lynchburg"
 
 b09020_data <- read_rds("data/b09020_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -308,7 +315,7 @@ local_senior_plot <- ggplot(local_senior,
   scale_x_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
   #scale_y_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  labs(title = "City of Lynchburg: Change in senior population by living arrangement",
+  labs(title = "Change in senior population by living arrangement in Lynchburg",
        subtitle="2016 to 2020",
        fill="Tenure",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.")  +
@@ -334,7 +341,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: subfam
+#| label: fig-subfam
+#| fig-cap: "Change in families living with others in Lynchburg"
 
 b11013_data <- read_rds("data/b11013_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -368,7 +376,7 @@ local_sub_plot <- ggplot(local_sub,
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(legend.position = "bottom",
         axis.text.x = element_blank()) +
-  labs(title = "City of Lynchburg: Change in families living with others",
+  labs(title = "Change in families living with others in Lynchburg",
        subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
 
@@ -388,7 +396,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: achild
+#| label: fig-achild
+#| fig-cap: "Cumulative change in adult children living with parents in Lynchburg"
 
 b09021_data <- read_rds("data/b09021_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -415,7 +424,7 @@ local_achild_plot <- ggplot(local_achild,
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "City of Lynchburg: Cumulative change in adult children living with parents",
+  labs(title = "Cumulative change in adult children living with parents in Lynchburg",
        subtitle = "From 2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E"))
@@ -438,7 +447,8 @@ if (knitr::is_html_output()) {
 ## Economic trends
 
 ```{r}
-#| label: inc-dist
+#| label: fig-inc-dist
+#| fig-cap: "Income distribution by tenure in Lynchburg"
 
 b25118_data <- read_rds("data/b25118_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -467,7 +477,7 @@ local_dist_plot <- ggplot(local_dist,
   theme_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "City of Lynchburg: Income distribution",
+  labs(title = "Income distribution by tenure in Lynchburg",
        subtitle = "In 2010 and 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") 
 
@@ -484,7 +494,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: med-inc
+#| label: fig-med-inc
+#| fig-cap: "Median household income by tenure in Lynchburg"
 
 b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
   mutate(NAME = str_remove_all(NAME, ", Virginia")) %>% 
@@ -507,8 +518,8 @@ local_inc_plot <- ggplot(local_inc,
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = dollar_format()) +
-  labs(title = "Median household income by tenure",
-       subtitle = "From 2010 to 2021 in 2021 adjusted dollars",
+  labs(title = "Median household income by tenure in Lynchburg",
+       subtitle = "In 2021 adjusted dollars",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5))
@@ -527,7 +538,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: race-inc
+#| label: fig-race-inc
+#| fig-cap: "Median household income by race and ethnicity in Lynchburg"
 
 b19013_data <- read_rds("data/b19013_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -552,7 +564,7 @@ local_rinc_plot <- ggplot(local_rinc,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         legend.position = "right") +
   scale_y_continuous(labels = dollar_format()) +
-  labs(title = "Median household income by race and ethnicity",
+  labs(title = "Median household income by race and ethnicity in Lynchburg",
        subtitle = "In 2021 inflation-adjusted dollars",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B19013B - I.")
 
@@ -567,14 +579,14 @@ if (knitr::is_html_output()){
 }
   
 
-
 ```
 
 
 ## Housing stock
 
 ```{r}
-#| label: structure
+#| label: fig-structure
+#| fig-cap: "Distribution of housing stock in Lynchburg in relation to the region"
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
@@ -622,7 +634,8 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
-#| label: mhc
+#| label: fig-mhc
+#| fig-cap: "Map of manufactured home communities in Lynchburg"
 
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
@@ -639,6 +652,7 @@ leaflet(mhc) %>%
 
 ```{r}
 #| label: fig-mhc-county
+#| fig-cap: ""Manufactured home communities by size in Lynchburg"
 
 
 lburg_mhc <- mhc%>% 
@@ -646,20 +660,37 @@ lburg_mhc <- mhc%>%
   summarise(count = n_distinct(OBJECTID)) %>% 
   st_drop_geometry()
 
-ggplot(lburg_mhc,
+lburg_mhc_plot <- ggplot(lburg_mhc,
        aes(x = SIZE,
            y = count,
-           fill = SIZE)) +
+           fill = SIZE,
+           data_id = count,
+           tooltip = count)) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,15))
+  scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,15)) +
+  labs(title = "Manufactured home communities by size in Lynchburg")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = lburg_mhc_plot,
+         height_svg = 4)
+  
+} else {
+  
+  lburg_mhc_plot
+  
+}
 
 
 ```
 
 ```{r}
-#| label: bps
+#| label: fig-bps
+#| fig-cap: "Residential building permits by unit type in Lynchburg"
 
 lburg_cbps <- read_rds("data/cv_cbps.rds") %>% 
   filter(NAMELSAD == "Lynchburg city")
@@ -677,7 +708,7 @@ lburg_cbps_plot <- ggplot(lburg_cbps,
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_x_continuous(breaks = seq(from = 2000, to = 2022, by = 2.0)) +
-  labs(title = "Residential building permits by unit type",
+  labs(title = "Residential building permits by unit type in Lynchburg",
        subtitle = "From 2000 through 2022",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey.")
 
@@ -696,7 +727,8 @@ if (knitr::is_html_output()) {
 ## Homeownership market
 
 ```{r}
-#| label: ho
+#| label: fig-ho
+#| fig-cap: "Homeownership rate in Lynchburg"
 
 # Read in saved tenure data.
 
@@ -723,8 +755,7 @@ cv_ho_plot <- ggplot(ho_rate,
   scale_color_hfv() +
   scale_y_continuous(labels = percent_format()) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
-  labs(title = "Homeownership rate",
-       subtitle = "From 2010 to 2021",
+  labs(title = "Homeownership rate in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
 
 if (knitr::is_html_output()) {
@@ -739,11 +770,214 @@ if (knitr::is_html_output()) {
 
 ```
 
+```{r}
+#| label: fig-lburg-sales
+#| fig-cap: "Lynchburg median home sales price"
+
+lburg_price <- read_excel("data/lburg_mls_data.xlsx", sheet = "Median Sales Price 2008 - 2022") %>% 
+  clean_names() %>% 
+  filter(property_type == "RESI") %>% 
+  select(year = year_sd, medprice = median_selling_price)
+
+
+library(fredr)
+library(lubridate)
+
+cpi_ls <- fredr(
+  series_id = "CUUR0000SA0L2"
+) %>% 
+  select(date, value) %>% 
+  mutate(date = as.Date(date)) %>% 
+  mutate(value = as.numeric(value)) %>% 
+  mutate(year = year(date)) %>% 
+  group_by(year) %>% 
+  summarise(cpi = mean(value))
+
+price_adj <- lburg_price %>% 
+  left_join(cpi_ls, by = "year") %>% 
+  mutate(price_adj = (271.6895/cpi)*medprice) %>% 
+  select(year, price_adj) %>% 
+  mutate(price_adj = round(as.numeric(price_adj))) %>% 
+  mutate(tooltip = c(paste0("Year: ", year, "\n Median sales price: $", price_adj)))
+
+price_adj_plot <- ggplot(price_adj,
+       aes(x = year,
+           y = price_adj,
+           color = price_adj)) +
+  geom_line(size = 1) +
+  geom_point_interactive(aes(
+    size = .8,
+    data_id = tooltip,
+    tooltip = tooltip
+  )) +
+  theme_hfv() +
+  scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(title = "Lynchburg median home sales price",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS) and <br>U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: <br>All Items Less Shelter in U.S. City Average [CUUR0000SA0L2].")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = price_adj_plot,
+         height_svg = 4)
+  
+} else {
+  
+  price_adj_plot
+}
+
+```
+```{r}
+#| label: lburg-mprice
+#| eval: false
+
+lburg_mprice <- read_excel("data/lburg_mls_data.xlsx", sheet = "Median Sales Price By Month") %>% 
+  clean_names() %>% 
+  filter(property_type == "RESI") %>% 
+  select(year = year_sd, month = month_sd, medprice = median_selling_price) %>% 
+  mutate(date = as.yearmon(paste(year, month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  select(date, medprice)
+
+
+ggplot(lburg_mprice,
+       aes(x = date,
+           y = medprice)) +
+  geom_line()
+  
+
+```
+```{r}
+#| label: fig-lburg-sold
+#| fig-cap: "Lynchburg closed home sales"
+
+lburg_sold <- read_excel("data/lburg_mls_data.xlsx", sheet = "Num Sold Listings Per Month") %>% 
+  clean_names() %>% 
+  filter(property_type == "RESI") %>% 
+  select(year = year_sd, month = month_sd, sold = number_sold_listings) %>% 
+  mutate(date = as.yearmon(paste(year, month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  select(date, sold) %>% 
+  mutate(tooltip = c(paste0("Date: ", date, "\n Homes sold: ", sold)))
+
+
+lburg_sold_plot <- ggplot(lburg_sold,
+       aes(x = date,
+           y = sold, 
+           fill = sold,
+           data_id = tooltip,
+           tooltip = tooltip)) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Lynchburg closed home sales",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS).")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = lburg_sold_plot,
+         height_svg = 4)
+  
+} else {
+  
+  lburg_sold_plot
+}
+
+
+
+```
+```{r}
+#| label: fig-dom
+#| fig-cap: "Lynchburg average days on market"
+
+
+lburg_dom <- read_excel("data/lburg_mls_data.xlsx", sheet = "Average DOM") %>% 
+  clean_names() %>% 
+  filter(property_type == "RESI")%>% 
+  select(year = year_sd, month = month_sd, dom = average_dom) %>% 
+  mutate(date = as.yearmon(paste(year, month), "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  select(date, dom)
+
+
+lburg_dom_plot <- ggplot(lburg_dom,
+       aes(x = date,
+           y = dom,
+           fill = dom,
+           data_id = dom,
+           tooltip = dom)) +
+  geom_col() + 
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Lynchburg average days on market",
+       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS).")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = lburg_dom_plot,
+         height_svg = 4)
+  
+} else {
+  
+  lburg_dom_plot
+  
+}
+
+
+```
+```{r}
+#| label: fig-lburg_sales
+#| fig-cap: "Map of home sales in Lynchburg"
+
+library(tidygeocoder)
+
+# lburg_props <- read_excel("data/lburg_sold.xlsx", sheet = "Residential") %>% 
+#   clean_names() %>% 
+#   geocode(address = street_full_address,
+#           method = 'geocodio',
+#           lat = latitude,
+#           long = longitude)
+
+# write_rds(lburg_props, "data/lburg_props.rds")
+
+library(zoo)
+
+lburg_props <- read_rds("data/lburg_props.rds") %>% 
+  mutate(date = as.yearmon(selling_date, "%Y %m")) %>% 
+  mutate(date = as.Date(date)) %>% 
+  mutate(year = year(date)) %>% 
+  drop_na(latitude)
+
+lburg_props_pcovid <- lburg_props %>% 
+  st_as_sf(coords = c("longitude", "latitude"),
+           crs = 4326)
+
+library(mapview)
+
+hex_grid <- st_make_grid(lburg_props_pcovid, n = c(25,25),
+                         what = "polygons", square = FALSE)
+
+hex_grid_sold <- st_sf(hex_grid) %>% 
+  mutate(grid_id = 1:length(lengths(hex_grid)))
+
+hex_grid_sold$n_pts <- lengths(st_intersects(hex_grid_sold, lburg_props_pcovid))
+
+hex_count <- filter(hex_grid_sold, n_pts > 5)
+
+mapview(hex_count, zcol = "n_pts")
+
+
+```
 
 ## Rental market
 
 ```{r}
-#| label: rent
+#| label: fig-rent
+#| fig-cap: "Quarterly average market asking rent in Lynchburg"
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All. Combine Bedford City and Bedford County.
 
@@ -791,11 +1025,10 @@ local_rent_plot <- ggplot(local_rent,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         legend.position = "bottom") +
   scale_y_continuous(labels = dollar_format()) +
-  labs(title = "Quarterly average rent",
+  labs(title = "Quarterly average market asking rent in Lynchburg",
        caption = "**Source:** CoStar Group Inc.")
   
 
-  
 if (knitr::is_html_output()) {
   
   girafe(ggobj = local_rent_plot,
@@ -806,7 +1039,6 @@ if (knitr::is_html_output()) {
   local_rent_plot
   
 }
-
 
 
 ```
@@ -841,7 +1073,8 @@ write_rds(parcels, "data/parcels.rds")
 
 
 ```{r}
-#| label: sfr
+#| label: fig-sfr
+#| fig-cap: "Map of single-family detached rentals in Lynchburg"
 
 # The following investigates the number of single-family detached homes that are being utilized as rentals. There is a growing concern over homeownership rates in the city. The current market incentivizes the rental of single-family homes over the sale.
 
@@ -902,33 +1135,44 @@ mapview(hex_count,
 ```
 
 ```{r}
-#| label: sfr-ward
+#| label: fig-sfr-ward
+#| fig-cap: "Single-family detached rentals by Lynchburg ward"
 
 sfr_ward <- sfr %>% 
   group_by(Designation) %>% 
   summarise(count = n_distinct(parcel_id)) %>% 
   st_drop_geometry()
 
-ggplot(sfr_ward,
+sfr_ward_plot <- ggplot(sfr_ward,
        aes(x = Designation,
            y = count,
            fill = Designation,
            data_id = count,
            tooltip = number_format(big.mark = ",")(count))) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Estimate of single-family detached rentals",
        caption = "**Source:** Lynchburg city parcel data") 
 
-
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = sfr_ward_plot,
+         height_svg = 4)
+  
+} else {
+  
+  sfr_ward_plot
+  
+}
 
 
 ```
 
 ```{r}
-#| label: nhpd-data
-
+#| label: fig-subsidy
+#| fig-cap: "
 
 nhpd_prop <- read_csv("data/nhpd_properties.csv") %>% 
   clean_names() %>% 
@@ -938,7 +1182,74 @@ nhpd_prop <- read_csv("data/nhpd_properties.csv") %>%
 nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
   clean_names() %>% 
   filter(subsidy_status != "Inactive") %>% 
-  filter(grepl("lynchburg", city, ignore.case = TRUE))
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
+  group_by(subsidy_name) %>% 
+  summarise(units = sum(assisted_units))
+
+
+subsidy_plot <- ggplot(nhpd_subsidies,
+       aes(x = reorder(subsidy_name, -units),
+           y = units,
+           fill = subsidy_name,
+           tooltip = label_number(big.mark = ",")(units),
+           data_id = units)) +
+  geom_col() +
+  geom_col_interactive() +
+  scale_y_continuous(labels = label_number(big.mark = ",")) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Federally-assisted rental homes in Lynchburg by subsidy",
+       caption = "**Source:** National Housing Preservation Database (NHPD).")
+
+
+
+```
+```{r}
+#| label: fig-lihtc-exp
+#| fig-cap: "LIHTC units by affordability commitment expiration in Lynchburg"
+
+
+lihtc <- read_csv("data/nhpd_subsidies.csv") %>% 
+  clean_names() %>% 
+  filter(subsidy_status != "Inactive") %>% 
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
+  filter(subsidy_name == "LIHTC") %>% 
+  mutate(end_date = mdy(end_date)) %>% 
+  mutate(year = year(end_date)) %>% 
+  group_by(year) %>% 
+  summarise(units = sum(assisted_units)) %>% 
+  mutate(pct = (units/sum(units)))
+
+lihtc_plot <- ggplot(lihtc,
+       aes(x = year,
+           y = pct,
+           fill = pct,
+           data_id = pct,
+           tooltip = percent_format()(pct)
+           )) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  labs(title = "LIHTC units by affordability commitment expiration date",
+       subtitle = "Percent of total in Lynchburg",
+       caption = "**Source:** National Housing Preservation Database (NHPD).") +
+  scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  scale_y_continuous(labels = percent_format())
+
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = lihtc_plot,
+         height_svg = 4)
+  
+} else {
+  
+lihtc_plot
+
+}
+
+  
 
 ```
 
@@ -946,6 +1257,7 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>%
 
 ```{r}
 #| label: gap-data
+#| eval:false
 
 tb_18c <- read_csv("data/Table18C_2012to2019.csv")
 
@@ -1004,7 +1316,13 @@ tb_18_match <- tb_18_match %>%
 write_rds(tb_18_match, "data/tb_18_match.rds")
 
 ```
+
 ```{r}
+#| label: fig-gap
+#| fig-cap: "Rental housing gap by AMI in Lynchburg"
+
+tb_18_match <- read_rds("data/tb_18_match.rds")
+
 
 gap <- tb_18_match %>% 
   group_by(year, household_income, gapcode) %>% 
@@ -1017,7 +1335,8 @@ gap <- tb_18_match %>%
   mutate(gapcode = case_when(
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
-  ))
+  )) %>% 
+  mutate(year = as.character(year))
 
 ggplot(gap,
        aes(x = year, 
@@ -1026,11 +1345,13 @@ ggplot(gap,
   geom_col() +
   facet_grid(~household_income) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Rental housing gap by AMI",
-       subtitle = "2012 to 2019",
-       fill = "Affordability of current home") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Rental housing gap by AMI in Lynchburg",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
   theme(
     legend.position = "bottom",
+    axis.text.x = element_text(angle = 90, vjust = 0.5),
     axis.title = element_blank(),
     panel.background = element_blank(),
     panel.grid.major.y = element_line(color = "grey95",
@@ -1052,19 +1373,24 @@ write_rds(hcv, "data/hcv.rds")
 ```
 
 ```{r}
-#| label: hcv-map
+#| label: fig-hcv-map
+#| fig-cap: "Housing Choice Voucher utilization in Lynchburg"
 
 hcv <- read_rds("data/hcv.rds") %>% 
   st_transform(crs = 4326) %>% 
   clean_names() %>% 
-  filter(county == 680)
+  filter(county == 680) 
 
-palette <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent")
+library(mapview)
 
-leaflet(hcv) %>% 
-  addTiles() %>% 
-  addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
-              fillOpacity = 1)
+mapview(hcv, zcol = "hcv_pct_renter_occ_units")
+
+# palette <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent")
+# 
+# leaflet(hcv) %>% 
+#   addTiles() %>% 
+#   addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
+#               fillOpacity = 1)
 
 
 ```
@@ -1081,24 +1407,6 @@ leaflet(hcv) %>%
 
 ```
 
-
-```{r}
-#| label: costar-rent
-
-# Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
-
-# Download data for current rent and inflation-adjusted rent into a single csv - name [locality_abbv]_rent.csv --- for example amherst_rent.csv or lburg_rent.csv
-
-# Merge all data into a single csv named - local_rent.csv
-
-# Note the download date of data here: 
-
-
-
-
-```
-
-## Homeownership market
 
 
 
