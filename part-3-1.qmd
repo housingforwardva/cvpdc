@@ -2550,16 +2550,47 @@ if (knitr::is_html_output()) {
 ```
 
 ```{r}
+#| label: fig-hh-cb
+#| fig-cap: "Regional cost-burden by household type"
 
 cb_7 <- read_rds("data/cb_7.rds")
   
 cbhh_region <- cb_7 %>% 
-  subset(fips %in% cnty) %>% 
-  group_by(year, county, household_type, cb_group) %>% 
+  group_by(year, household_type, cb_group) %>% 
   summarise(estimate = sum(estimate)) %>% 
-  group_by(year, county, household_type) %>% 
+  group_by(year, household_type) %>% 
   mutate(pct = estimate/sum(estimate)) %>% 
-  filter(cb_group == "Cost-burdened")
+  filter(cb_group == "Cost-burdened") %>% 
+  mutate(year = as.character(year))
+
+cb_hh_plot <- ggplot(cbhh_region,
+       aes(x = year,
+           y = pct,
+           fill = household_type,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.text = element_text(size = 8)) +
+    facet_wrap(~household_type, nrow = 1, labeller = label_wrap_gen(8)) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = "Regional cost-burden by household type",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cb_hh_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cb_hh_plot
+  
+}
 
 
 ```

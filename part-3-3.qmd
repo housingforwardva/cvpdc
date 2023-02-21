@@ -1268,8 +1268,7 @@ renter <- tb_18c %>%
   filter(line_type == "Detail") %>% 
   select(county, fips, year, estimate, tenure, cost, household_income) %>% 
   group_by(county, fips, year, tenure, cost, household_income) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(fips == lburg)
+  summarise(estimate = sum(estimate))
 
 
 tb_18_match <- renter %>% 
@@ -1321,7 +1320,8 @@ write_rds(tb_18_match, "data/tb_18_match.rds")
 #| label: fig-gap
 #| fig-cap: "Rental housing gap by AMI in Lynchburg"
 
-tb_18_match <- read_rds("data/tb_18_match.rds")
+tb_18_match <- read_rds("data/tb_18_match.rds") %>% 
+  filter(fips == lburg)
 
 
 gap <- tb_18_match %>% 
@@ -1338,11 +1338,12 @@ gap <- tb_18_match %>%
   )) %>% 
   mutate(year = as.character(year))
 
-ggplot(gap,
+gap_plot <- ggplot(gap,
        aes(x = year, 
            y = estimate,
            fill = gapcode)) +
   geom_col() +
+  geom_col_interactive() +
   facet_grid(~household_income) +
   scale_y_continuous(labels = label_comma()) +
   theme_hfv() +
@@ -1358,6 +1359,17 @@ ggplot(gap,
                                       size = 0.05),
     axis.ticks = element_blank()
   )
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = gap_plot,
+         height_svg = 4)
+  
+} else {
+  
+  gap_plot
+  
+}
 
 
 ```

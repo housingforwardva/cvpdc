@@ -16,7 +16,6 @@ library(janitor)
 library(sf)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
-
 cv_names <- list_counties("VA") %>% 
   mutate(GEOID = paste0("51", county_code))
 
@@ -1010,7 +1009,10 @@ if (knitr::is_html_output()) {
 
 
 ```
+
 ```{r}
+#| label: fig-cb-race
+#| fig-cap: "Local cost burden by race and ethnicity"
 
 cb_9 <- read_rds("data/cb_9.rds")
 
@@ -1050,6 +1052,52 @@ if (knitr::is_html_output()) {
   cv_cb9_plot
   
 }
+
+
+```
+
+```{r}
+#| label: fig-gap
+#| fig-cap: "Local rental housing gap by AMI"
+
+tb_18_match <- read_rds("data/tb_18_match.rds")
+
+
+gap <- tb_18_match %>% 
+  subset(fips %in% cnty) %>% 
+  group_by(year, county, household_income, gapcode) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  mutate(estimate = case_when(
+    gapcode == "Gap" ~ estimate * -1,
+    gapcode == "Matches or less than income" ~ estimate
+  )) %>% 
+  filter(household_income != "80 percent AMI or greater") %>% 
+  mutate(gapcode = case_when(
+    gapcode == "Gap" ~ "Unaffordable",
+    TRUE ~ "Affordable"
+  )) %>% 
+  mutate(year = as.character(year))
+
+ggplot(gap,
+       aes(x = year, 
+           y = estimate,
+           fill = gapcode)) +
+  geom_col() +
+  facet_grid(household_income~county, labeller = label_wrap_gen(10)) +
+  scale_y_continuous(labels = label_comma()) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Rental housing gap by AMI in Lynchburg",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = 90, vjust = 0.5),
+    axis.title = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "grey95",
+                                      linewidth = 0.05),
+    axis.ticks = element_blank()
+  )
 
 
 ```
