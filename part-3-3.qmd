@@ -20,6 +20,7 @@ library(readxl)
 library(ggtext)
 library(tidytext)
 library(lubridate)
+library(zoo)
 
 lburg <- "51680"
 
@@ -88,7 +89,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-local-chg
-#| fig-cap: "Lynchburg
+#| fig-cap: "Components of population change in Lynchburg"
 
 
 # Read in components of population change data and filter for Lynchburg.
@@ -652,7 +653,7 @@ leaflet(mhc) %>%
 
 ```{r}
 #| label: fig-mhc-county
-#| fig-cap: ""Manufactured home communities by size in Lynchburg"
+#| fig-cap: "Manufactured home communities by size in Lynchburg"
 
 
 lburg_mhc <- mhc%>% 
@@ -848,6 +849,7 @@ ggplot(lburg_mprice,
   
 
 ```
+
 ```{r}
 #| label: fig-lburg-sold
 #| fig-cap: "Lynchburg closed home sales"
@@ -1172,7 +1174,7 @@ if (knitr::is_html_output()) {
 
 ```{r}
 #| label: fig-subsidy
-#| fig-cap: "
+#| fig-cap: "Federally-assisted rental homes in Lynchburg by subsidy"
 
 nhpd_prop <- read_csv("data/nhpd_properties.csv") %>% 
   clean_names() %>% 
@@ -1257,7 +1259,7 @@ lihtc_plot
 
 ```{r}
 #| label: gap-data
-#| eval:false
+#| eval: false
 
 tb_18c <- read_csv("data/Table18C_2012to2019.csv")
 
