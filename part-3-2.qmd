@@ -211,6 +211,7 @@ local_tenure_plot <- ggplot(local_tenure,
            tooltip = label_number(big.mark = ",", style_positive = "plus",
                                   style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -711,8 +712,11 @@ cv_mhc <- mhc  %>%
 cv_mhc_plot <- ggplot(cv_mhc,
        aes(x = reorder(COUNTY,count),
            y = count,
-           fill = SIZE)) +
+           fill = SIZE,
+           data_id = count,
+           tooltip = count)) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Manfactured home communities by size",
@@ -1027,17 +1031,21 @@ cv_cb9 <- cb_9 %>%
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = year, 
            y = pct,
-           fill = race,
+           fill = str_wrap(race, width = 10),
            data_id = pct,
            tooltip = percent_format()(pct))) +
   geom_col(position = "stack") +
-  geom_col_interactive() +
-  facet_grid(race~county, labeller = label_wrap_gen()) +
+  geom_col_interactive(size = 2) +
+  facet_grid(race~county, labeller = label_wrap_gen(8)) +
   scale_y_continuous(labels = percent_format()) +
   scale_fill_hfv() +
   theme_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
-        strip.text = element_text(size = 8)) +
+        strip.text.x = element_text(size = 8),
+        strip.text.y = element_blank(),
+        legend.text = element_text(size = 8),
+        legend.position = "right",
+        axis.text.y = element_blank()) +
   labs(title = "Cost burden by race and ethnicity",
        subtitle = "Percent of cost-burdened households",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
@@ -1078,11 +1086,14 @@ gap <- tb_18_match %>%
   )) %>% 
   mutate(year = as.character(year))
 
-ggplot(gap,
+gap_plot <- ggplot(gap,
        aes(x = year, 
            y = estimate,
-           fill = gapcode)) +
+           fill = gapcode,
+           data_id = estimate,
+           tooltip = label_number(big.mark = ",", style_positive = "plus")(estimate))) +
   geom_col() +
+  geom_col_interactive() +
   facet_grid(household_income~county, labeller = label_wrap_gen(10)) +
   scale_y_continuous(labels = label_comma()) +
   theme_hfv() +
@@ -1099,5 +1110,16 @@ ggplot(gap,
     axis.ticks = element_blank()
   )
 
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = gap_plot,
+         height_svg = 4)
+  
+} else {
+  
+  gap_plot
+  
+}
 
 ```

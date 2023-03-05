@@ -64,8 +64,11 @@ lburg_pop <- rbind(local_pop, projections)
 local_pop_plot <- ggplot(lburg_pop,
        aes(x = year,
            y = value,
-           fill = counttype)) +
+           fill = counttype,
+           data_id = value,
+           tooltip = label_number(big.mark = ",")(value))) +
   geom_col() +
+  geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Estimated and projected population in Lynchburg",
@@ -157,6 +160,7 @@ local_tenure_plot <- ggplot(local_tenure,
            data_id = run_diff,
            tooltip = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge") +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -261,6 +265,7 @@ local_size_plot <- ggplot(local_size,
            data_id = run_diff,
            tooltip )) +
   geom_col(position = "dodge") +
+  geom_col_interactive() +
   facet_grid(tenure~size) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -607,8 +612,11 @@ level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more u
 local_str_plot <- ggplot(local_str,
        aes(x = factor(structure, level = level_order),
            y = pct,
-           fill = tenure)) +
+           fill = tenure,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
   geom_col(position = "stack") +
+  geom_col_interactive() +
   facet_wrap(~tenure, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() + 
@@ -746,7 +754,11 @@ ho_rate <- b25003_data %>%
 
 cv_ho_plot <- ggplot(ho_rate,
        aes(x = year, 
-           y = pct)) +
+           y = pct,
+           group = 1,
+           data_id = pct,
+           color = "#011E41",
+           tooltip = percent_format()(pct))) +
   geom_line(size = 0.5) +
   geom_point_interactive(
     aes(data_id = pct,
@@ -1343,7 +1355,9 @@ gap <- tb_18_match %>%
 gap_plot <- ggplot(gap,
        aes(x = year, 
            y = estimate,
-           fill = gapcode)) +
+           fill = gapcode,
+           data_id = estimate,
+           tooltip = label_number(big.mark = ",")(estimate))) +
   geom_col() +
   geom_col_interactive() +
   facet_grid(~household_income) +
@@ -1422,6 +1436,103 @@ mapview(hcv, zcol = "hcv_pct_renter_occ_units")
 ```
 
 
+```{r}
+#| label: fig-cb-tenure
+#| fig-cap: "Lynchburg cost burden by tenure"
+
+cb_tenure <- read_rds("data/cb_7.rds") %>% 
+  subset(fips %in% lburg) %>% 
+  filter(cb_group == "Cost-burdened") %>% 
+  group_by(year, tenure, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by( tenure) |> 
+  mutate(change = estimate - lag(estimate)) |> 
+  drop_na() |> 
+  mutate(run_diff = cumsum(change))
+
+cb_diff <- ggplot(cb_tenure,
+       aes(x = year, 
+           y = run_diff, 
+           fill = tenure,
+           data_id = run_diff,
+           tooltip = run_diff)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Cumulative change in cost-burdened households by tenure",
+       subtitle = "2012 to 2019",
+       fill = "Tenure",
+       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  theme(legend.position = "right") +
+  add_zero_line(axis = "y")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cb_diff,
+         height_svg = 4) 
+  
+} else {
+  
+  cb_diff
+  
+  }
+  
+
+
+
+
+```
+
+```{r}
+#| label: fig-cb-race
+#| fig-cap: "Lynchburg cost burden by race and ethnicity"
+
+cb_9 <- read_rds("data/cb_9.rds")
+
+cv_cb9 <- cb_9 %>% 
+  subset(fips %in% lburg) %>% 
+  group_by(year, race, cb_group) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  group_by(year, race) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
+  filter(cb_group == "Cost-burdened")
+
+cv_cb9_plot <- ggplot(cv_cb9,
+       aes(x = year, 
+           y = pct,
+           fill = str_wrap(race, width = 10),
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col(position = "stack") +
+  geom_col_interactive(size = 2) +
+  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen(8)) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.text.x = element_text(size = 8),
+        strip.text.y = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(title = "Cost burden by race and ethnicity",
+       subtitle = "Percent of cost-burdened households",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb9_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_cb9_plot
+  
+}
+
+
+```
 
 
 

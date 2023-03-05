@@ -291,21 +291,26 @@ cv_proj <- cv_proj %>%
 cv_proj_plot <- ggplot(cv_proj,
        aes(x = year,
            y = count,
-           fill = type)) +
+           fill = type,
+           data_id = count,
+           tooltip = label_number(big.mark = ",")(count))) +
   geom_col() + 
+  geom_col_interactive() +
   theme_hfv() + 
   scale_fill_hfv() +
-  geom_text(aes(label = scales::comma(count)), 
-            size = 4, 
-            vjust = 1.5, 
-            color = "white", 
-            fontface = "bold") +
   labs(title = "Population projection",
        caption = "**Source:** University of Virginia, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma())
 
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_proj_plot,
+         height_svg = 4)
+} else {
+  
+ cv_proj_plot
 
-cv_proj_plot
+}
 
 
 ```
@@ -2082,7 +2087,8 @@ cv_sold_plot <- ggplot(cv_sold,
            fill = count,
            data_id = count,
            tooltip = label_number(big.mark = ",")(count))) +
-  geom_col() +
+  geom_col() + 
+  geom_col_interactive() +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
   labs(title = "Number of closed home sales",
@@ -2121,7 +2127,8 @@ cv_dom_plot <- ggplot(cv_dom,
        aes(x = date,
            y = dom,
            fill = dom)) +
-  geom_col() +
+  geom_col() + 
+  geom_col_interactive() +
   theme_hfv() + 
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
   labs(title = "Average days on market for residential",
