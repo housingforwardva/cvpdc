@@ -39,6 +39,12 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 ## Takeaways
 
+- Population growth as a result of domestic migration due to COVID-19 pandemic
+- Growing renter population --- particularly a growing higher income renter population 
+- More and more smaller households coming to the region 
+- Continuing income disparities --- between white and Black households
+- Loss of smaller sized housing
+- 
 
 
 ## Population trends
@@ -69,8 +75,8 @@ census_raw <- get_decennial(
   variables = "P1_001N"
 )
 
-pep_total_clean <- pep_total_raw %>%
-  filter(!DATE %in% c(2, 3)) %>% # Remove non-decennial 2010 counts
+pep_total_clean <- pep_total_raw |>
+  filter(!DATE %in% c(2, 3)) |> # Remove non-decennial 2010 counts
   mutate(year = # Translate date codes into years
     case_when(
       DATE == 1 ~ "2010",
@@ -82,11 +88,11 @@ pep_total_clean <- pep_total_raw %>%
       DATE == 9 ~ "2016",
       DATE == 10 ~ "2017",
       DATE == 11 ~ "2018",
-      DATE == 12 ~ "2019")) %>%
+      DATE == 12 ~ "2019")) |>
   mutate(counttype = # Add descriptions to count types
       case_when(
         DATE == 1 ~ "Census population",
-        TRUE ~ "Population estimate")) %>% 
+        TRUE ~ "Population estimate")) |> 
   select( # Simplify columns
     GEOID,
     year,
@@ -96,9 +102,9 @@ pep_total_clean <- pep_total_raw %>%
 
 # Prep total population counts from 2020 Census summary file
 
-census_clean <- census_raw %>% 
+census_clean <- census_raw |> 
   mutate(year = "2020", # Add year and count type columns
-         counttype = "Census population") %>% 
+         counttype = "Census population") |> 
   select( # Simplify columns
     GEOID,
     year,
@@ -106,8 +112,8 @@ census_clean <- census_raw %>%
     value
   )
 
-population_data <-pep_total_clean %>% 
-  bind_rows(census_clean) %>% 
+population_data <-pep_total_clean |> 
+  bind_rows(census_clean) |> 
   subset(GEOID %in% cv)
 
 write_rds(population_data, "data/pop_data.rds")
@@ -120,8 +126,8 @@ write_rds(population_data, "data/pop_data.rds")
 
 # Read in saved data and aggregate to the regional level.
 
-cv_pop <- read_rds("data/pop_data.rds") %>% 
-  group_by(year, counttype) %>% # Group by year and the count type.
+cv_pop <- read_rds("data/pop_data.rds") |> 
+  group_by(year, counttype) |> # Group by year and the count type.
   summarise(value = sum(value)) # Sum the values.
 
 # Create bar chart showing the change in population from 2010 to 2020
@@ -154,6 +160,9 @@ if (knitr::is_html_output()) {
   
 
 ```
+For much of the last decade, growth in the region has been a result of both domestic migration and international migration. But from 2020 to 2021, there were significant shifts in the causes of population change in the region. Deaths outpaced births during this time, leading to a loss of over 600 individuals. International migration decreased, while domestic migration overwhelmingly became the reason for growth in the region.
+
+These changes within the region were no doubt a result of the COVID-19 pandemic's impact. With the increase in work-from-home (WFH), households from outside the region saw an opportunity to benefit from the relative affordability of the region, while still earning high wages from elsewhere. And sadly, the pandemic's impact also contributed to losses among the community.
 
 ```{r}
 #| label: components-data
@@ -168,9 +177,9 @@ pep_change_raw <- get_estimates(
   time_series = TRUE
 )
 
-pep_change_clean <- pep_change_raw %>%  
-  mutate(GEOID = as.character(GEOID)) %>%  
-  filter(GEOID %in% cv) %>% 
+pep_change_clean <- pep_change_raw |>  
+  mutate(GEOID = as.character(GEOID)) |>  
+  filter(GEOID %in% cv) |> 
   mutate(year = # Translate date codes into years
     case_when(
       PERIOD == 1 ~ "2010",
@@ -182,12 +191,12 @@ pep_change_clean <- pep_change_raw %>%
       PERIOD == 7 ~ "2016",
       PERIOD == 8 ~ "2017",
       PERIOD == 9 ~ "2018",
-      PERIOD == 10 ~ "2019")) %>% 
+      PERIOD == 10 ~ "2019")) |> 
   mutate(component = # Rename components of change
     case_when(
       variable == "NATURALINC" ~ "Natural increase",
       variable == "DOMESTICMIG" ~ "Domestic migration",
-      variable == "INTERNATIONALMIG" ~ "International migration")) %>%  
+      variable == "INTERNATIONALMIG" ~ "International migration")) |>  
   select( # Simplify columns
     GEOID,
     year,
@@ -195,23 +204,23 @@ pep_change_clean <- pep_change_raw %>%
     value
   )
 
-pep_2021 <- read_csv("data/comp_chang_2021.csv") %>% 
+pep_2021 <- read_csv("data/comp_chang_2021.csv") |> 
   pivot_longer(4:6,
                names_to = "component",
-               values_to = "value") %>% 
+               values_to = "value") |> 
   mutate(year = 2021,
          component =
     case_when(
       component == "NATURALINC" ~ "Natural increase",
       component == "DOMESTICMIG" ~ "Domestic migration",
-      component == "INTERNATIONALMIG" ~ "International migration")) %>% 
+      component == "INTERNATIONALMIG" ~ "International migration")) |> 
   select(GEOID, year, component, value) |> 
   mutate(GEOID = as.character(GEOID))
 
-cv_comp_change <- pep_change_clean %>% 
+cv_comp_change <- pep_change_clean |> 
   rbind(pep_2021) |>
-  filter(GEOID %in% cv) %>%
-  left_join(counties("VA", year = 2021), by = "GEOID") %>%
+  filter(GEOID %in% cv) |>
+  left_join(counties("VA", year = 2021), by = "GEOID") |>
   select(NAMELSAD, year, component, value)
 
 write_rds(cv_comp_change, "data/comp_data.rds")
@@ -228,8 +237,8 @@ cv_comp_change <- read_rds("data/comp_data.rds")
 
 # Aggregate data to the regional level.
 
-cv_change <- cv_comp_change %>% 
-  group_by(year, component) %>% # Group by year and component of change.
+cv_change <- cv_comp_change |> 
+  group_by(year, component) |> # Group by year and component of change.
   summarise(value = sum(value)) # Sum values.
 
 cv_change_plot <- ggplot(cv_change,
@@ -258,16 +267,16 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+Despite the slight population decline from from 2019 to 2020, the region is projected to near 300,000 people by 2050 --- a 13 percent increase from the 2020 Census.
 ```{r}
 #| label: fig-projections
 #| fig-cap: "Regional population projections"
 
 # Read in saved UVA Projections data.
 
-projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% cv) %>% # Filter for Lynchburg metro localities
-  select(FIPS, NAME, `2030`,`2040`, `2050`) %>%  # Select only necessary variables
+projections <- read_csv("data/uva_proj.csv") |> 
+  subset(FIPS %in% cv) |> # Filter for Lynchburg metro localities
+  select(FIPS, NAME, `2030`,`2040`, `2050`) |>  # Select only necessary variables
   pivot_longer(3:5, # Choose which columns to pivot
                names_to = "year", # Name the variable
                values_to = "projection") # Name the data value
@@ -277,15 +286,15 @@ dec_2020 <- c("2020", 261593) # 2020 Decennial Census for context.
 
 # Aggregate the data to the region. 
 
-cv_proj <- projections %>% 
-  group_by(year) %>% 
-  summarise(count = sum(projection)) %>% 
-  rbind(dec_2020) %>% # Add 2020 Decennial Census data to data frame.
+cv_proj <- projections |> 
+  group_by(year) |> 
+  summarise(count = sum(projection)) |> 
+  rbind(dec_2020) |> # Add 2020 Decennial Census data to data frame.
   arrange(year) # Arrange in ascending year order to visualize properly. 
 
 cv_proj$type <- c("Census count", "Projection", "Projection", "Projection") # Add column to describe count type.
 
-cv_proj <- cv_proj %>% 
+cv_proj <- cv_proj |> 
   transform(count = as.numeric(count)) 
 
 cv_proj_plot <- ggplot(cv_proj,
@@ -317,6 +326,8 @@ if (knitr::is_html_output()) {
 
 ## Household trends
 
+From 2010 to 2021, there has been a continuous increase in the number of renter households in the region. Cumulatively, there has been an increase of 3,226 renters since 2010. Although, there has been a cumulative increase in the number of homeowner households since 2010 --- that increase is only recent as of 2020 and 2021. 
+
 ```{r}
 #| label: tenure-data
 #| eval: false
@@ -325,8 +336,8 @@ if (knitr::is_html_output()) {
 
 years <- 2010:2021
 
-b25003_vars <- load_variables(2021, "acs5") %>% 
-  filter(str_sub(name, end = 6) %in% "B25003") %>% 
+b25003_vars <- load_variables(2021, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25003") |> 
   filter(str_length(name) < 11)
 
 b25003_raw <- map_dfr(years, function(yr){
@@ -337,16 +348,16 @@ b25003_raw <- map_dfr(years, function(yr){
     year = yr,
     survey = "acs5",
     cache_table = TRUE
-  ) %>% 
+  ) |> 
     mutate(year = yr)
 })
 
-b25003_raw <- b25003_raw %>% 
+b25003_raw <- b25003_raw |> 
   subset(GEOID %in% cv)
 
 
-b25003_vars_cleaned <- b25003_vars %>% 
-  separate(label, into = c("est", "total", "tenure"), sep = "!!") %>% 
+b25003_vars_cleaned <- b25003_vars |> 
+  separate(label, into = c("est", "total", "tenure"), sep = "!!") |> 
   select(variable = name, tenure) |>
   drop_na() |>
   mutate(tenure = case_when(
@@ -354,9 +365,9 @@ b25003_vars_cleaned <- b25003_vars %>%
     tenure == "Renter occupied" ~ "Renter"
   ))
 
-b25003_data <- b25003_raw %>% 
-  right_join(b25003_vars_cleaned, by = "variable") %>% 
-  select(NAME, GEOID, year, tenure, estimate, moe) %>% 
+b25003_data <- b25003_raw |> 
+  right_join(b25003_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, estimate, moe) |> 
   mutate(NAME = str_remove_all(NAME, ", Virginia"),
          NAME = case_when(
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
@@ -377,14 +388,14 @@ b25003_data <- read_rds("data/b25003_data.rds")
 
 # Aggregate data and conduct analysis to identify the cumulative change.
 
-cv_tenure <- b25003_data %>% 
-  group_by(year, tenure) %>% # Group by year and tenure to aggregate to region.
-  summarise(estimate = sum(estimate)) %>% # Summarize data for the aggregation.
-  group_by(tenure) %>% 
+cv_tenure <- b25003_data |> 
+  group_by(year, tenure) |> # Group by year and tenure to aggregate to region.
+  summarise(estimate = sum(estimate)) |> # Summarize data for the aggregation.
+  group_by(tenure) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
 
 cv_tenure_plot <- ggplot(cv_tenure,
@@ -413,14 +424,14 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+The growing number of homeowners in the region are overwhelmingly the result of seniors (65 years and over). Between 2010 and 2021, there was an increase of 5,796 senior homeowners. The growth in homeowners was offset by major decreases in homeowners aged between 25 and 64 years old --- an overall decrease of 5,180. Renter households saw increases across all age groups, but the greatest increase was among 45 to 64 year olds (+1,323).
 ```{r}
 #| label: age
 #| eval: false
 
 # Table B25007: Tenure by Age of Householder
 
-b25007_vars <- load_variables(2021, "acs5") %>%
+b25007_vars <- load_variables(2021, "acs5") |>
   filter(str_sub(name, end = 6) %in% "B25007")
 
 b25007_raw <- map_dfr(years, function(yr){
@@ -431,25 +442,25 @@ b25007_raw <- map_dfr(years, function(yr){
     year = yr,
     survey = "acs5",
     cache_table = TRUE
-  ) %>%
+  ) |>
     mutate(year = yr)
 })
 
-b25007_raw <- b25007_raw %>%
+b25007_raw <- b25007_raw |>
   subset(GEOID %in% cv)
 
-b25007_vars_cleaned <- b25007_vars %>%
-  separate(label, into = c("est", "total", "tenure", "age"), sep = "!!") %>%
-  select(variable = name, tenure, age) %>%
+b25007_vars_cleaned <- b25007_vars |>
+  separate(label, into = c("est", "total", "tenure", "age"), sep = "!!") |>
+  select(variable = name, tenure, age) |>
   drop_na() |>
   mutate(tenure = case_when(
     tenure == "Owner occupied:" ~ "Homeowner",
     tenure == "Renter occupied:" ~ "Renter"
   ))
 
-b25007_data <- b25007_raw %>%
-  right_join(b25007_vars_cleaned, by = "variable") %>% 
-  select(NAME, GEOID, year, tenure, age, estimate, moe) %>% 
+b25007_data <- b25007_raw |>
+  right_join(b25007_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, age, estimate, moe) |> 
   mutate(NAME = str_remove_all(NAME, ", Virginia"),
          NAME = case_when(
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
@@ -476,17 +487,17 @@ write_rds(b25007_data, "data/b25007_data.rds")
 
 b25007_data <- read_rds("data/b25007_data.rds")
 
-cv_age <- b25007_data %>% 
-  group_by(NAME, year, tenure, age) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+cv_age <- b25007_data |> 
+  group_by(NAME, year, tenure, age) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  select(tenure, age, `2010`, `2021`) %>% 
-  transform(change = `2021` - `2010`) %>% 
-  group_by(NAME, tenure, age) %>% 
-  summarise(change = sum(change)) %>% 
-  mutate(age = fct_relevel(age, "Under 25 years old")) %>% 
-  group_by(tenure, age) %>% 
+              values_from = estimate) |> 
+  select(tenure, age, `2010`, `2021`) |> 
+  transform(change = `2021` - `2010`) |> 
+  group_by(NAME, tenure, age) |> 
+  summarise(change = sum(change)) |> 
+  mutate(age = fct_relevel(age, "Under 25 years old")) |> 
+  group_by(tenure, age) |> 
   summarise(change = sum(change))
 
 cv_age_plot <- ggplot(cv_age,
@@ -504,6 +515,7 @@ cv_age_plot <- ggplot(cv_age,
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
   labs(title = "Change in households by age and tenure",
+       subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
 
 if (knitr::is_html_output()) {
@@ -518,15 +530,16 @@ if (knitr::is_html_output()) {
 
 
 ```
+Among household types, householders not living alone grew by 1,430 from 2010 to 2021 --- more than any other household type. This household type mostly represents households with unrelated household members (i.e. living with roommates). Household types like this are expected in regions with major universities, but they can also be an indicator of affordability challenges as individuals increasingly need additional household members to contribute to rent or mortgages.
 
-
+Householders living alone follow at an increase of 1,133. Household formation continues to be delayed among many individuals --- contributing to the growing number of one-person households. But in the Lynchburg region, married couple households follow closely behind with an increase of 1,059 since 2010.
 ```{r}
 #| label: hhtype-data
 #| eval: false
 
 # Table B11001: Household type (including Living Alone)
 
-b11001_vars <- load_variables(2021, "acs5") %>% 
+b11001_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 7) %in% "B11001_")
 
 
@@ -542,13 +555,13 @@ b11001_raw <- map_dfr(years, function(yr){
     mutate(year = yr)
 })
 
-b11001_raw <- b11001_raw %>% 
+b11001_raw <- b11001_raw |> 
   subset(GEOID %in% cv)
 
-b11001_vars_cleaned <- b11001_vars %>% 
+b11001_vars_cleaned <- b11001_vars |> 
   separate(label, into = c("est", "tot", "type", "relationship", "householder"),
            sep = "!!") |>
-  select(variable = name, type, relationship, householder) %>% 
+  select(variable = name, type, relationship, householder) |> 
   mutate(
     householder = case_when(
       relationship == "Married-couple family" ~ relationship,
@@ -559,8 +572,8 @@ b11001_vars_cleaned <- b11001_vars %>%
       relationship == "Householder living alone" ~ type,
       relationship == "Householder not living alone" ~ type,
       TRUE ~ relationship)
-    ) %>% 
-  mutate(across(.fns = ~str_remove_all(.x, ":"))) %>% 
+    ) |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) |> 
   drop_na()
 
 b11001_data <- b11001_raw |>
@@ -581,12 +594,12 @@ write_rds(b11001_data, "data/b11001_data.rds")
 
 b11001_data <- read_rds("data/b11001_data.rds")
 
-cv_hhtype <- b11001_data %>% 
-  group_by(year, hhtype) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+cv_hhtype <- b11001_data |> 
+  group_by(year, hhtype) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  select(hhtype, `2010`, `2021`) %>% 
+              values_from = estimate) |> 
+  select(hhtype, `2010`, `2021`) |> 
   transform(change = `2021` - `2010`) 
 
 
@@ -603,6 +616,7 @@ cv_hhtype_plot <-ggplot(cv_hhtype,
   scale_y_continuous(labels = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 16)) +
   labs(title = "Change in household type",
+       subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11001.")
 
 if (knitr::is_html_output()) {
@@ -615,15 +629,14 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
-
+The region saw its greatest gains among households --- both homeowners and renters --- with two people or less. Two-person renter households saw the most growth between 2010 and 2021, increasing by 2,409. Household with three or more people only grew slightly, but three-person homeowner households actually saw a decline (-1,642). 
 ```{r}
 #| label: hhsize-data
 #| eval: false
 
 # Table B25009: Household size by tenure
 
-b25009_vars <- load_variables(2021, "acs5") %>% 
+b25009_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25009")
 
 b25009_raw <- map_dfr(years, function(yr){
@@ -638,25 +651,25 @@ b25009_raw <- map_dfr(years, function(yr){
     mutate(year = yr)
 })
 
-b25009_raw <- b25009_raw %>% 
+b25009_raw <- b25009_raw |> 
   subset(GEOID %in% cv)
 
-b25009_vars_cleaned <- b25009_vars %>% 
-  separate(label, into = c("est", "total", "tenure", "size"), sep = "!!") %>% 
-  select(variable = name, tenure, size)  %>% 
+b25009_vars_cleaned <- b25009_vars |> 
+  separate(label, into = c("est", "total", "tenure", "size"), sep = "!!") |> 
+  select(variable = name, tenure, size)  |> 
   drop_na() |>
   mutate(tenure = case_when(
     tenure == "Owner occupied:" ~ "Homeowner",
     tenure == "Renter occupied:" ~ "Renter"
   ))
 
-b25009_data <- b25009_raw %>% 
-  right_join(b25009_vars_cleaned, by = "variable") %>% 
-  select(NAME, GEOID, year, tenure, size, estimate) %>% 
+b25009_data <- b25009_raw |> 
+  right_join(b25009_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, size, estimate) |> 
   mutate(NAME = str_remove_all(NAME, ", Virginia"),
          NAME = case_when(
            NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
-           TRUE ~ NAME)) %>% 
+           TRUE ~ NAME)) |> 
   mutate(size = case_when(
     size == "1-person household" ~ "1-person",
     size == "2-person household" ~ "2-person",
@@ -674,12 +687,12 @@ write_rds(b25009_data, "data/b25009_data.rds")
 
 b25009_data <- read_rds("data/b25009_data.rds")
 
-cv_hhsize <- b25009_data %>% 
-  group_by(year, tenure, size) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+cv_hhsize <- b25009_data |> 
+  group_by(year, tenure, size) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  select(tenure, size, `2010`, `2021`) %>% 
+              values_from = estimate) |> 
+  select(tenure, size, `2010`, `2021`) |> 
   transform(change = `2021` - `2010`) 
   
 
@@ -695,6 +708,7 @@ cv_hhsize_plot <- ggplot(cv_hhsize,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Change in household size by tenure",
+       subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") +
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
@@ -710,7 +724,7 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+The senior population grew by 9,021 individuals from 2010 to 2021. Much of that growth occurred among seniors living with family --- mainly as a householder (+3,233) or as the spouse in a family (+3,091). The third largest change in the senior population was among seniors living alone (+2,291). This senior living arrangement can be a concern for communities. With more and more seniors living alone, aging-in-place is made more difficult without support from others. 
 ```{r}
 #| label: hh-seniors-data
 #| eval: false
@@ -775,12 +789,12 @@ write_rds(b09020_data, "data/b09020_data.rds")
 
 b09020_data <- read_rds("data/b09020_data.rds")
 
-cv_seniors <- b09020_data %>% 
-  group_by(year, family, relationship) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+cv_seniors <- b09020_data |> 
+  group_by(year, family, relationship) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  transform(change = `2021` - `2012`) %>% 
+              values_from = estimate) |> 
+  transform(change = `2021` - `2012`) |> 
   mutate(family = str_replace(family, "Group quarters", " "),
          family = fct_relevel(family, "Family", "Nonfamily", " "))
 
@@ -798,6 +812,7 @@ cv_seniors_plot <- ggplot(cv_seniors,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Change in senior population by living arrangement",
+       subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.") +
   theme(strip.placement = "outside",
         strip.text.y = element_text(angle = 0),
@@ -807,7 +822,7 @@ cv_seniors_plot <- ggplot(cv_seniors,
         plot.title.position = "plot",
         plot.caption.position = "plot"
         ) +
-   scale_x_continuous(labels = label_comma())
+   scale_x_continuous(labels = number_format(big.mark = ",", style_positive = "plus"))
 
 if (knitr::is_html_output()) {
   
@@ -818,8 +833,7 @@ if (knitr::is_html_output()) {
   cv_seniors_plot
 }
 ```
-
-
+With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. These families are called subfamilies, and within the Lynchburg region subfamilies are more than likely to be single mothers. But in recent years, the number of single fathers and married couples (both with and without children) living with another family has been on the rise.
 ```{r}
 #| label: hh-subfam-data
 #| eval: false
@@ -877,9 +891,9 @@ write_rds(b11013_data, "data/b11013_data.rds")
 
 b11013_data <- read_rds("data/b11013_data.rds") 
 
-cv_subfam <- b11013_data %>% 
-  group_by(year, subfamily, children) %>%  
-  summarise(estimate = sum(estimate)) %>% 
+cv_subfam <- b11013_data |> 
+  group_by(year, subfamily, children) |>  
+  summarise(estimate = sum(estimate)) |> 
   mutate(year = as.character(year))
 
 cv_subfam_plot <- ggplot(cv_subfam,
@@ -910,8 +924,7 @@ if (knitr::is_html_output()) {
   
 
 ```
-
-
+While more and more families are living with other families, the number of multigenerational households has also increased in recent years --- especially within Lynchburg and Campbell County, where the percentage of the population living in multigenerational households increased 2.4 percentage points from 2016 (5.5 percent) to 2020 (7.9 percent).
 ```{r} 
 #| label: hh-multigen-data
 #| eval: false
@@ -991,7 +1004,7 @@ multigen_raw <- bind_rows(multigen_2016, multigen_2017, multigen_2018,
   mutate(geography = case_when(
     PUMA == "51096" ~ "Lynchburg city and Campbell County",
     PUMA == "51095" ~ "Amherst, Appomattox, and Bedford Counties"
-  )) %>% 
+  )) |> 
   mutate(MULTG = case_when(
     MULTG == "1" ~ "Single generation",
     MULTG == "2" ~ "Multiple generations"
@@ -1047,7 +1060,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+While other parts of Virginia are seeing an increasing number of adult children returning home to live with parents, this is not so much the case in the Lynchburg region. Young adults (18 to 34 years old) are increasingly living with a partner in the region, a 38 percent increase between 2015 and 2021. Adults living with their parents only increased by 1.5 percent during this same timeframe.
 ```{r}
 #| label: hh-adultchild-data
 #| eval: false
@@ -1101,12 +1114,12 @@ write_rds(b09021_data, "data/b09021_data.rds")
 
 b09021_data <- read_rds("data/b09021_data.rds") 
 
-cv_adultchild <- b09021_data %>% 
-  group_by(year, arrangement) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year %in% c(2015, 2021)) %>% 
+cv_adultchild <- b09021_data |> 
+  group_by(year, arrangement) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year %in% c(2015, 2021)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
+              values_from = estimate) |> 
   mutate(change = `2021` - `2015`,
          pct_change = change/`2015`)
 
@@ -1141,6 +1154,9 @@ if (knitr::is_html_output()) {
 
 ## Economic trends
 
+In the region, the distribution of homeowner incomes have shifted upwards. A greater share of homeowners are now in the $100,000 and more income range than back in 2010. Renter incomes have also shifted upwards but not as dramatically towards the upper income bands. In 2021, there 5,060 more renter households making between \$50,000 and \$149,999, a 92 percent increase.
+
+Regardless of these shifts, income distributions for renter households continue to skew towards the low end.
 ```{r}
 #| label: hh-inc-data
 #| eval: false
@@ -1202,10 +1218,10 @@ write_rds(b25118_data, "data/b25118_data.rds")
 
 b25118_data <- read_rds("data/b25118_data.rds") 
 
-inc_dist <- b25118_data %>% 
-  group_by(year, tenure, income) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
+inc_dist <- b25118_data |> 
+  group_by(year, tenure, income) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year == 2010 | year == 2021) |> 
   mutate(year = as.character(year)) 
 
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
@@ -1238,7 +1254,7 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+Between homeowner and renter households there is a \$35,236 gap in median household income. Adjusting for inflation shows that median household income has been relatively flat for homeowners in the last decade (7 percent increase), while the typical income for renters saw modest gains (18 percent increase).
 ```{r}
 #| label: med-income-msa
 #| eval: false
@@ -1259,26 +1275,26 @@ b25119_raw <- map_dfr(years, function(yr){
     year = yr,
     survey = "acs5",
     cache_table = TRUE
-  ) %>%
+  ) |>
     mutate(year = yr)
   })  
 
 
-b25119_msa <- b25119_raw %>% 
+b25119_msa <- b25119_raw |> 
   filter(NAME == "Lynchburg, VA Metro Area")
 
-b25119_vars_cleaned <- b25119_vars %>% 
-  separate(label, into = c("est", "income", "total", "tenure"), sep = "!!") %>% 
-  select(variable = name, tenure) %>% 
+b25119_vars_cleaned <- b25119_vars |> 
+  separate(label, into = c("est", "income", "total", "tenure"), sep = "!!") |> 
+  select(variable = name, tenure) |> 
   mutate(tenure = case_when(
     tenure == "Owner occupied (dollars)" ~ "Homeowner",
     tenure == "Renter occupied (dollars)" ~ "Renter"
   ))
 
-b25119_vars_cleaned$tenure <- b25119_vars_cleaned$tenure %>%  
+b25119_vars_cleaned$tenure <- b25119_vars_cleaned$tenure |>  
   replace_na('All households')
 
-b25119_data <- b25119_msa %>% 
+b25119_data <- b25119_msa |> 
   right_join(b25119_vars_cleaned, by = "variable") |> 
   select(NAME, year, tenure, estimate, moe)
 
@@ -1286,7 +1302,7 @@ library(readxl)
 
 cpi <- read_excel("data/CPI_U_RS.xlsx")
 
-cpi <- cpi %>% 
+cpi <- cpi |> 
   rename(year = Year,
          priceindex = Index) |> 
   transform(year = as.numeric(year))
@@ -1306,10 +1322,10 @@ write_rds(b25119_cpi_msa, "data/b25119_cpi_msa.rds")
 #| label: fig-medinc
 #| fig-cap: "Regional median household income by tenure"
 
-b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") %>% 
+b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") |> 
   pivot_longer(4:5,
                names_to = "value",
-               values_to = "estimate") %>% 
+               values_to = "estimate") |> 
   mutate(value = case_when(
     value == "dollars21" ~ "2021 inflation-adjusted",
     value == "cdollars" ~ "Current dollars"
@@ -1344,7 +1360,6 @@ if (knitr::is_html_output()) {
 
 ```
 
-
 ```{r}
 #| label: med-income-county
 #| eval: false
@@ -1363,7 +1378,7 @@ b25119_raw <- map_dfr(years, function(yr){
     year = yr,
     survey = "acs5",
     cache_table = TRUE
-  ) %>%
+  ) |>
     mutate(year = yr)
   })
 
@@ -1401,7 +1416,9 @@ b25119_cpi <- b25119_data |>
 write_rds(b25119_cpi, "data/b25119_cpi.rds")
 
 ```
+Gaps in income between different races and ethnicities in the region continue to further racial inequities --- especially in the housing market. Black households in the region make a fraction of what their white counterparts make. For every dollar a typical white household makes, a Black household only makes 62 percent of that dollar.
 
+Hispanic households in the region have made major gains in income. When comparing inflation-adjusted income, Hispanic households in the region saw a 17 percent increase in median household income, the largest gain among any other group.
 ```{r}
 #| label: inc-race-msa
 #| eval: false
@@ -1410,20 +1427,20 @@ years <- 2010:2021
 
 b19013 <- paste0("B19013", LETTERS[2:9])
 
-b19013_defns <- load_variables(2020, "acs5") %>%
-  filter(str_sub(name, end = 7) %in% b19013) %>%
+b19013_defns <- load_variables(2020, "acs5") |>
+  filter(str_sub(name, end = 7) %in% b19013) |>
   filter(str_detect(name, "PR") == FALSE)
 
 concept_to_race <- function(x) {
-  out <- x %>%
-    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") %>%
+  out <- x |>
+    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") |>
     str_to_title()
 }
 
-b19013_cleaned <- b19013_defns %>%
-  mutate(race = concept_to_race(concept)) %>%
-  separate(label, c("estimate", "medhhincome"), sep = "!!") %>%
-  select(variable = name, medhhincome, race) %>%
+b19013_cleaned <- b19013_defns |>
+  mutate(race = concept_to_race(concept)) |>
+  separate(label, c("estimate", "medhhincome"), sep = "!!") |>
+  select(variable = name, medhhincome, race) |>
   mutate(across(.fns = ~replace_na(.x, "All")),
           across(.fns = ~str_remove_all(.x, ":")))
 
@@ -1433,16 +1450,16 @@ b19013_raw_msa <- map_dfr(b19013, function(tb) {
       geography = "cbsa",
       table = tb,
       year = yr
-    ) %>%
+    ) |>
     left_join(b19013_cleaned, by = "variable")
-    acs_rearranged <- acs_pull %>%
-      mutate(year = yr) %>%
+    acs_rearranged <- acs_pull |>
+      mutate(year = yr) |>
       select(variable, year, NAME, GEOID, race, medhhincome,
              estimate, moe)
     acs_rearranged
   })
   yearly_data
-}) %>% 
+}) |> 
   filter(NAME == "Lynchburg, VA Metro Area")
 
 cpi <- read_excel("data/CPI_U_RS.xlsx") |> 
@@ -1450,7 +1467,7 @@ cpi <- read_excel("data/CPI_U_RS.xlsx") |>
          priceindex = Index) |> 
   transform(year = as.numeric(year))
 
-b19013_msa <- b19013_raw_msa %>% 
+b19013_msa <- b19013_raw_msa |> 
   mutate(across(.fns = ~str_remove_all(.x, "Alone Householder")),
          across(.fns = ~trimws(.x))) |> 
   select(year, NAME, race, estimate, moe) |> 
@@ -1475,12 +1492,12 @@ write_rds(b19013_msa, "data/b19013_msa.rds")
 #| label: fig-inc-race-msa
 #| fig-cap: "Regional median household income by race and ethnicity"
 
-b19013_msa <- read_rds("data/b19013_msa.rds") %>% 
-  select(NAME, year, race, cdollars = estimate, dollars21) %>% 
+b19013_msa <- read_rds("data/b19013_msa.rds") |> 
+  select(NAME, year, race, cdollars = estimate, dollars21) |> 
   pivot_longer(4:5,
                names_to = "value",
                values_to = "estimate"
-               ) %>% 
+               ) |> 
   mutate(value = case_when(
     value == "dollars21" ~ "2021 inflation-adjusted",
     value == "cdollars" ~ "Current dollars"))
@@ -1521,20 +1538,20 @@ years <- 2010:2021
 
 b19013 <- paste0("B19013", LETTERS[2:9])
 
-b19013_defns <- load_variables(2020, "acs5") %>%
-  filter(str_sub(name, end = 7) %in% b19013) %>%
+b19013_defns <- load_variables(2020, "acs5") |>
+  filter(str_sub(name, end = 7) %in% b19013) |>
   filter(str_detect(name, "PR") == FALSE)
 
 concept_to_race <- function(x) {
-  out <- x %>%
-    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") %>%
+  out <- x |>
+    str_remove_all("MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS \\(\\IN 2020 INFLATION-ADJUSTED DOLLARS\\)\\ \\(|\\)") |>
     str_to_title()
 }
 
-b19013_cleaned <- b19013_defns %>%
-  mutate(race = concept_to_race(concept)) %>%
-  separate(label, c("estimate", "medhhincome"), sep = "!!") %>%
-  select(variable = name, medhhincome, race) %>%
+b19013_cleaned <- b19013_defns |>
+  mutate(race = concept_to_race(concept)) |>
+  separate(label, c("estimate", "medhhincome"), sep = "!!") |>
+  select(variable = name, medhhincome, race) |>
   mutate(across(.fns = ~replace_na(.x, "All")),
           across(.fns = ~str_remove_all(.x, ":")))
 
@@ -1545,10 +1562,10 @@ b19013_raw <- map_dfr(b19013, function(tb) {
       table = tb,
       year = yr,
       state = "VA"
-    ) %>%
+    ) |>
     left_join(b19013_cleaned, by = "variable")
-    acs_rearranged <- acs_pull %>%
-      mutate(year = yr) %>%
+    acs_rearranged <- acs_pull |>
+      mutate(year = yr) |>
       select(variable, year, NAME, GEOID, race, medhhincome,
              estimate, moe)
     acs_rearranged
@@ -1585,6 +1602,12 @@ write_rds(b19013_data, "data/b19013_data.rds")
 ```
 
 ## Housing stock
+
+The bulk of the region's housing stock is composed of single-family housing (74 percent). Much of the single-family housing stock resides in homeownership, but in 2015 single-family housing decreased roughly two percentage points from homeownership towards rental. Manufactured homes, which is included in the Other category, has continued to make up the second largest portion of the region's housing stock (10 percent overall). 
+
+Rental housing stock is diverse and has grown to include duplexes, tri-plexes, and quads, as well as larger multifamily properties. While these smaller multifamily properties like duplexes once made up nearly two percent of the homeownership market, they have reduced to a half of a percent of the region's entire housing stock.
+
+Options like these have been touted as Missing Middle Housing, which are able to offer affordable homeownership options.
 
 ```{r}
 #| label: structure-data
@@ -1652,11 +1675,11 @@ write_rds(b25127_data, "data/b25127_data.rds")
 
 b25127_data <- read_rds("data/b25127_data.rds")
 
-cv_structure <- b25127_data %>% 
-  group_by(year, tenure, structure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+cv_structure <- b25127_data |> 
+  group_by(year, tenure, structure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year) |> 
+  mutate(pct = round(estimate/sum(estimate), 4)) |> 
   mutate(year = as.character(year))
 
 cv_structure_plot <- ggplot(cv_structure,
@@ -1674,7 +1697,8 @@ cv_structure_plot <- ggplot(cv_structure,
   labs(title = "Housing stock by structure type",
        subtitle = "Percent of total occupied housing from 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, 5-Year ACS, Table B25127.") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "right")
 
 if (knitr::is_html_output()) {
   
@@ -1687,14 +1711,14 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+Most of the region's housing is surpassing 20 years in age. A construction boom in the late 20th century (from 1960 to 1999) contributed to much of the region's homeownership and rental housing stock. With aging housing stock, housing quality becomes an ever-present issue.
 ```{r}
 #| label: fig-yrbuilt
 #| fig-cap: "Regional housing stock by year built"
 
-cv_yrbuilt <- b25127_data %>% 
-  filter(year == 2021) %>% 
-  group_by(tenure, yrbuilt) %>% 
+cv_yrbuilt <- b25127_data |> 
+  filter(year == 2021) |> 
+  group_by(tenure, yrbuilt) |> 
   summarise(estimate = sum(estimate))
 
 cv_yrbuilt_plot <- ggplot(cv_yrbuilt,
@@ -1724,7 +1748,9 @@ if (knitr::is_html_output()) {
 }
 
 ```
+The number of smaller bedroom homes has been declining since 2010, particularly within the existing homeowner housing stock. From 2010 to 2021, there was a loss of 2,435 two-bedroom homes in homeownership. Some of that loss could be accounted for in a transition to rental, but two-bedroom rentals only increased by 1,487. One-bedroom rentals, often in-demand by young professionals, as well as those most in need, also so a decline (-191), but two-bedroom rentals accounted for much of the growth in the rental market.
 
+Larger homes with three or more bedrooms saw the greatest increase in the region. Although larger homes are meeting a demand, they often come at the expense of affordability.
 ```{r}
 #| label: beds-data
 #| eval: false
@@ -1746,7 +1772,7 @@ b25042_raw <- map_dfr(years, function(yr) {
     mutate(year = yr)
 })
 
-b25042_raw <- b25042_raw %>% 
+b25042_raw <- b25042_raw |> 
   subset(GEOID %in% cv)
 
 b25042_vars_cleaned <- b25042_vars |> 
@@ -1780,18 +1806,18 @@ write_rds(b25042_data, "data/b25042_data.rds")
 
 b25042_data <- read_rds("data/b25042_data.rds")
 
-cv_beds <- b25042_data %>% 
+cv_beds <- b25042_data |> 
   mutate(br = case_when(
     br == "4 bedrooms" ~ "4 or more bedrooms",
     br == "5 or more bedrooms" ~ "4 or more bedrooms",
     TRUE ~ br
-  )) %>% 
-  group_by(year, tenure, br) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+  )) |> 
+  group_by(year, tenure, br) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(
     names_from = year,
     values_from = estimate
-  ) %>% 
+  ) |> 
   mutate(chg = `2021` - `2010`)
 
 
@@ -1821,13 +1847,21 @@ if (knitr::is_html_output()) {
 }
 
 ```
+Manufactured housing communities are spread out across the region. These homes often serve as market-rate affordable housing, but they are face several challenges, including risk of redevelopment, poor housing quality, and aging infrastructure.
 
+There are 99 manufactured home communities in the region. Three quarters of the communities in the region are small, consisting of less than 50 homes. 
+
+:::{.callout-note}
+
+Insert information about MHC tenure and issues.
+
+:::
 ```{r}
 #| label: fig-mhc-map
 #| fig-cap: "Map of manufactured home communities"
 
 # mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
-#   filter(STATE == "VA") %>% 
+#   filter(STATE == "VA") |> 
 #   filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL|LYNCHBURG"))
 # 
 # write_rds(mhc, "data/cv_mhc.rds")
@@ -1843,7 +1877,45 @@ leaflet(mhc) |>
 
 ```
 
+```{r}
+#| label: fig-mhc
+#| fig-cap: "Manufactured home communities by size"
 
+mhc <- read_rds("data/cv_mhc.rds")
+
+mhc_group <- mhc |> 
+  group_by(SIZE) |> 
+  summarise(count = n_distinct(OBJECTID)) |> 
+  mutate(size = str_to_sentence(SIZE))
+
+mhc_group_plot <- ggplot(mhc_group,
+                         aes(x = size,
+                             y = count,
+                             data_id = count,
+                             tooltip = count,
+                             fill = size)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Manufactured home communities by size",
+       caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).")
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = mhc_group_plot,
+         height_svg = 4)
+} else {
+  
+  mhc_group_plot
+}
+
+
+```
+The region has still not recovered to its Great Recession building-levels, when residential building permits peaked at 1,840 in 2005. Since 2012, permits have only averaged at 768 per year, less than half of what it was in 2005.  
+
+In addition, the early 2000s saw a greater number of two to four bedroom homes. But by 2005, these diverse types of housing were nearly non-existent from the building pipeline in the region.
 ```{r}
 #| label: bps-data
 #| eval: false
@@ -1854,22 +1926,22 @@ header_rows <- read_csv("https://www2.census.gov/econ/bps/County/co2020a.txt",
                         col_names = FALSE,
                         n_max = 2)
 
-column_names <- header_rows %>%
-  select(X1:X18) %>%
-  t() %>%
-  as_tibble() %>%
-  mutate(group = rep(1:6, each = 3)) %>%
-  group_by(group) %>%
-  fill(V1, .direction = "updown") %>%
-  mutate(names = paste0(V1, ": ", V2)) %>%
+column_names <- header_rows |>
+  select(X1:X18) |>
+  t() |>
+  as_tibble() |>
+  mutate(group = rep(1:6, each = 3)) |>
+  group_by(group) |>
+  fill(V1, .direction = "updown") |>
+  mutate(names = paste0(V1, ": ", V2)) |>
   pull(names)
 
 library(glue)
 
 cbps_raw <- map_df(bps_years, ~{
   raw <- read_csv(glue("https://www2.census.gov/econ/bps/County/co{.x}a.txt"), skip = 2,
-                    col_names = FALSE) %>%
-    select(X1:X18) %>%
+                    col_names = FALSE) |>
+    select(X1:X18) |>
     set_names(column_names)
   
   raw
@@ -1886,28 +1958,28 @@ cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2211y.txt",
   set_names(column_names) |> 
   mutate(`Survey: Date` = 2022)
 
-cbps_data <- cbps_raw %>% 
+cbps_data <- cbps_raw |> 
   bind_rows(cbps_ytd) |> 
   mutate(year = `Survey: Date`,
-         GEOID = paste0(`FIPS: State`, `FIPS: County`)) %>%
-  select(`1-unit: Bldgs`:GEOID) %>%
-  filter(GEOID %in% cv) %>%
+         GEOID = paste0(`FIPS: State`, `FIPS: County`)) |>
+  select(`1-unit: Bldgs`:GEOID) |>
+  filter(GEOID %in% cv) |>
   pivot_longer(`1-unit: Bldgs`:`5+ units: Value`,
                names_to = "type",
-               values_to = "value") %>%
-  separate(type, into = c("Type", "col"), sep = ": ") %>%
+               values_to = "value") |>
+  separate(type, into = c("Type", "col"), sep = ": ") |>
   pivot_wider(names_from = col,
-              values_from = value) %>%
-  rename_with(tolower, Type:Value) %>% 
+              values_from = value) |>
+  rename_with(tolower, Type:Value) |> 
   select(GEOID, year, type:units)
 
-cv_cbps <- cbps_data %>% 
+cv_cbps <- cbps_data |> 
   mutate(GEOID = case_when(
     GEOID == "51515" ~ "51019",
-    TRUE ~ GEOID)) %>% 
-  left_join(counties("VA", year = 2021), by = "GEOID") %>% 
-  select(GEOID, NAMELSAD, year, type, units) %>% 
-  group_by(GEOID, NAMELSAD, year, type) %>% 
+    TRUE ~ GEOID)) |> 
+  left_join(counties("VA", year = 2021), by = "GEOID") |> 
+  select(GEOID, NAMELSAD, year, type, units) |> 
+  group_by(GEOID, NAMELSAD, year, type) |> 
   summarise(units = sum(units))
 
 
@@ -1918,9 +1990,16 @@ write_rds(cv_cbps, "data/cv_cbps.rds")
 #| label: fig-permits
 #| fig-cap: "Regional residential building permits"
 
-cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
-  group_by(year, type) %>% 
+cv_cbps <- read_rds("data/cv_cbps.rds") |> 
+  group_by(year, type) |> 
   summarise(units = sum(units))
+
+# permit_avg <- cv_cbps |> 
+#   filter(year >= 2012) |> 
+#   group_by(year) |> 
+#   summarise(units = sum(units))
+# 
+# mean(permit_avg$units)
 
 cv_cbps_plot <- ggplot(cv_cbps,
        aes(x = year,
@@ -1951,6 +2030,7 @@ if (knitr::is_html_output()) {
 
 ## Homeownership market
 
+The regional homeownership rate has been on a slow decline in the last decade, from 72 percent in 2010 to 70 percent in 2021.
 ```{r}
 #| label: fig-ho-rate
 #| fig-cap: "Regional homeownership rate"
@@ -1961,16 +2041,16 @@ b25003_data <- read_rds("data/b25003_data.rds")
 
 # Aggregate data to the regional level.
 
-ho_rate <- b25003_data %>%
-  select(year, tenure, estimate) %>% 
-  group_by(year, tenure) %>% 
+ho_rate <- b25003_data |>
+  select(year, tenure, estimate) |> 
+  group_by(year, tenure) |> 
   summarise(estimate = sum(estimate))
 
 # Calculate the percent of total by year and tenure.
 
-cv_ho <- ho_rate %>% 
-  group_by(year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>%  
+cv_ho <- ho_rate |> 
+  group_by(year) |> 
+  mutate(pct = estimate/sum(estimate)) |>  
   filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
 
 cv_ho_plot <- ggplot(cv_ho,
@@ -1998,18 +2078,18 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+As the homeownership rate has declined slightly, the regional median residential sales price has continued to climb in recent years. Although fluctuating between \$180,000 and \$225,000 between 2016 and 2019, the region saw a major bump in early 2020 as the pandemic impacts hit the region's housing market that have kept home prices well-above \$225,000 ever since.
 ```{r}
 #| label: fig-mls-price
 #| fig-cap: "Regional median residential sales price"
 
 # Utilize Lynchburg MLS data. Need median sales price for the entire region from 2000 to 2022 or at least 2010. Monthly median sales price is preferred.
 
-cv_price <- read_excel("data/cv_mls_data.xlsx", sheet = "Median Sales Price By Month") %>% 
-  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
-  mutate(date = as.Date(date)) %>% 
-  filter(Property_Type == "RESI") %>% 
-  mutate(price = as.numeric(Median_Sales_Price)) %>% 
+cv_price <- read_excel("data/cv_mls_data.xlsx", sheet = "Median Sales Price By Month") |> 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) |> 
+  mutate(date = as.Date(date)) |> 
+  filter(Property_Type == "RESI") |> 
+  mutate(price = as.numeric(Median_Sales_Price)) |> 
   select(date, price)
 
 
@@ -2017,33 +2097,34 @@ library(fredr)
 
 cpi_ls <- fredr(
   series_id = "CUUR0000SA0L2"
-) %>% 
-  select(date, value) %>% 
-  mutate(date = as.Date(date)) %>% 
+) |> 
+  select(date, value) |> 
+  mutate(date = as.Date(date)) |> 
   mutate(value = as.numeric(value))
 
-cv_price_adj <- cv_price %>% 
-  left_join(cpi_ls, by = "date") %>% 
-  transform(price_adj = ((272.711/value)*price)) %>% 
-  select(date, price, price_adj) %>% 
+cv_price_adj <- cv_price |> 
+  left_join(cpi_ls, by = "date") |> 
+  transform(price_adj = ((272.711/value)*price)) |> 
+  select(date, price, price_adj) |> 
   pivot_longer(2:3,
                names_to = "type",
-               values_to = "price") %>% 
+               values_to = "price") |> 
   mutate(type = case_when(
     type == "price" ~ "Current dollars",
     type == "price_adj" ~ "Inflation-adjusted dollars"
-  ))
+  )) |> 
+  transform(price_label = dollar(price)) |> 
+  mutate(tooltip = c(paste0("Date: ", date, "\n Price: ", price_label)))
   
 
 cv_price_plot <- ggplot(cv_price_adj,
        aes(x = date,
            y = price,
            color = type)) +
-  geom_line(size = 1) +
+  geom_line(size = 0.5) +
   geom_point_interactive(
-    aes(data_id = price,
-        tooltip = dollar_format()(price)),
-    size = 2) +
+    aes(data_id = tooltip,
+        tooltip = tooltip)) +
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = dollar_format()) +
@@ -2066,27 +2147,27 @@ if (knitr::is_html_output()) {
 
 
 ```
-
-
+The impact of the pandemic is most noticeable when looking at the number of closed home sales and average days on market. The region saw record high closed home sales during the summers of 2020 and 2021, when it hit 435 sales in June 2020 and then 448 in June 2021.
 ```{r}
 #| label: fig-mls-sales
 #| fig-cap: "Regional number of closed home sales"
 
 # Utilzie Lynchburg MLS data. Need mumber of closed sales for the entire region from 2000 to 2022 or at least 2010. Monthly number is preferred.
 
-cv_sold <- read_excel("data/cv_mls_data.xlsx", sheet = "Number Sold Per Month") %>% 
-  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
-  mutate(date = as.Date(date)) %>% 
-  filter(Property_Type == "RESI") %>% 
-  mutate(count = as.numeric(Quantity)) %>% 
-  select(date, count)
+cv_sold <- read_excel("data/cv_mls_data.xlsx", sheet = "Number Sold Per Month") |> 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) |> 
+  mutate(date = as.Date(date)) |> 
+  filter(Property_Type == "RESI") |> 
+  mutate(count = as.numeric(Quantity)) |> 
+  select(date, count) |> 
+  mutate(tooltip = c(paste0("Date: ", date, "\n Closed home sales: ", count)))
 
 cv_sold_plot <- ggplot(cv_sold,
        aes(x = date,
            y = count,
            fill = count,
-           data_id = count,
-           tooltip = label_number(big.mark = ",")(count))) +
+           data_id = tooltip,
+           tooltip = tooltip)) +
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() + 
@@ -2108,25 +2189,30 @@ if (knitr::is_html_output()) {
 
 
 ```
+The demand in the region is further exemplified by the dramatic decline in average days on market. Already on the decline since 2017, the region hit record low average days on market in middle of 2021. Since then, homes have remained below an average of 40 days on the market.
 
+With increasing mortgage interest rates in recent months, home sales, as well as prices, have seen declines. But prices will continue to rise, although not as rapidly as during the early aughts of the pandemic when record low interest rates opened up housing opportunity for many who could not have afforded a home otherwise. 
 ```{r}
 #| label: fig-mls-dom
 #| fig-cap: "Regional average days on market"
 
 # Utilize Lynchburg MLS data. Need days on market for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
 
-cv_dom <- read_excel("data/cv_mls_data.xlsx", sheet = "Average DOM Per Month") %>% 
-  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) %>% 
-  mutate(date = as.Date(date)) %>% 
-  filter(Property_Type == "RESI") %>% 
-  mutate(dom = as.numeric(`Average DOM`)) %>% 
-  select(date, dom)
+cv_dom <- read_excel("data/cv_mls_data.xlsx", sheet = "Average DOM Per Month") |> 
+  mutate(date = as.yearmon(paste(Year, Month), "%Y %m")) |> 
+  mutate(date = as.Date(date)) |> 
+  filter(Property_Type == "RESI") |> 
+  mutate(dom = as.numeric(`Average DOM`)) |> 
+  select(date, dom) |> 
+  mutate(tooltip = c(paste0("Date: ", date, "\n Average DOM: ", dom)))
 
 
 cv_dom_plot <- ggplot(cv_dom,
        aes(x = date,
            y = dom,
-           fill = dom)) +
+           fill = dom,
+           data_id = tooltip, 
+           tooltip = tooltip)) +
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() + 
@@ -2149,6 +2235,8 @@ if (knitr::is_html_output()) {
 
 ## Rental market
 
+Average rent for the region has been relatively flat since 2016. The average market asking rent was \$1,049 in the first quarter of 2016. By the fourth quarter of 2022, the typical rent in the region had only increased by \$3 to \$1,052. 
+
 ```{r}
 #| label: fig-rent
 #| fig-cap: "Regional average market asking rent"
@@ -2161,19 +2249,21 @@ if (knitr::is_html_output()) {
 
 library(lubridate)
 
-cvpdc_rent <- read_csv("data/cvpdc_rent.csv") %>%
-  filter(!str_detect(period, "QTD")) %>% 
-  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
+cvpdc_rent <- read_csv("data/cvpdc_rent.csv") |>
+  filter(!str_detect(period, "QTD")) |> 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
   pivot_longer(2:3,
                names_to = "value",
-               values_to = "estimate") %>% 
-  arrange(desc(value)) %>% 
-  mutate(year = year(period)) %>% 
-  filter(year >= 2010) %>% 
+               values_to = "estimate") |> 
+  arrange(desc(value)) |> 
+  mutate(year = year(period)) |> 
+  filter(year >= 2016) |> 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
     value == "infl_adj" ~ "Inflation-adjusted dollars"
-  ))
+  )) |> 
+  mutate(price_label = dollar(estimate)) |> 
+  mutate(tooltip = c(paste0("Date: ", period, "\n Average rent: ", price_label)))
 
 cvpdc_rent_plot <- ggplot(cvpdc_rent,
        aes(x = period,
@@ -2182,8 +2272,8 @@ cvpdc_rent_plot <- ggplot(cvpdc_rent,
            color = value)) + 
   geom_line(size = 0.5) +
   geom_point_interactive(
-    aes(data_id = estimate,
-        tooltip = dollar_format()(estimate)),
+    aes(data_id = tooltip,
+        tooltip = tooltip),
     size = 1) +
   scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) + 
   scale_linetype_manual(values = c(2,1)) +
@@ -2207,7 +2297,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+In spite of the minute changes in average rent over the past few years, the rental vacancy rate took a major dip in the second half of 2020, reaching a low of 3 percent in Q3 2021. Rental vacancy has increased since the end of 2021, but has yet to reach pre-COVID-19 levels. 
 ```{r}
 #| label: fig-vacancy
 #| fig-cap: "Regional rental vacancy rate"
@@ -2218,10 +2308,14 @@ if (knitr::is_html_output()) {
 
 # Note the download date of data here: 
 
-cvpdc_vacancy <- read_csv("data/cvpdc_vacancy.csv") %>% 
-  select(period, vacancy = overall_vacancy) %>% 
-  filter(!str_detect(period, "QTD")) %>% 
-  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1))
+cvpdc_vacancy <- read_csv("data/cvpdc_vacancy.csv") |> 
+  select(period, vacancy = overall_vacancy) |> 
+  filter(!str_detect(period, "QTD")) |> 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
+  mutate(year = year(period)) |> 
+  filter(year >= 2016) |> 
+  mutate(vacancy_label = percent(vacancy)) |> 
+  mutate(tooltip = c(paste0("Date: ", period, "\n Vacancy rate: ", vacancy_label)))
 
 cvpdc_vacancy_plot <- ggplot(cvpdc_vacancy,
        aes(x = period,
@@ -2231,8 +2325,8 @@ cvpdc_vacancy_plot <- ggplot(cvpdc_vacancy,
   theme_hfv() +
   scale_color_hfv() +
   geom_point_interactive(
-    aes(data_id = vacancy,
-        tooltip = percent_format()(vacancy))) +
+    aes(data_id = tooltip,
+        tooltip = tooltip)) +
       scale_y_continuous(labels = percent_format()) +
   labs(title = "Rental vacancy rate",
        caption = "**Source:** CoStar Group, Inc.") + 
@@ -2253,6 +2347,103 @@ if (knitr::is_html_output()) {
 ```
 
 ## Affordability
+
+As home prices increase and rental supply wanes, the impacts on housing affordability can
+
+
+```{r}
+#| label: cb-acs
+#| eval: false
+
+years <- 2010:2021
+
+b25106_vars <- load_variables(2021, "acs5") |> 
+  filter(str_sub(name, end = 6) %in% "B25106")
+
+b25106_raw <- map_dfr(years, function(yr) {
+  b25042_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25106",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |> 
+    mutate(year = yr)
+})
+
+b25106_raw <- b25106_raw |> 
+  subset(GEOID %in% cv)
+
+b25106_vars_cleaned <- b25106_vars |> 
+  separate(label, into = c("est", "total", "tenure", "income", "cb"), sep = "!!") |> 
+  select(variable = name, tenure, income, cb) |> 
+  drop_na() |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":"))) |> 
+  mutate(tenure = case_when(
+    tenure == "Owner-occupied housing units" ~ "Homeowner",
+    tenure == "Renter-occupied housing units" ~ "Renter"),
+    cb = case_when(
+      cb == "30 percent or more" ~ "Cost-burdened",
+      TRUE ~ "Not cost-burdened"))
+
+b25106_raw <- b25106_raw |> 
+  right_join(b25106_vars_cleaned, by = "variable") |> 
+  select(NAME, GEOID, year, tenure, income, cb, estimate)
+
+b25106_data <- b25106_raw |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME)) |>
+  select(NAME, GEOID, year, tenure, income, cb, estimate) |> 
+  group_by(NAME, GEOID, year, tenure, income, cb) |> 
+  summarise(estimate = sum(estimate))
+
+
+write_rds(b25106_data, "data/b25106_data.rds")
+
+```
+
+```{r}
+
+cv_cb <- read_rds("data/b25106_data.rds")
+
+cv_cb <- cv_cb |> 
+  group_by(year, tenure, cb) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(cb == "Cost-burdened") |> 
+  mutate(year_label = as.character(year))
+
+
+cv_cb_plot <- ggplot(cv_cb,
+       aes(x = year_label,
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+           tooltip = label_number(big.mark = ",")(estimate))) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",")) + 
+  labs(title = "Cost-burdened households by tenure",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25106.")
+
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb_plot,
+         height_svg = 4)
+} else {
+  
+  cv_cb_plot
+}
+  
+
+
+```
 
 ```{r}
 #| label: cb-data
@@ -2322,7 +2513,7 @@ walk(tables, function(table) {
     # Read in the data dictionary and merge
     dict <- read_excel(dict_path,
                        sheet = glue("Table {table}"))
-    cleaned_with_dict <- cleaned %>%
+    cleaned_with_dict <- cleaned |>
       left_join(dict, by = c("Code" = "Column Name"))
     cleaned_with_dict
   })
@@ -2339,34 +2530,34 @@ walk(tables, function(table) {
 #| label: cb7-clean
 #| eval: false
 
-cb_7 <- read_csv("data/Table7_2012to2019.csv") %>% 
-  clean_names() %>% 
-  filter(line_type == "Detail") %>% 
-  select(year, estimate, moe, county, fips, tenure, household_income, household_type, cost_burden) %>% 
+cb_7 <- read_csv("data/Table7_2012to2019.csv") |> 
+  clean_names() |> 
+  filter(line_type == "Detail") |> 
+  select(year, estimate, moe, county, fips, tenure, household_income, household_type, cost_burden) |> 
   mutate(tenure = case_when(
     tenure == "Owner occupied" ~ "Homeowner",
     tenure == "Renter occupied" ~ "Renter"
-  )) %>% 
+  )) |> 
   mutate(household_income = case_when(
     household_income == "household income is less than or equal to 30% of HAMFI" ~ "30% AMI or less",
     household_income == "household income is greater than 30% but less than or equal to 50% of HAMFI" ~ "31 to 50% AMI",
     household_income == "household income is greater than 50% but less than or equal to 80% of HAMFI" ~ "51 to 80% AMI",
     household_income == "household income is greater than 80% but less than or equal to 100% of HAMFI" ~ "81 to 100% AMI",
     household_income == "household income is greater than 100% of HAMFI" ~ "101% AMI or greater"
-  )) %>% 
+  )) |> 
   mutate(household_type = case_when(
     household_type == "household type is elderly family (2 persons, with either or both age 62 or over)" ~ "Elderly family",
     household_type == "household type is small family (2 persons, neither person 62 years or over, or 3 or 4 persons)" ~ "Small family",
     household_type == "household type is large family (5 or more persons)" ~ "Large family",
     household_type == "household type is elderly non-family" ~ "Elderly non-family",
     household_type == "other household type (non-elderly non-family)" ~ "Non-elderly non-family"
-  ))  %>% 
+  ))  |> 
   mutate(cost_burden = case_when(
     cost_burden == "housing cost burden is less than or equal to 30%" ~ "Not cost-burdened",
     cost_burden == "housing cost burden is greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
     cost_burden == "housing cost burden is greater than 50%" ~ "Severely cost-burdened",
     cost_burden == "housing cost burden not computed (household has no/negative income)" ~ "No or negative income"
-  )) %>% 
+  )) |> 
   mutate(cb_group = case_when(
     cost_burden == "Cost-burdened" ~ "Cost-burdened",
     cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
@@ -2384,11 +2575,11 @@ write_rds(cb_7, "data/cb_7.rds")
 
 cb_7 <- read_rds("data/cb_7.rds")
   
-cbhh_region <- cb_7 %>% 
-  group_by(year, household_income, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year, household_income) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+cbhh_region <- cb_7 |> 
+  group_by(year, household_income, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, household_income) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened")
 
 cbhh_region$household_income <- factor(cbhh_region$household_income,
@@ -2434,7 +2625,7 @@ if (knitr::is_html_output()) {
 
 cb_7 <- read_rds("data/cb_7.rds")
   
-cb_change <- cb_7 %>% 
+cb_change <- cb_7 |> 
   filter(fips %in% cv,
          cb_group == "Cost-burdened") |> 
   group_by(year, tenure) |> 
@@ -2482,31 +2673,31 @@ if (knitr::is_html_output()) {
 #| label: cb9-clean
 #| eval: false
 
-cb_9 <- read_csv("data/Table9_2012to2019.csv") %>% 
-  clean_names() %>% 
-  filter(line_type == "Detail")  %>% 
+cb_9 <- read_csv("data/Table9_2012to2019.csv") |> 
+  clean_names() |> 
+  filter(line_type == "Detail")  |> 
   mutate(tenure = case_when(
     tenure == "Owner occupied" ~ "Homeowner",
     tenure == "Renter occupied" ~ "Renter"
-  )) %>% 
+  )) |> 
   mutate(race = case_when(
     race_ethnicity == "White alone, non-Hispanic" ~ "White, non-Hispanic",
     race_ethnicity == "Black or African-American alone, non-Hispanic" ~ "Black",
     race_ethnicity == "Asian alone, non-Hispanic" ~ "Asian",
     race_ethnicity == "Hispanic, any race" ~ "Hispanic or Latino",
     TRUE ~ "Another race, including multiracial"
-  ))   %>% 
+  ))   |> 
   mutate(cost_burden = case_when(
     cost_burden == "less than or equal to 30%" ~ "Not cost-burdened",
     cost_burden == "greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
     cost_burden == "greater than 50%" ~ "Severely cost-burdened",
     cost_burden == "not computed (no/negative income)" ~ "No or negative income"
-  )) %>% 
+  )) |> 
   mutate(cb_group = case_when(
     cost_burden == "Cost-burdened" ~ "Cost-burdened",
     cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
     TRUE ~ cost_burden
-  )) %>% 
+  )) |> 
   select(county, fips, year, race, cost_burden, cb_group, estimate)
 
 write_rds(cb_9, "data/cb_9.rds")
@@ -2519,14 +2710,14 @@ write_rds(cb_9, "data/cb_9.rds")
 
 cb_9 <- read_rds("data/cb_9.rds")
 
-cv_cb9 <- cb_9 %>% 
-  group_by(year, race, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year, race) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
-  filter(cb_group == "Cost-burdened") %>% 
-  group_by(race) %>% 
-  mutate(change = pct - lag(pct)) %>% 
+cv_cb9 <- cb_9 |> 
+  group_by(year, race, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, race) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
+  filter(cb_group == "Cost-burdened") |> 
+  group_by(race) |> 
+  mutate(change = pct - lag(pct)) |> 
   mutate(year = as.character(year))
 
 cv_cb9_plot <- ggplot(cv_cb9,
@@ -2566,12 +2757,12 @@ if (knitr::is_html_output()) {
 
 cb_7 <- read_rds("data/cb_7.rds")
   
-cbhh_region <- cb_7 %>% 
-  group_by(year, household_type, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year, household_type) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
-  filter(cb_group == "Cost-burdened") %>% 
+cbhh_region <- cb_7 |> 
+  group_by(year, household_type, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, household_type) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
+  filter(cb_group == "Cost-burdened") |> 
   mutate(year = as.character(year))
 
 cb_hh_plot <- ggplot(cbhh_region,
