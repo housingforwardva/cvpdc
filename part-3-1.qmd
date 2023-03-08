@@ -2348,8 +2348,9 @@ if (knitr::is_html_output()) {
 
 ## Affordability
 
-As home prices increase and rental supply wanes, the impacts on housing affordability can
+Housing affordability is most often defined by housing where a homeowner or tenant is spending no more than 30 percent of their income on their housing costs. Those households that spend more than 30 percent are considered housing cost-burdened. This metric is a standard measurement for housing affordability, especially in terms of state and federal programs.
 
+In the region, there was a total of 23,419 cost-burdened households in 2021, fifty-three percent of which were renters. This 2021 estimates is a 12 percent decrease from 2010 (-3,123), when the total cost-burdened households was 26,542. At that time, 59 percent of those cost-burdened households were homeowners, indicating a major shift in who is cost-burdened in the region.
 
 ```{r}
 #| label: cb-acs
@@ -2524,8 +2525,6 @@ walk(tables, function(table) {
 
 ```
 
-
-
 ```{r}
 #| label: cb7-clean
 #| eval: false
@@ -2565,56 +2564,6 @@ cb_7 <- read_csv("data/Table7_2012to2019.csv") |>
   ))
 
 write_rds(cb_7, "data/cb_7.rds")
-
-```
-
-```{r}
-#| label: fig-cb-total
-#| fig-cap: "Total regional housing cost burden by household area median income"
-
-
-cb_7 <- read_rds("data/cb_7.rds")
-  
-cbhh_region <- cb_7 |> 
-  group_by(year, household_income, cb_group) |> 
-  summarise(estimate = sum(estimate)) |> 
-  group_by(year, household_income) |> 
-  mutate(pct = estimate/sum(estimate)) |> 
-  filter(cb_group == "Cost-burdened")
-
-cbhh_region$household_income <- factor(cbhh_region$household_income,
-                                       levels = c("30% AMI or less", "31 to 50% AMI", "51 to 80% AMI", "81 to 100% AMI", "101% AMI or greater"))
-
-cbhh_region_plot <- ggplot(cbhh_region,
-       aes(x = year, 
-           y = pct, 
-           fill = household_income,
-           data_id = pct,
-           tooltip = percent_format()(pct))) +
-  geom_col(position = "stack") +
-  geom_col_interactive(position = "stack", size = 2) +
-  theme_hfv() +
-  scale_fill_hfv() +
-  facet_wrap(~household_income, nrow = 1) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(title = "Cost-burdened households by household area median income",
-       subtitle = "Percent of cost-burdened households by household income from 2012 to 2019",
-       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
-  add_zero_line(axis = "y") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
-
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cbhh_region_plot,
-         height_svg = 4) 
-  
-} else {
-  
-  cbhh_region_plot
-  
-  }
-
 
 ```
 
@@ -2668,6 +2617,56 @@ if (knitr::is_html_output()) {
 
 ```
 
+```{r}
+#| label: fig-cb-total
+#| fig-cap: "Total regional housing cost burden by household area median income"
+
+
+cb_7 <- read_rds("data/cb_7.rds")
+  
+cbhh_region <- cb_7 |> 
+  group_by(year, household_income, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, household_income) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
+  filter(cb_group == "Cost-burdened")
+
+cbhh_region$household_income <- factor(cbhh_region$household_income,
+                                       levels = c("30% AMI or less", "31 to 50% AMI", "51 to 80% AMI", "81 to 100% AMI", "101% AMI or greater"))
+
+cbhh_region_plot <- ggplot(cbhh_region,
+       aes(x = year, 
+           y = pct, 
+           fill = household_income,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack", size = 2) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  facet_wrap(~household_income, nrow = 1) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = "Cost-burdened households by household area median income",
+       subtitle = "Percent of cost-burdened households by household income from 2012 to 2019",
+       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  add_zero_line(axis = "y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cbhh_region_plot,
+         height_svg = 4) 
+  
+} else {
+  
+  cbhh_region_plot
+  
+  }
+
+
+```
+
 
 ```{r}
 #| label: cb9-clean
@@ -2706,6 +2705,7 @@ write_rds(cb_9, "data/cb_9.rds")
 
 ```{r}
 #| label: fig-cb-race
+#| eval: false
 #| fig-cap: "Regional percent of cost-burdened households by race and ethnicity"
 
 cb_9 <- read_rds("data/cb_9.rds")
