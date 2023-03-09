@@ -44,7 +44,8 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 - More and more smaller households coming to the region 
 - Continuing income disparities --- between white and Black households
 - Loss of smaller sized housing
-- 
+- Major home price increases and rental vacancy declines due to COVID-19
+- Affordability challenges hitting people of color, renters, and those living alone the most
 
 
 ## Population trends
@@ -2569,6 +2570,7 @@ write_rds(cb_7, "data/cb_7.rds")
 
 ```{r}
 #| label: fig-cb-change
+#| eval: false
 #| fig-cap: "Regional change in cost-burdened households by tenure"
 
 
@@ -2616,6 +2618,10 @@ if (knitr::is_html_output()) {
 
 
 ```
+
+The U.S. Department of Housing and Urban Development receives custom tabulations of American Community Survey data from the U.S. Census Bureau. This data is used to demonstrate the breadth of housing needs across the country. This data lags behind ACS data by about two years, but it provides a snapshot of the different impacts of cost burden by area median income, household type, and race and ethnicity.
+
+From 2012 to 2019, Cost burden in the region has generally been declining for higher income households, particularly those making above 50 percent AMI. But for households making 30 percent AMI or less, cost burden has increased rapidly between 2017 and 2018, going from 67 percent to 79 percent. Although there was an overall decline in cost-burdened households making 30 percent AMI or less between these years, the *share* grew significantly. 
 
 ```{r}
 #| label: fig-cb-total
@@ -2666,90 +2672,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
-
-```{r}
-#| label: cb9-clean
-#| eval: false
-
-cb_9 <- read_csv("data/Table9_2012to2019.csv") |> 
-  clean_names() |> 
-  filter(line_type == "Detail")  |> 
-  mutate(tenure = case_when(
-    tenure == "Owner occupied" ~ "Homeowner",
-    tenure == "Renter occupied" ~ "Renter"
-  )) |> 
-  mutate(race = case_when(
-    race_ethnicity == "White alone, non-Hispanic" ~ "White, non-Hispanic",
-    race_ethnicity == "Black or African-American alone, non-Hispanic" ~ "Black",
-    race_ethnicity == "Asian alone, non-Hispanic" ~ "Asian",
-    race_ethnicity == "Hispanic, any race" ~ "Hispanic or Latino",
-    TRUE ~ "Another race, including multiracial"
-  ))   |> 
-  mutate(cost_burden = case_when(
-    cost_burden == "less than or equal to 30%" ~ "Not cost-burdened",
-    cost_burden == "greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
-    cost_burden == "greater than 50%" ~ "Severely cost-burdened",
-    cost_burden == "not computed (no/negative income)" ~ "No or negative income"
-  )) |> 
-  mutate(cb_group = case_when(
-    cost_burden == "Cost-burdened" ~ "Cost-burdened",
-    cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
-    TRUE ~ cost_burden
-  )) |> 
-  select(county, fips, year, race, cost_burden, cb_group, estimate)
-
-write_rds(cb_9, "data/cb_9.rds")
-
-```
-
-```{r}
-#| label: fig-cb-race
-#| eval: false
-#| fig-cap: "Regional percent of cost-burdened households by race and ethnicity"
-
-cb_9 <- read_rds("data/cb_9.rds")
-
-cv_cb9 <- cb_9 |> 
-  group_by(year, race, cb_group) |> 
-  summarise(estimate = sum(estimate)) |> 
-  group_by(year, race) |> 
-  mutate(pct = estimate/sum(estimate)) |> 
-  filter(cb_group == "Cost-burdened") |> 
-  group_by(race) |> 
-  mutate(change = pct - lag(pct)) |> 
-  mutate(year = as.character(year))
-
-cv_cb9_plot <- ggplot(cv_cb9,
-       aes(x = year, 
-           y = pct,
-           fill = race,
-           data_id = pct,
-           tooltip = percent_format()(pct))) +
-  geom_col(position = "dodge") +
-  geom_col_interactive() +
-  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen()) +
-  scale_y_continuous(labels = percent_format()) +
-  scale_fill_hfv() +
-  theme_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
-        strip.text = element_text(size = 8)) +
-  labs(title = "Cost burden by race and ethnicity",
-       subtitle = "Percent of cost-burdened households",
-       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cb9_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_cb9_plot
-  
-}
-
-```
+Across all household types, cost burden has been declining from 2012 to 2019. However, nearly a third of elderly, non-family (31 percent) and non-elderly, non-family (37 percent) household types are cost-burdened. These households are typically individuals living alone or with other unrelated adults. Family households are less likely to be cost-burdened, but nearly one in five large and small family households were still cost-burdened in 2019.
 
 ```{r}
 #| label: fig-hh-cb
@@ -2796,3 +2719,90 @@ if (knitr::is_html_output()) {
 
 
 ```
+
+```{r}
+#| label: cb9-clean
+#| eval: false
+
+cb_9 <- read_csv("data/Table9_2012to2019.csv") |> 
+  clean_names() |> 
+  filter(line_type == "Detail")  |> 
+  mutate(tenure = case_when(
+    tenure == "Owner occupied" ~ "Homeowner",
+    tenure == "Renter occupied" ~ "Renter"
+  )) |> 
+  mutate(race = case_when(
+    race_ethnicity == "White alone, non-Hispanic" ~ "White, non-Hispanic",
+    race_ethnicity == "Black or African-American alone, non-Hispanic" ~ "Black",
+    race_ethnicity == "Asian alone, non-Hispanic" ~ "Asian",
+    race_ethnicity == "Hispanic, any race" ~ "Hispanic or Latino",
+    TRUE ~ "Another race, including multiracial"
+  ))   |> 
+  mutate(cost_burden = case_when(
+    cost_burden == "less than or equal to 30%" ~ "Not cost-burdened",
+    cost_burden == "greater than 30% but less than or equal to 50%" ~ "Cost-burdened",
+    cost_burden == "greater than 50%" ~ "Severely cost-burdened",
+    cost_burden == "not computed (no/negative income)" ~ "No or negative income"
+  )) |> 
+  mutate(cb_group = case_when(
+    cost_burden == "Cost-burdened" ~ "Cost-burdened",
+    cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
+    TRUE ~ cost_burden
+  )) |> 
+  select(county, fips, year, race, cost_burden, cb_group, estimate)
+
+write_rds(cb_9, "data/cb_9.rds")
+
+```
+
+There has been a decline in the share of cost-burdened white and Asian households in the region between 2012 and 2019, while there has been little to no change in cost burden for other racial and ethnic groups. Although Hispanics in the region saw an initial decline in cost burden from 2012 to 2013, that decline was negated by 2019, when the percent of cost-burdened Hispanic households reached 37 percent, a two percentage point increase from 2012.
+
+Disparities exist and have persisted in regards to race and ethnicity and cost burden. White households are less likely to be cost-burdened than any other racial or ethnic group in the region. As of 2019, 20 percent of white households were cost-burdened. The closest group were Asian households and yet they were still eight percentage points above their white counterparts. Black, Hispanic, and other racial groups (including multiracial households) experienced cost burden at least 15 percentage points above white households.
+```{r}
+#| label: fig-cb-race
+#| fig-cap: "Regional percent of cost-burdened households by race and ethnicity"
+
+cb_9 <- read_rds("data/cb_9.rds")
+
+cv_cb9 <- cb_9 |> 
+  group_by(year, race, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, race) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
+  filter(cb_group == "Cost-burdened") |> 
+  group_by(race) |> 
+  mutate(change = pct - lag(pct)) |> 
+  mutate(year = as.character(year))
+
+cv_cb9_plot <- ggplot(cv_cb9,
+       aes(x = year, 
+           y = pct,
+           fill = race,
+           data_id = pct,
+           tooltip = percent_format()(pct))) +
+  geom_col(position = "dodge") +
+  geom_col_interactive() +
+  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen()) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_hfv() +
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.text = element_text(size = 8)) +
+  labs(title = "Cost burden by race and ethnicity",
+       subtitle = "Percent of cost-burdened households",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb9_plot,
+         height_svg = 4)
+  
+} else {
+  
+  cv_cb9_plot
+  
+}
+
+```
+
+

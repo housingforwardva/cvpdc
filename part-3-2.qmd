@@ -16,7 +16,7 @@ library(janitor)
 library(sf)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
-cv_names <- list_counties("VA") %>% 
+cv_names <- list_counties("VA") |> 
   mutate(GEOID = paste0("51", county_code))
 
 ```
@@ -25,23 +25,27 @@ cv_names <- list_counties("VA") %>%
 
 ## Population trends
 
+From 2010 to 2020, Bedford County has grown more than any other locality in the region, experiencing a 16 percent increase. In fact, as of the 2020 Census, Bedford County (is more populous than the City of Lynchburg (79,462 versus 79,009, respectively).
+
+Appomattox and Campbell experienced slight to moderate growth in the last decade, while Amherst County's population declined by three percent.
+
 ```{r}
 #| label: fig-localpop
 #| fig-cap: "2020 Census population by county"
 
 # Read in population data and filter for only the counties using the county list.
 
-pop_data <- read_rds("data/pop_data.rds") %>% 
+pop_data <- read_rds("data/pop_data.rds") |> 
   subset(GEOID %in% cnty)
 
 # Join the data to the names list and clean.
 
-local_pop <- pop_data %>% 
-  left_join(cv_names, by = "GEOID") %>% 
-  select(year, county, counttype, value) %>% 
-  group_by(county) %>% 
-  mutate(pchg = (value - first(value))/first(value)) %>% 
-  filter(year == 2020) %>% 
+local_pop <- pop_data |> 
+  left_join(cv_names, by = "GEOID") |> 
+  select(year, county, counttype, value) |> 
+  group_by(county) |> 
+  mutate(pchg = (value - first(value))/first(value)) |> 
+  filter(year == 2020) |> 
   select(county, value, pchg)
 
 
@@ -103,12 +107,17 @@ if (knitr::is_html_output()) {
 }
 
 ```
+Population growth in Bedford and Appomattox can be largely attributed to domestic migration. In Bedford specifically, there has been significant losses in population due to natural decreases, but domestic migration has outpaced those decreases to lead to a net increase in population.
+
+The loss of population in Amherst County has largely been a result of domestic out migration over the decade, but also natural decreases. It was not until recently that Amherst began to see some growth again.
+
+Campbell County's population changes have been driven by international migration into the county for much of the last decade. And in 2021, domestic migration began to contribute towards growth whereas the county was previously seeing migration out of the county to other parts of the region, state, or nation.
 
 ```{r}
 #| label: fig-local-chg
 #| fig-cap: "Components of population change by county"
 
-local_change <- read_rds("data/comp_data.rds") %>% 
+local_change <- read_rds("data/comp_data.rds") |> 
   filter(NAMELSAD != "Lynchburg city")
 
 # Create group bar chart showing population change by locality.
@@ -142,31 +151,43 @@ if (knitr::is_html_output()) {
 
 
 ```
+Population projects show that Bedford County will continue to grow at a substantial rate over the next 30 years. Appomattox and Campbell will see slight growth, while Amherst is slated to see more population decline in the coming decades.
 
 ```{r}
 #| label: fig-localproj
-#| fig-cap: "Projected population growth 2030 to 2050 by county"
+#| fig-cap: "Projected population growth 2020 to 2050 by county"
 
+projections <- read_csv("data/uva_proj.csv") |> 
+  subset(FIPS %in% cnty) |> 
+  select(NAME, `2030`, `2040`, `2050`) |> 
+  pivot_longer(2:4,
+               names_to = "year",
+               values_to = "value") |> 
+  mutate(counttype = "Projection")|> 
+  select(NAME, year, counttype, value)
 
-projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% cnty) %>% 
-  mutate(Difference = as.numeric(Difference)) 
+pop_data <- read_rds("data/pop_data.rds") |> 
+  subset(GEOID %in% cnty) |> 
+  left_join(cv_names, by = "GEOID") |> 
+  select(NAME = county, year, counttype, value) |> 
+  filter(year == 2020) |> 
+  mutate(NAME = paste(NAME, "County", sep = " "))
+  
+pop_proj <- rbind(projections, pop_data)
 
-local_proj_plot <- ggplot(projections,
-       aes(x = reorder(NAME, -Difference),
-           y = Difference,
+local_proj_plot <- ggplot(pop_proj,
+       aes(x = year,
+           y = value,
            fill = NAME,
-           data_id = Difference,
-           tooltip = label_number(big.mark = ",",
-                                  style_positive = "plus",
-                                  style_negative = "minus")(Difference))) +
+           data_id = value,
+           tooltip = label_number(big.mark = ",")(value))) +
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "Projected growth",
-       subtitle = "Change from 2030 to 2050",
-       caption = "University of Virginia, Weldon Cooper Center for Public Service.") +
+  facet_wrap(~NAME, nrow = 1) +
+  labs(title = "Projected growth from 2020 to 2050",
+       caption = "U.S. Census Bureau, Decennial Census and University of Virginia, Weldon Cooper Center for Public Service.") +
   scale_y_continuous(labels = label_comma())
 
 if (knitr::is_html_output()) {
@@ -188,18 +209,18 @@ if (knitr::is_html_output()) {
 #| label: fig-localtenure
 #| fig-cap: "Local cumulative change in households by tenure"
 
-b25003_data <- read_rds("data/b25003_data.rds") %>% 
+b25003_data <- read_rds("data/b25003_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_tenure <- b25003_data %>%
-  select(county = NAME, year, tenure, estimate) %>% 
-  group_by(county, year, tenure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(county, tenure) %>% 
+local_tenure <- b25003_data |>
+  select(county = NAME, year, tenure, estimate) |> 
+  group_by(county, year, tenure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(county, tenure) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
 
 
@@ -211,7 +232,7 @@ local_tenure_plot <- ggplot(local_tenure,
            tooltip = label_number(big.mark = ",", style_positive = "plus",
                                   style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
-  geom_col_interactive() +
+  geom_col_interactive(position = "dodge") +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
@@ -239,15 +260,15 @@ if (knitr::is_html_output()) {
 #| label: fig-localage
 #| fig-cap: "Local percent of households by age and tenure"
 
-b25007_data <- read_rds("data/b25007_data.rds") %>% 
+b25007_data <- read_rds("data/b25007_data.rds") |> 
   filter(NAME != "Lynchburg city")
   
-local_age <- b25007_data %>% 
-  group_by(county = NAME, year, tenure, age) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
-  group_by(county, year, tenure) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+local_age <- b25007_data |> 
+  group_by(county = NAME, year, tenure, age) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year == 2010 | year == 2021) |> 
+  group_by(county, year, tenure) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
   mutate(year = as.character(year))
 
 local_age_plot <- ggplot(local_age,
@@ -283,7 +304,7 @@ if (knitr::is_html_output()) {
 #| label: type
 #| eval: false
 
-b11001_data <- read_rds("data/b11001_data.rds") %>% 
+b11001_data <- read_rds("data/b11001_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
 
@@ -293,19 +314,19 @@ b11001_data <- read_rds("data/b11001_data.rds") %>%
 #| label: fig-localsize
 #| fig-cap: "Local cumulative change in households by size and tenure"
 
-b25009_data <- read_rds("data/b25009_data.rds") %>% 
+b25009_data <- read_rds("data/b25009_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_size <- b25009_data %>% 
-  select(county = NAME, year, tenure, size, estimate) %>% 
-  group_by(county, year, tenure, size) %>% 
-  summarise(estimate = sum(estimate))  %>%
-  group_by(county, tenure, size) %>% 
+local_size <- b25009_data |> 
+  select(county = NAME, year, tenure, size, estimate) |> 
+  group_by(county, year, tenure, size) |> 
+  summarise(estimate = sum(estimate))  |>
+  group_by(county, tenure, size) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
-  mutate(year = as.character(year)) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
+  mutate(year = as.character(year)) |> 
   filter(year == "2021")
 
 
@@ -344,19 +365,19 @@ if (knitr::is_html_output()) {
 #| label: fig-localsenior
 #| fig-cap: "Local change in senior population living alone"
 
-b09020_data <- read_rds("data/b09020_data.rds") %>% 
+b09020_data <- read_rds("data/b09020_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_senior <- b09020_data %>% 
-  select(county = NAME, year, family, relationship, estimate) %>% 
-  group_by(county, year, family, relationship) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+local_senior <- b09020_data |> 
+  select(county = NAME, year, family, relationship, estimate) |> 
+  group_by(county, year, family, relationship) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  transform(change = `2021` - `2012`) %>% 
-  select(county, family, relationship, change) %>% 
+              values_from = estimate) |> 
+  transform(change = `2021` - `2012`) |> 
+  select(county, family, relationship, change) |> 
   mutate(family = str_replace(family, "Group quarters", " "),
-         family = fct_relevel(family, "Family", "Nonfamily", " ")) %>% 
+         family = fct_relevel(family, "Family", "Nonfamily", " ")) |> 
   filter(relationship == "Living alone")
 
 local_senior_plot <- ggplot(local_senior,
@@ -393,23 +414,23 @@ if (knitr::is_html_output()) {
 #| label: fig-localsubfam
 #| fig-cap: "Local change in families living with others"
 
-b11013_data <- read_rds("data/b11013_data.rds") %>% 
+b11013_data <- read_rds("data/b11013_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_sub <- b11013_data %>% 
-  select(county = NAME, year, subfamily, children, estimate) %>% 
+local_sub <- b11013_data |> 
+  select(county = NAME, year, subfamily, children, estimate) |> 
   mutate(subfamily = case_when(
     subfamily == "Single father" ~ "Single parent",
     subfamily == "Single mother" ~ "Single parent",
     TRUE ~ subfamily
-  )) %>% 
-  group_by(county, year, subfamily, children) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(county, subfamily, children) %>% 
+  )) |> 
+  group_by(county, year, subfamily, children) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(county, subfamily, children) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   filter(year == 2021) 
 
 local_sub_plot <- ggplot(local_sub,
@@ -449,16 +470,16 @@ if (knitr::is_html_output()) {
 #| label: fig-localachild
 #| fig-cap: "Local cumulative change in adult children living with parents"
 
-b09021_data <- read_rds("data/b09021_data.rds") %>% 
+b09021_data <- read_rds("data/b09021_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_achild <- b09021_data %>% 
-  select(county = NAME, year, arrangement, estimate) %>% 
-  filter(arrangement == "Child of householder") %>% 
-  group_by(county, arrangement) %>% 
+local_achild <- b09021_data |> 
+  select(county = NAME, year, arrangement, estimate) |> 
+  filter(arrangement == "Child of householder") |> 
+  group_by(county, arrangement) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
   filter(run_diff != 0) 
 
 
@@ -498,13 +519,13 @@ if (knitr::is_html_output()) {
 #| label: fig-localinc-distribution
 #| fig-cap: "Local income distribution by tenure"
 
-b25118_data <- read_rds("data/b25118_data.rds") %>% 
+b25118_data <- read_rds("data/b25118_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_dist <- b25118_data %>% 
-  select(county = NAME, year, tenure, income, estimate) %>% 
-  group_by(county, year, tenure, income) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+local_dist <- b25118_data |> 
+  select(county = NAME, year, tenure, income, estimate) |> 
+  group_by(county, year, tenure, income) |> 
+  summarise(estimate = sum(estimate)) |> 
   filter(year == 2021)
 
 
@@ -544,12 +565,12 @@ if (knitr::is_html_output()) {
 #| label: fig-med-inc
 #| fig-cap: "Local median household income by tenure"
 
-b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
+b25119_data <- read_rds("data/b25119_cpi.rds") |> 
   filter(NAME != "Lynchburg city, Virginia")
 
-local_inc <- b25119_data %>% 
-  select(county = NAME, year, tenure, dollars21, cdollars) %>% 
-  mutate(county = str_remove_all(county, ", Virginia")) %>% 
+local_inc <- b25119_data |> 
+  select(county = NAME, year, tenure, dollars21, cdollars) |> 
+  mutate(county = str_remove_all(county, ", Virginia")) |> 
   filter(county != "Bedford city")
 
 
@@ -589,13 +610,13 @@ if (knitr::is_html_output()) {
 #| label: fig-localrace-inc
 #| fig-cap: "Local median household income by race and ethnicity"
 
-b19013_data <- read_rds("data/b19013_data.rds") %>% 
+b19013_data <- read_rds("data/b19013_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-local_rinc <- b19013_data %>% 
-  select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
-  filter(year == 2021) %>% 
-  drop_na() %>% 
+local_rinc <- b19013_data |> 
+  select(county = NAME, year, race, cdollars = estimate, dollars21) |> 
+  filter(year == 2021) |> 
+  drop_na() |> 
   mutate(label = paste(county, "-", race))
   
 local_rinc_plot <- ggplot(local_rinc,
@@ -639,15 +660,15 @@ if (knitr::is_html_output()){
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
-local_str <- b25127_data %>% 
-  select(county = NAME, year, tenure, structure, estimate) %>% 
-  group_by(county, year, tenure, structure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
-  group_by(year) %>% 
-  transform(pct = estimate/sum(estimate)) %>% 
-  mutate(county = fct_reorder(county, pct, .desc = TRUE)) %>% 
-  filter(year == 2021) %>% 
+local_str <- b25127_data |> 
+  select(county = NAME, year, tenure, structure, estimate) |> 
+  group_by(county, year, tenure, structure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year == 2010 | year == 2021) |> 
+  group_by(year) |> 
+  transform(pct = estimate/sum(estimate)) |> 
+  mutate(county = fct_reorder(county, pct, .desc = TRUE)) |> 
+  filter(year == 2021) |> 
   filter(county != "Lynchburg city")
 
 level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
@@ -690,7 +711,7 @@ if (knitr::is_html_output()) {
 
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
-  filter(STATE == "VA") %>% 
+  filter(STATE == "VA") |> 
   filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL"))
 
 write_rds(mhc, "data/mhc_cnty.rds")
@@ -703,10 +724,10 @@ write_rds(mhc, "data/mhc_cnty.rds")
 
 mhc <- read_rds("data/mhc_cnty.rds")
 
-cv_mhc <- mhc  %>% 
-  group_by(COUNTY, SIZE) %>% 
-  summarise(count = n_distinct(OBJECTID)) %>% 
-  st_drop_geometry() %>% 
+cv_mhc <- mhc  |> 
+  group_by(COUNTY, SIZE) |> 
+  summarise(count = n_distinct(OBJECTID)) |> 
+  st_drop_geometry() |> 
   mutate(COUNTY = str_to_sentence(COUNTY))
 
 cv_mhc_plot <- ggplot(cv_mhc,
@@ -742,7 +763,7 @@ if (knitr::is_html_output()) {
 #| label: fig-localbps
 #| fig-cap: "Local esidential building permits by type"
 
-cv_cbps <- read_rds("data/cv_cbps.rds") %>% 
+cv_cbps <- read_rds("data/cv_cbps.rds") |> 
   filter(NAMELSAD != "Lynchburg city")
 
 cv_cbps_plot <- ggplot(cv_cbps,
@@ -778,14 +799,14 @@ if (knitr::is_html_output()) {
 #| label: fig-localho
 #| fig-cap: "Local homeownership rates"
 
-b25003_data <- read_rds("data/b25003_data.rds") %>% 
-  filter(NAME != "Lynchburg city") %>% 
-  group_by(NAME, year, tenure) %>% 
+b25003_data <- read_rds("data/b25003_data.rds") |> 
+  filter(NAME != "Lynchburg city") |> 
+  group_by(NAME, year, tenure) |> 
   summarise(estimate = sum(estimate))
 
-local_ho <- b25003_data %>% 
-  group_by(NAME, year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>%  
+local_ho <- b25003_data |> 
+  group_by(NAME, year) |> 
+  mutate(pct = estimate/sum(estimate)) |>  
   filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
 
 local_ho_plot <- ggplot(local_ho,
@@ -835,37 +856,37 @@ if (knitr::is_html_output()) {
 
 # Note the download date of data here: 1/23/2023
 
-# lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+# lburg_rent <- read_csv("data/lburg_rent.csv") |> 
 #  mutate(county = "Lynchburg city")
 
-amherst_rent <- read_csv("data/amherst_rent.csv") %>% 
+amherst_rent <- read_csv("data/amherst_rent.csv") |> 
   mutate(county = "Amherst County")
 
-appomattox_rent <- read_csv("data/appomattox_rent.csv") %>% 
+appomattox_rent <- read_csv("data/appomattox_rent.csv") |> 
   mutate(county = "Appomattox County")
 
-bedford_rent <- read_csv("data/bedford_rent.csv") %>% 
+bedford_rent <- read_csv("data/bedford_rent.csv") |> 
   mutate(county = "Bedford County")
 
-campbell_rent <- read_csv("data/campbell_rent.csv") %>% 
+campbell_rent <- read_csv("data/campbell_rent.csv") |> 
   mutate(county = "Campbell County")
 
 library(zoo)
 library(lubridate)
 
-local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) %>% 
-  filter(!str_detect(period, "QTD")) %>% 
-  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>% 
-  select(county, period, current, inf) %>% 
+local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) |> 
+  filter(!str_detect(period, "QTD")) |> 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
+  select(county, period, current, inf) |> 
   pivot_longer(3:4,
                names_to = "value",
-               values_to = "rent") %>% 
+               values_to = "rent") |> 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
     value == "inf" ~ "Inflation-adjusted dollars"
-  )) %>% 
-  filter(value == "Inflation-adjusted dollars") %>% 
-  mutate(year = year(period)) %>% 
+  )) |> 
+  filter(value == "Inflation-adjusted dollars") |> 
+  mutate(year = year(period)) |> 
   filter(year >= 2015)
 
 local_rent_plot <- ggplot(local_rent,
@@ -920,19 +941,19 @@ if (knitr::is_html_output()) {
 #| label: fig-nhpd
 #| fig-cap: "Federally assisted rental homes by county"
 
-nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
-  clean_names() %>% 
-  filter(subsidy_status != "Inactive") %>% 
+nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(subsidy_status != "Inactive") |> 
   filter(grepl("amherst", city, ignore.case = TRUE) |
            grepl("bedford", city, ignore.case = TRUE) |
            grepl("campbell", city, ignore.case = TRUE) |
-           grepl("appomattox", city, ignore.case = TRUE)) %>% 
-  select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude) %>% 
+           grepl("appomattox", city, ignore.case = TRUE)) |> 
+  select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude) |> 
   mutate(city = str_to_title(city))
 
 
-cnty_nhpd <- nhpd_subsidies %>% 
-  group_by(city, subsidy_name) %>% 
+cnty_nhpd <- nhpd_subsidies |> 
+  group_by(city, subsidy_name) |> 
   summarise(units = sum(units))
 
 cnty_nhpd_plot <- ggplot(cnty_nhpd,
@@ -967,11 +988,11 @@ if (knitr::is_html_output()) {
 #| label: fig-cb-tenure
 #| fig-cap: "Local cost burden by tenure"
 
-cb_tenure <- read_rds("data/cb_7.rds") %>% 
-  subset(fips %in% cnty) %>% 
-  filter(cb_group == "Cost-burdened") %>% 
-  group_by(year, county, tenure, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+cb_tenure <- read_rds("data/cb_7.rds") |> 
+  subset(fips %in% cnty) |> 
+  filter(cb_group == "Cost-burdened") |> 
+  group_by(year, county, tenure, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
   group_by(county, tenure) |> 
   mutate(change = estimate - lag(estimate)) |> 
   drop_na() |> 
@@ -1020,12 +1041,12 @@ if (knitr::is_html_output()) {
 
 cb_9 <- read_rds("data/cb_9.rds")
 
-cv_cb9 <- cb_9 %>% 
-  subset(fips %in% cnty) %>% 
-  group_by(year, county, race, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year, county, race) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+cv_cb9 <- cb_9 |> 
+  subset(fips %in% cnty) |> 
+  group_by(year, county, race, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, county, race) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened")
 
 cv_cb9_plot <- ggplot(cv_cb9,
@@ -1071,19 +1092,19 @@ if (knitr::is_html_output()) {
 tb_18_match <- read_rds("data/tb_18_match.rds")
 
 
-gap <- tb_18_match %>% 
-  subset(fips %in% cnty) %>% 
-  group_by(year, county, household_income, gapcode) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+gap <- tb_18_match |> 
+  subset(fips %in% cnty) |> 
+  group_by(year, county, household_income, gapcode) |> 
+  summarise(estimate = sum(estimate)) |> 
   mutate(estimate = case_when(
     gapcode == "Gap" ~ estimate * -1,
     gapcode == "Matches or less than income" ~ estimate
-  )) %>% 
-  filter(household_income != "80 percent AMI or greater") %>% 
+  )) |> 
+  filter(household_income != "80 percent AMI or greater") |> 
   mutate(gapcode = case_when(
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
-  )) %>% 
+  )) |> 
   mutate(year = as.character(year))
 
 gap_plot <- ggplot(gap,
