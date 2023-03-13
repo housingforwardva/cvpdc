@@ -261,7 +261,7 @@ if (knitr::is_html_output()) {
   
 
 ```
-
+The loss of younger households is common among the counties. The percentage of both renter and homeowner householders 45 years old or less have been declining since 2010. But older renters (45 years old and older) have been coming into the counties. Appomattox, in particular, saw an 81 percent increase in renters aged 45 to 64 years old between 2010 and 2021, while Bedford experienced a 56 percent increase in renters 65 years old and over. The growth in homeowners was predominantly among householders aged 65 years and over, where all countied experienced an over 25 percent increase since 2010.
 ```{r}
 #| label: fig-localage
 #| fig-cap: "Local percent change in households by age and tenure"
@@ -329,6 +329,9 @@ b11001_data <- read_rds("data/b11001_data.rds") |>
 
 
 ```
+Although younger householders are declining in the counties, smaller households are increasing. One-person homeowners households are increasing in Amherst, Appomattox, and Bedford. Unlike its neighbors, Campbell is seeing an increase in *both* one-person renter and homeowner households. Two-person households are overwhelmingly increasing in Bedford.
+
+The counties that did see an increase in larger households were Amherst, Bedford, and Campbell. These increases were mainly among renter households, but Bedford saw an increase of four-person households for both homeowners and renters. 
 
 ```{r}
 #| label: fig-localsize
@@ -357,11 +360,12 @@ local_size_plot <- ggplot(local_size,
            data_id = run_diff,
            tooltip )) +
   geom_col(position = "dodge") +
-  geom_col_interactive() +
+  geom_col_interactive(position = "dodge") +
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
+        legend.position = "bottom") +
   labs(title = "Cumulative change in households by size and tenure",
        subtitle = "From 2010 to 2021",
        caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") + 
@@ -380,6 +384,7 @@ if (knitr::is_html_output()) {
 
 
 ```
+The increases in smaller households may be accounted for by increases in the senior (65 years and over) population. But increasing number of seniors living alone can be of great concern for localities. Although many seniors desire to maintain their independence, professionals note that [older adults who live alone are more likely to be poor.](https://www.merckmanuals.com/professional/geriatrics/social-issues-in-older-adults/older-adults-living-alone) Campbell had the largest increase in seniors living alone from 2012 to 2021 (+1,241), followed by Bedford at an addition of 919 seniors living alone.
 
 ```{r}
 #| label: fig-localsenior
@@ -414,7 +419,7 @@ local_senior_plot <- ggplot(local_senior,
    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   labs(title = "Change in senior population living alone",
        subtitle = "From 2012 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table")
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09020.")
 
 if (knitr::is_html_output()) {
   
@@ -429,6 +434,7 @@ if (knitr::is_html_output()) {
   
 
 ```
+Rising costs in the region can force families to double up with others. Single parents with children are the most common family type that is experiencing this living situation. But over the last decade, there has been an increasing number of single parents with children living with others in Amherst County. Married couples with and without children are more likely to be in Amherst or Campbell, and their numbers have also been increasing in the last decade.
 
 ```{r}
 #| label: fig-localsubfam
@@ -485,7 +491,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+Adult children living parents can also be an indicator of affordability challenges. Campbell has consistently seen a decrease in the number of adult children living with parents since 2015, an overall decrease of 511 adults between the age of 18 and 34. Although Amherst and Bedford experienced relatively major increases by 2020, changes in the population led to an overall minimal increase (+75) for Amherst and a decrease for Bedford (-37). Appomattox saw the largest increase in adult children living with parents compared to 2015 estimates (+151).
 ```{r}
 #| label: fig-localachild
 #| fig-cap: "Local cumulative change in adult children living with parents"
@@ -500,7 +506,8 @@ local_achild <- b09021_data |>
   mutate(diff = estimate - lag(estimate),
          diff = replace_na(diff, 0)) |> 
   mutate(run_diff = cumsum(diff)) |>  
-  filter(run_diff != 0) 
+  filter(run_diff != 0) |> 
+  mutate(year = as.character(year))
 
 
 local_achild_plot <- ggplot(local_achild,
@@ -518,7 +525,8 @@ local_achild_plot <- ggplot(local_achild,
   labs(title = "Cumulative change in adult children living with parents",
        subtitle = "From 2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
-  theme(legend.position = "right")
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 
 if (knitr::is_html_output()) {
@@ -535,6 +543,7 @@ if (knitr::is_html_output()) {
 
 ## Economic trends
 
+Across the four counties, renter household incomes skew towards the lower end when compared to their homeowner counterparts, and most lower-income renter households are located in Bedford or Campbell. Homeowner households are more likely to make \$75,000 or more, especially in Bedford.
 ```{r}
 #| label: fig-localinc-distribution
 #| fig-cap: "Local income distribution by tenure"
@@ -580,7 +589,7 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+Median household income shows that the typical renter income has continued to lag behind homeowners. The income gap between renters and homeowners has only widened in Amherst County and Bedford, while it has narrowed in Appomattox and Campbell. The latter has largely occurred due to the decrease in incomes for homeowners and rises in renter incomes, while the former is the result of diverging incomes. 
 ```{r}
 #| label: fig-med-inc
 #| fig-cap: "Local median household income by tenure"
@@ -625,7 +634,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+The graph below shows the median household incomes of the different racial and ethnic groups for the four counties in 2021. There are varying disparities between groups depending on locality. Hispanic households in Bedford and Appomattox have much higher median incomes than their Hispanic counterparts in Amherst and Campbell. Meanwhile,  Black households have median household incomes grouped towards the low-end of the spectrum, except for in Bedford, where Black median household income is comparable to white household incomes in neighboring localities.
 ```{r}
 #| label: fig-localrace-inc
 #| fig-cap: "Local median household income by race and ethnicity"
@@ -673,6 +682,10 @@ if (knitr::is_html_output()){
 
 
 ## Housing stock
+
+The counties contribute to 36 percent of the region's total housing stock. The majority of that share consists of single-family housing that is utilized for homeownership. Among the homeownership housing stock in the counties, there is little diversity as the only other type of housing is in the "Other" category, which includes manufactured homes. Two to four unit homes, like duplexes and quads, can look like single-family housing and can often be more affordable, but the counties only contribute one percent of this type of housing to the region's total stock.
+
+Renter housing stock in the counties is diverse, but still largely made up of single-family housing. 
 
 ```{r}
 #| label: fig-localstructure
@@ -722,9 +735,13 @@ if (knitr::is_html_output()) {
   
 }
 
+sums <- local_str |> 
+  filter(structure == "2 to 4 units") 
+
+sum(sums$pct)
 
 ```
-
+Manufactured home communities are prevalent among the four counties. 
 ```{r}
 #| label: mhc
 #| eval: false
