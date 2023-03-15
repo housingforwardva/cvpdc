@@ -695,7 +695,7 @@ if (knitr::is_html_output()){
 
 ## Housing stock
 
-The counties contribute to 36 percent of the region's total housing stock. The majority of that share consists of single-family housing that is utilized for homeownership. Among the homeownership housing stock in the counties, there is little diversity as the only other type of housing is in the "Other" category, which includes manufactured homes. Two to four unit homes, like duplexes and quads, can look like single-family housing and can often be more affordable, but the counties only contribute one percent of this type of housing to the region's total stock.
+The counties contribute to 72 percent of the region's total housing stock. The majority of that share consists of single-family housing that is utilized for homeownership. Among the homeownership housing stock in the counties, there is little diversity as the only other type of housing is in the "Other" category, which includes manufactured homes. Two to four unit homes, like duplexes and quads, can look like single-family housing and can often be more affordable, but the counties only contribute one percent of this type of housing to the region's total stock.
 
 Renter housing stock in the counties is diverse, but still largely made up of single-family housing. 
 
@@ -711,7 +711,7 @@ local_str <- b25127_data |>
   summarise(estimate = sum(estimate)) |> 
   filter(year == 2010 | year == 2021) |> 
   group_by(year) |> 
-  transform(pct = estimate/sum(estimate)) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
   mutate(county = fct_reorder(county, pct, .desc = TRUE)) |> 
   filter(year == 2021) |> 
   filter(county != "Lynchburg city")

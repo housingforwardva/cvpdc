@@ -28,11 +28,22 @@ lburg <- "51680"
 
 ## Takeaways
 
+- Growth in the city has been a result of international migration and natural increases.
+- Once 44 percent renter households, the city is now majority renter households at 51 percent.
+- There has been a loss of homeowners in the city, mainly among those households aged 25 to 64 years old.
+- The number of higher income households is growing in the city, even among renters, but there is also a growing number of extremely low-income renters.
+- In spite of its urban environment, housing in the city is dominated by single-family housing.
+- Homeownership is declining as prices have climbed rapidly during the pandemic.
+- Large amount of detached single-family rentals, especially in College Hill and Diamond Hill areas.
+- Rental prices have remained generally flat among multifamily properties, but cost burden among renters has continued to rise.
+
+
 ## Population trends
 
+From 2010 to 2020, Lynchburg has only grown by four percent to reach a population of 79,009. Despite this growth, the current population is an estimated decline from a 2019 estimated population of 82,168. 
 ```{r}
 #| label: fig-pop-2020
-#| fig-cap: "Lynchburg estimated and projected population"
+#| fig-cap: "Total population in Lynchburg"
 
 # Read in population data and filter for Lynchburg.
 
@@ -59,9 +70,12 @@ projections <- read_csv("data/uva_proj.csv") %>%
 
 lburg_pop <- rbind(local_pop, projections)
 
-# Visualize as colored bar chart. Showing different colors for count type (Census, estimate, and projection).
+# Visualize as colored bar chart. Showing different colors for count type.
+
+lburg_po <- lburg_pop |> 
+  filter(counttype != "Projection")
   
-local_pop_plot <- ggplot(lburg_pop,
+local_pop_plot <- ggplot(lburg_po,
        aes(x = year,
            y = value,
            fill = counttype,
@@ -71,10 +85,11 @@ local_pop_plot <- ggplot(lburg_pop,
   geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "Estimated and projected population in Lynchburg",
+  labs(title = "Total population in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
-  theme(legend.position = "right")
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 if (knitr::is_html_output()) {
   
@@ -89,6 +104,7 @@ if (knitr::is_html_output()) {
 
 
 ```
+The growth in population over the last decade in Lynchburg has been a result of international migration and natural increases. This is in stark contrast to the rest of the region where growth has been driven by domestic migration.
 
 ```{r}
 #| label: fig-local-chg
@@ -109,7 +125,7 @@ local_change_plot <- ggplot(local_change,
   geom_col(position = "stack") +
   theme_hfv() +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(size = 6, angle = 90),
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         legend.position = "bottom") +
   labs(title = "Components of population change in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
@@ -126,9 +142,50 @@ if (knitr::is_html_output()) {
 }
 
 ```
+Despite the decrease in population from 2019 to 2020, the city is expected to see continued growth over the next few decades. By 2050, the city is projected to have a population of 93,708, a 19 percent increase over 30 years.
+
+```{r}
+#| label: fig-pop-proj
+#| fig-cap: "Projected population in Lynchburg"
+
+lburg_p <- lburg_pop |> 
+  filter(counttype == "Projection" | counttype == "Census population") |> 
+  mutate(year == as.character(year))
+
+local_pop_plot <- ggplot(lburg_p,
+       aes(x = year,
+           y = value,
+           fill = counttype,
+           data_id = value,
+           tooltip = label_number(big.mark = ",")(value))) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Projected population in Lynchburg",
+       caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
+  scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
+  theme(legend.position = "right")
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = local_pop_plot,
+         height_svg = 4)
+  
+} else {
+  
+  local_pop_plot
+  
+}
+
+
+
+```
 
 ## Household trends
 
+Lynchburg has steadily lost homeowners, while gaining renters. By 2021, the city had gained a total of 2,563 renters since 2010, while subsequently losing 1,499 homeowners. These changes have left the balance of renter and homeowner households in slight favor of renters, as renter households make up 51 percent of households in the city.This is shift from 2010 when renter households made up 44 percent of all households in the city.
+ 
 ```{r}
 #| label: fig-tenure
 #| fig-cap: "Change in households by tenure in Lynchburg"
@@ -184,37 +241,50 @@ if (knitr::is_html_output()) {
   
 
 ```
+Breaking down the changes in tenure by age shows that more and more households of all ages are now renting in the city. The largest increases were among renter households under 45 years old, an obvious result of the many higher education institutions in the city.
+
+Losses were mainly among 25 to 64 year old homeowners. By 2021, the city had lost 603 25 to 44 year old homeowner households and 909 45 to 64 year old homeowner households. 
 
 ```{r}
 #| label: fig-age
-#| fig-cap: "Households by tenure and age in Lynchburg"
+#| fig-cap: "Cumulative change in households by tenure and age in Lynchburg"
 
 b25007_data <- read_rds("data/b25007_data.rds") %>% 
   filter(NAME == "Lynchburg city")
-  
-local_age <- b25007_data %>% 
-  group_by(county = NAME, year, tenure, age) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
-  group_by(county, year, tenure) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+
+local_age <- b25007_data |> 
+  group_by(county = NAME, year, tenure, age) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(tenure, age) |> 
+  mutate(diff = estimate - lag(estimate),
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
+
+
+# local_age <- b25007_data %>% 
+#   group_by(county = NAME, year, tenure, age) %>% 
+#   summarise(estimate = sum(estimate)) %>% 
+#   filter(year == 2010 | year == 2021) %>% 
+#   group_by(county, year, tenure) %>% 
+#   mutate(pct = estimate/sum(estimate)) %>% 
+#   mutate(year = as.character(year))
 
 local_age_plot <- ggplot(local_age,
        aes(x = year, 
-           y = pct,
+           y = run_diff,
            fill = age,
-           data_id = pct,
-           tooltip = percent_format()(pct)))  +
+           data_id = run_diff,
+           tooltip = run_diff))  +
   geom_col(position = "dodge") +
   facet_grid(~tenure) +
-  geom_col_interactive(size = 2) +
+  geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(labels = percent_format()) +
-  theme(legend.position = "bottom") +
-  labs(title = "Households by age and tenure in Lynchburg",
-       subtitle = "In 2010 and 2021",
+  scale_y_continuous(labels = number_format(big.mark = ",", style_positive = "plus")) +
+  theme(legend.position = "right") +
+  labs(title = "Cumulative change in households by age and tenure in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
 
 if (knitr::is_html_output()) {
@@ -238,7 +308,7 @@ b11001_data <- read_rds("data/b11001_data.rds") %>%
 
 
 ```
-
+Among those growing number of renters, most of those households have been two-person households, an addition of 2,011 from 2010 to 2021. Households of three people or less have been declining among homeowners, but four or more person homeowner households surprisingly grew by 409 during this time.
 ```{r}
 #| label: figsize
 #| fig-cap: "Change in households by size and tenure in Lynchburg"
@@ -263,7 +333,7 @@ local_size_plot <- ggplot(local_size,
            y = run_diff,
            fill = tenure,
            data_id = run_diff,
-           tooltip )) +
+           tooltip = number_format(big.mark = ",")(run_diff))) +
   geom_col(position = "dodge") +
   geom_col_interactive() +
   facet_grid(tenure~size) +
@@ -287,6 +357,7 @@ if (knitr::is_html_output()) {
 
 
 ```
+The city has experienced a decreasing number of seniors living alone or with nonrelatives in recent years (-575). This is another contrast to the surrounding counties, where more and more seniors are living alone. Whether this is the result of Lynchburg seniors moving to the counties is not easily discerned, but regardless seniors in the city may find it more difficult to find housing that meets their needs for aging-in-place. Seniors in the city are rather increasingly the head of household (+604) or living with a spouse (+473).
 
 ```{r}
 #| label: fig-senior
@@ -322,7 +393,7 @@ local_senior_plot <- ggplot(local_senior,
   facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
   #scale_y_discrete(labels = function(x) str_wrap(x, width = 10)) +
   labs(title = "Change in senior population by living arrangement in Lynchburg",
-       subtitle="2016 to 2020",
+       subtitle="From 2012 to 2021",
        fill="Tenure",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.")  +
   theme(strip.placement = "outside",
@@ -345,10 +416,10 @@ if (knitr::is_html_output()) {
   
 
 ```
-
+The number of single parents living with other families is increasing in the city. From 2010 to 2021, there has been an increase of 330 single parents having to live with others.
 ```{r}
 #| label: fig-subfam
-#| fig-cap: "Change in families living with others in Lynchburg"
+#| fig-cap: "Cumulative change in families living with others in Lynchburg"
 
 b11013_data <- read_rds("data/b11013_data.rds") %>% 
   filter(NAME == "Lynchburg city")
@@ -366,7 +437,8 @@ local_sub <- b11013_data %>%
   mutate(diff = estimate - lag(estimate),
          diff = replace_na(diff, 0)) %>% 
   mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0)
+  filter(run_diff != 0) |> 
+  mutate(year = as.character(year))
 
 local_sub_plot <- ggplot(local_sub,
                          aes(x = year,
@@ -381,8 +453,8 @@ local_sub_plot <- ggplot(local_sub,
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(legend.position = "bottom",
-        axis.text.x = element_blank()) +
-  labs(title = "Change in families living with others in Lynchburg",
+        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  labs(title = "Cumulative change in families living with others in Lynchburg",
        subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
 
@@ -400,7 +472,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+Although the city was seeing a significant increase in adult (18 to 34 years old) children living with parents between 2016 and 2020, the overall increase was only 558 by 2021, when there were 4,730. These living arrangements, as well as families living with others, are often an indicator of affordability challenges in communities. The increase in 2020 may have likely been a result of pandemic impacts, and the subsequent decrease by 2021 could have been the result of loosening pandemic restrictions.
 ```{r}
 #| label: fig-achild
 #| fig-cap: "Cumulative change in adult children living with parents in Lynchburg"
@@ -449,8 +521,9 @@ if (knitr::is_html_output()) {
 
 ```
 
-
 ## Economic trends
+
+Income distribution in the city has shifted from 2010 to 2021. Lower income homeowner households have decreased over a decade, resulting in fewer homeowners making less than \$25,000. And while there has been an increase in lower income renter households, there has also been an increase in renter households making \$75,000 or more.
 
 ```{r}
 #| label: fig-inc-dist
@@ -498,7 +571,7 @@ if (knitr::is_html_output()) {
 }
 
 ```
-
+Median household income emphasizes these shifts. Homeowner median household income has increased by 15 percent from 2010 to 2021, while renter income increased by 25 percent. The growth in the median renter income was the result of higher income renters coming into the city, but still the typical renter in the city only makes about half (\$38,229) of what a homeowner makes (\$75,093).
 ```{r}
 #| label: fig-med-inc
 #| fig-cap: "Median household income by tenure in Lynchburg"
@@ -542,7 +615,15 @@ if (knitr::is_html_output()) {
 
 
 ```
+In the city, Hispanic households have seen major increases in median household income since 2010. As of 2021, Hispanic households have the highest median income at \$72,680. White, non-Hispanic households follow at $62,857, a slight increase of about \$9,000 from 2010. 
 
+Black households in the city, however, had consistently low median household incomes. From 2010 to 2021, the Black median household income had only increased by 14 percent, while their white counterparts saw an 18 percent increase, furthering the Black-white income gap.
+
+:::{.callout-warning}
+
+Note about margins of error. Ways people identify may have impacted this major increase.
+
+:::
 ```{r}
 #| label: fig-race-inc
 #| fig-cap: "Median household income by race and ethnicity in Lynchburg"
@@ -590,6 +671,10 @@ if (knitr::is_html_output()){
 
 ## Housing stock
 
+Lynchburg contributes to 28 percent of the region's total housing stock in 2021. Most of that contribution is composed of single-family housing that is in the homeownership stock. Despite it's urban environment, the homeownership stock in the city is not diverse and very few duplexes and other smaller housing types are not utilized for homeownership.
+
+Rather, diverse housing is largely used for rental housing. Most of the rental housing stock in the city is made up of single-family and medium-scale multifamily (5 to 19 units). 
+
 ```{r}
 #| label: fig-structure
 #| fig-cap: "Distribution of housing stock in Lynchburg in relation to the region"
@@ -602,7 +687,7 @@ local_str <- b25127_data %>%
   summarise(estimate = sum(estimate)) %>% 
   filter(year == 2010 | year == 2021) %>% 
   group_by(year) %>% 
-  transform(pct = estimate/sum(estimate)) %>% 
+  mutate(pct = estimate/sum(estimate)) %>% 
   mutate(county = fct_reorder(county, pct, .desc = TRUE)) %>% 
   filter(year == 2021) %>% 
   filter(county == "Lynchburg city")
@@ -641,7 +726,7 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+Manufactured home communities exist within the city limits, mainly on the outskirts along major thoroughfares. Six of the eleven communities are located along or in proximity to Lakeside Drive in the western end of the city.
 ```{r}
 #| label: fig-mhc
 #| fig-cap: "Map of manufactured home communities in Lynchburg"
@@ -658,7 +743,7 @@ leaflet(mhc) %>%
 
 
 ```
-
+The majority of communities are small, consisting of fewer than 50 homes. Although not as prevalent as in the counties, manufactured home communities also provide an affordable housing option within the city.
 ```{r}
 #| label: fig-mhc-county
 #| fig-cap: "Manufactured home communities by size in Lynchburg"
@@ -696,13 +781,13 @@ if (knitr::is_html_output()) {
 
 
 ```
-
+Residential building permits display the dominance of single-family construction within the city for much of the past two decades. Recovery from the Great Recession has still yet to come to the city, but the construction of five or more unit buildings in the city has continued to surpass all other types in recent years. Although the city saw the construction of duplexes and triplexes early on in the 2000s, there have been little to no construction of this type of housing in the city.
 ```{r}
 #| label: fig-bps
 #| fig-cap: "Residential building permits by unit type in Lynchburg"
 
 lburg_cbps <- read_rds("data/cv_cbps.rds") %>% 
-  filter(NAMELSAD == "Lynchburg city")
+  filter(NAMELSAD == "Lynchburg city") 
 
 lburg_cbps_plot <- ggplot(lburg_cbps,
        aes(x = year,
@@ -715,7 +800,7 @@ lburg_cbps_plot <- ggplot(lburg_cbps,
   facet_grid(~type) +
   theme_hfv() +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
   scale_x_continuous(breaks = seq(from = 2000, to = 2022, by = 2.0)) +
   labs(title = "Residential building permits by unit type in Lynchburg",
        subtitle = "From 2000 through 2022",
@@ -734,6 +819,9 @@ if (knitr::is_html_output()) {
 ```
 
 ## Homeownership market
+
+As the number of renters has been increasing in the city, the homeownership rate has continued to drop. From 56 percent in 2010 to 49 percent in 2021, the city is now majority-renter.
+
 
 ```{r}
 #| label: fig-ho
@@ -783,6 +871,7 @@ if (knitr::is_html_output()) {
 
 ```
 
+As the homeownership rate has declined, home prices have been on the rise. The pandemic had a profound impact on the homeownership market in the city. The median home price increased by 10 percent from 2019 to 2020 and by 2022, the price had reached \$240,000, an overall 22 percent increase from 2019. Previously, the city was seeing increases closer to one percent before the pandemic. 
 ```{r}
 #| label: fig-lburg-sales
 #| fig-cap: "Lynchburg median home sales price"
@@ -862,6 +951,8 @@ ggplot(lburg_mprice,
 
 ```
 
+Closed home sales increased slightly during the pandemic reaching a high of 191 homes sold in the June 2021. Despite the high demand produced by record low interest rates, the number of homes for sale in the city did not increase significantly. 
+
 ```{r}
 #| label: fig-lburg-sold
 #| fig-cap: "Lynchburg closed home sales"
@@ -903,6 +994,9 @@ if (knitr::is_html_output()) {
 
 
 ```
+
+The demand in the city is exemplified by the average days on market, which was already trending downward ahead of the pandemic. But ever since the start of the pandemic, the average days on market has generally not exceeded more than 30 days.
+
 ```{r}
 #| label: fig-dom
 #| fig-cap: "Lynchburg average days on market"
@@ -943,9 +1037,10 @@ if (knitr::is_html_output()) {
 
 
 ```
+From 2016 through 2022, homes sales in the city have been concentrated in the Perrymont and Fort Hill neighborhoods. There have also been a large number of home sales at the southern edge of the city along Timberlake Road.
 ```{r}
 #| label: fig-lburg_sales
-#| fig-cap: "Map of home sales in Lynchburg"
+#| fig-cap: "Map of home sales in Lynchburg from 2016 through 2022"
 
 library(tidygeocoder)
 
@@ -960,11 +1055,13 @@ library(tidygeocoder)
 
 library(zoo)
 
+# Hex map has some of these properties that may be outside of city limits. Might need to explore this and filter those out. 
+
 lburg_props <- read_rds("data/lburg_props.rds") %>% 
   mutate(date = as.yearmon(selling_date, "%Y %m")) %>% 
   mutate(date = as.Date(date)) %>% 
   mutate(year = year(date)) %>% 
-  drop_na(latitude)
+  drop_na(latitude) 
 
 lburg_props_pcovid <- lburg_props %>% 
   st_as_sf(coords = c("longitude", "latitude"),
@@ -988,6 +1085,8 @@ mapview(hex_count, zcol = "n_pts")
 ```
 
 ## Rental market
+
+Like the counties, rents in the city have been relatively flat from 2015 to 2020. From 2020 onward, there were bumps in the market asking rent that led to a high of \$1,106 in the second quarter of 2022. But average market asking rent has been in decline since then and sat at \$1,046 by the end of 2022, the lowest average rent over the course of seven years.
 
 ```{r}
 #| label: fig-rent
@@ -1021,7 +1120,9 @@ local_rent <- lburg_rent %>%
     value == "current" ~ "Current dollars",
     value == "inf" ~ "Inflation-adjusted dollars")) %>% 
   mutate(year = year(period)) %>% 
-  filter(year >= 2015)
+  filter(year >= 2015) |> 
+  mutate(rent_label = dollar(rent)) |> 
+  mutate(tooltip = c(paste0("Date: ", period, "\n Rent: ", rent_label)))
   
 
 local_rent_plot <- ggplot(local_rent,
@@ -1031,8 +1132,8 @@ local_rent_plot <- ggplot(local_rent,
            color = value)) +
   geom_line(size = 0.5) + 
   geom_point_interactive(aes(
-    data_id = rent,
-    tooltip = dollar_format()(rent))) +
+    data_id = tooltip,
+    tooltip = tooltip)) +
   scale_linetype_manual(values = c("dotted", "solid")) +
   theme_hfv() +
   scale_color_hfv() +
@@ -1070,8 +1171,9 @@ if (knitr::is_html_output()) {
 
 
 ```
+It is important to note that CoStar data excludes a significant amount of single-family detached rentals, which has been growing in demand across the nation. In the city, there is an estimated 4,922 single-family homes that are being used as rentals. A majority of the detached SFR is located in Ward II, where the College Hill and Diamond Hill neighborhoods are located.
 
-
+Rental prices for these are not easily discerned, as this type of housing is sometimes marketed on non-traditional channels, like Facebook groups or simply with a yard sign.
 
 ```{r}
 #| label: parcel-data
@@ -1092,7 +1194,11 @@ write_rds(parcels, "data/parcels.rds")
 
 # The following investigates the number of single-family detached homes that are being utilized as rentals. There is a growing concern over homeownership rates in the city. The current market incentivizes the rental of single-family homes over the sale.
 
-wards <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPStatic/MapServer/62/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE)
+# wards <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPStatic/MapServer/62/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE)
+
+# write_rds(wards, "data/wards.rds")
+
+wards <- read_rds("data/wards.rds")
 
 parcels <- read_rds("data/parcels.rds")
 
@@ -1183,7 +1289,13 @@ if (knitr::is_html_output()) {
 
 
 ```
+As of early 2023, there were a total of 3,651 assisted rental units in the city. While assisted units can be supported by multiples types of federal subsidy, the bulk of these units (35 percent) are supported by the Low-Income Housing Tax Credit (LIHTC) program. They are followed by project-based Section 8 at 1,201 units. 
 
+:::{.callout-note}
+
+Add information about the status of public housing in Lynchburg.
+
+:::
 ```{r}
 #| label: fig-subsidy
 #| fig-cap: "Federally-assisted rental homes in Lynchburg by subsidy"
@@ -1216,8 +1328,18 @@ subsidy_plot <- ggplot(nhpd_subsidies,
        caption = "**Source:** National Housing Preservation Database (NHPD).")
 
 
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = subsidy_plot,
+         height_svg = 4)
+  
+} else {
+  
+  subsidy_plot
+}
 
 ```
+As a major portion of Lynchburg's affordable housing stock, LIHTC is potentially at-risk due to expiring affordability commitments. By 2035, over 40 percent of active LIHTC units are set to exit their affordability commitment period. These properties would need to obtain an additional allocation of tax credits to maintain affordability. While nonprofit owner/operators will seek to maintain affordability, for-profit owners are more likely to convert their properties to market rate.
 ```{r}
 #| label: fig-lihtc-exp
 #| fig-cap: "LIHTC units by affordability commitment expiration in Lynchburg"
@@ -1266,8 +1388,6 @@ lihtc_plot
   
 
 ```
-
-
 
 ```{r}
 #| label: gap-data
@@ -1424,7 +1544,6 @@ mapview(hcv, zcol = "hcv_pct_renter_occ_units")
 ```
 
 
-
 ```{r}
 #| label: rprops
 
@@ -1434,10 +1553,60 @@ mapview(hcv, zcol = "hcv_pct_renter_occ_units")
 
 
 ```
+## Affordability
 
+In 2021, there was a total of 8,875 cost-burdened households in the city, 75 percent of which were renters. Even those the overall total of cost-burdened households in the city has declined by five percent, that decline has been mainly among homeowner households. 
+
+The number of cost-burdened renter households has increased in the last decade from 5,380 to 6,663, a 24 percent increase.
+
+```{r}
+#| label: fig-local-cb
+#| fig-cap: "Lynchburg cost burden by tenure"
+
+cv_cb <- read_rds("data/b25106_data.rds") |> 
+  filter(NAME == "Lynchburg city")
+
+local_cb <- cv_cb |> 
+  group_by(NAME, year, tenure, cb) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(cb == "Cost-burdened") |> 
+  mutate(year_label = as.character(year))
+
+
+cv_cb_plot <- ggplot(local_cb,
+       aes(x = year_label,
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+           tooltip = label_number(big.mark = ",")(estimate))) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",")) + 
+  labs(title = "Lynchburg cost-burdened households by tenure",
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25106.") +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = cv_cb_plot,
+         height_svg = 4)
+} else {
+  
+  cv_cb_plot
+}
+  
+
+
+```
 
 ```{r}
 #| label: fig-cb-tenure
+#| eval: false
 #| fig-cap: "Lynchburg cost burden by tenure"
 
 cb_tenure <- read_rds("data/cb_7.rds") %>% 
