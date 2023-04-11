@@ -11,14 +11,12 @@ The following provides a regional-level analysis of major trends impacting housi
 ```{r}
 #| label: setup
 
-
 # Load necessary libraries.
 
 library(tidyverse)
 library(tidycensus)
 library(janitor)
 library(scales)
-library(ggplot2)
 library(tigris)
 library(sf)
 library(glue)
@@ -46,7 +44,6 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 - Loss of smaller sized housing
 - Major home price increases and rental vacancy declines due to COVID-19
 - Affordability challenges hitting people of color, renters, and those living alone the most
-
 
 ## Population trends
 
@@ -123,7 +120,7 @@ write_rds(population_data, "data/pop_data.rds")
 
 ```{r}
 #| label: fig-pop
-#| fig-cap: "Total regional population"
+#| fig-cap: "Total population of CVPDC region"
 
 # Read in saved data and aggregate to the regional level.
 
@@ -140,27 +137,20 @@ pop_bar <- ggplot(cv_pop, # Read in the data.
                       data_id = value, # Set the variable that will be used in interactive plot.
                       tooltip = label_comma()(value))) + # Set the format of the data label on hover.
   geom_col() + # Set as a bar chart. 
-  geom_col_interactive(size = 2) +
+  geom_col_interactive(size = 2) + # Add interactive geometry for ggiraph widget.
   theme_hfv() + # Apply custom HFV theme.
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
-  labs(title = "Total population",
+  labs(title = "Total population of CVPDC region",
        subtitle = "From 2010 to 2020",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program (PEP).") +
   scale_y_continuous(label = label_comma()) # Format the y-axis to show commas.
 
-# Apply if-else statement to print interactive plot if in html or simply print the visualization static plot if anything else.
+# Use custom function from hdatools package to render the plot as a dynamic ggiraph widget for HTML outputs; regular image for all other formats.
   
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = pop_bar,
-         height_svg = 4)
-} else {
-  
-  pop_bar
-}
-  
+publish_plot(pop_bar)
 
 ```
+
 For much of the last decade, growth in the region has been a result of both domestic migration and international migration. But from 2020 to 2021, there were significant shifts in the causes of population change in the region. Deaths outpaced births during this time, leading to a loss of over 600 individuals. International migration decreased, while domestic migration overwhelmingly became the reason for growth in the region.
 
 These changes within the region were no doubt a result of the COVID-19 pandemic's impact. With the increase in work-from-home (WFH), households from outside the region saw an opportunity to benefit from the relative affordability of the region, while still earning high wages from elsewhere. And sadly, the pandemic's impact also contributed to losses among the community.
