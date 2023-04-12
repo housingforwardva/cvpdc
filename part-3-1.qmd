@@ -138,7 +138,8 @@ pop_bar <- ggplot(cv_pop, # Read in the data.
                       tooltip = label_comma()(value))) + # Set the format of the data label on hover.
   geom_col() + # Set as a bar chart. 
   geom_col_interactive(size = 2) + # Add interactive geometry for ggiraph widget.
-  theme_hfv() + # Apply custom HFV theme.
+  theme_hfv(base_size = 11) + # Apply custom HFV theme.
+  # add_zero_line("x") + # Add darker zero intercept line for emphasis.
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
   labs(title = "Total population of CVPDC region",
        subtitle = "From 2010 to 2020",

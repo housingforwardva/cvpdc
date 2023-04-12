@@ -1,6 +1,6 @@
 project:
   type: book
-  execute-dir: file
+  execute-dir: project
   output-dir: docs
   
 execute: 
@@ -23,15 +23,15 @@ book:
     - part: "PART 2: Engagement summary"
       chapters:
         - part-2-1.qmd # Methods and themes
-    - part: "Part 3: Findings"
+    - part: "PART 3: Findings"
       chapters: 
         - part-3-1.qmd # CVPDC Housing Market Assessment
         - part-3-2.qmd # County Housing Market Assessment
         - part-3-3.qmd # City of Lynchburg Housing Market Analysis
-    - part: "Part 4: Policy evaluation"
+    - part: "PART 4: Policy evaluation"
       chapters:
         - part-4-1.qmd # Regional and local policy evaluation
-    - part: "Part 5: Policy recommendations"
+    - part: "PART 5: Policy recommendations"
       chapters: 
         - part-5-1.qmd # Regional solutions
         - part-5-2.qmd # Local solutions
@@ -48,11 +48,11 @@ format:
     theme:
       - lumen
     fontsize: "100%"
-  pdf:
-    documentclass: scrreprt
-    mainfont: "Noto Sans"
-    fig-pos: "H"
-    include-in-header:
-      text: |
-        \usepackage{float}
-        \raggedbottom
+  # pdf:
+  #   documentclass: scrreprt
+  #   mainfont: "Open Sans"
+  #   fig-pos: "H"
+  #   include-in-header:
+  #     text: |
+  #       \usepackage{float}
+  #       \raggedbottom
