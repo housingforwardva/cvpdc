@@ -138,8 +138,8 @@ pop_bar <- ggplot(cv_pop, # Read in the data.
                       tooltip = label_comma()(value))) + # Set the format of the data label on hover.
   geom_col() + # Set as a bar chart. 
   geom_col_interactive(size = 2) + # Add interactive geometry for ggiraph widget.
-  theme_hfv(base_size = 11) + # Apply custom HFV theme.
-  # add_zero_line("x") + # Add darker zero intercept line for emphasis.
+  theme_hfv() + # Apply custom HFV theme.
+  add_zero_line("y") + # Add darker zero intercept line for emphasis.
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
   labs(title = "Total population of CVPDC region",
        subtitle = "From 2010 to 2020",
@@ -221,7 +221,7 @@ write_rds(cv_comp_change, "data/comp_data.rds")
 
 ```{r}
 #| label: fig-pchange
-#| fig-cap: "Regional components of population change"
+#| fig-cap: "Components of population change"
 
 # Read in saved data. 
 
@@ -242,6 +242,7 @@ cv_change_plot <- ggplot(cv_change,
   geom_col(position = "stack") +
   geom_col_interactive(size = 2) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() + 
   labs(title = "Components of population change",
        subtitle = "From 2010 to 2021",
@@ -249,20 +250,15 @@ cv_change_plot <- ggplot(cv_change,
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_change_plot,
-         height_svg = 4)
-} else {
-  
-  cv_change_plot
-}
+publish_plot(cv_change_plot)
 
 ```
+
 Despite the slight population decline from from 2019 to 2020, the region is projected to near 300,000 people by 2050 --- a 13 percent increase from the 2020 Census.
+
 ```{r}
 #| label: fig-projections
-#| fig-cap: "Regional population projections"
+#| fig-cap: "Projected total population"
 
 # Read in saved UVA Projections data.
 
@@ -298,21 +294,14 @@ cv_proj_plot <- ggplot(cv_proj,
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() + 
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Population projection",
+  labs(title = "Projected total population",
+       subtitle = "2030, 2040, and 2050 projections",
        caption = "**Source:** University of Virginia, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma())
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_proj_plot,
-         height_svg = 4)
-} else {
-  
- cv_proj_plot
-
-}
-
+publish_plot(cv_proj_plot)
 
 ```
 
@@ -372,7 +361,7 @@ write_rds(b25003_data, "data/b25003_data.rds")
 
 ```{r}
 #| label: fig-tenure
-#| fig-cap: "Regional change in household tenure"
+#| fig-cap: "Cumulative change in households by tenure"
 
 # Read in saved data. 
 
@@ -400,23 +389,20 @@ cv_tenure_plot <- ggplot(cv_tenure,
   geom_col_interactive(size = 2) +
   facet_wrap(~tenure) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
   labs(title = "Cumulative change in households by tenure", 
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25003.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_tenure_plot,
-         height_svg = 4)
-} else {
-  
-  cv_tenure_plot
-}
+publish_plot(cv_tenure_plot)
 
 ```
+
 The growing number of homeowners in the region are overwhelmingly the result of seniors (65 years and over). Between 2010 and 2021, there was an increase of 5,796 senior homeowners. The growth in homeowners was offset by major decreases in homeowners aged between 25 and 64 years old --- an overall decrease of 5,180. Renter households saw increases across all age groups, but the greatest increase was among 45 to 64 year olds (+1,323).
+
 ```{r}
 #| label: age
 #| eval: false
@@ -475,7 +461,7 @@ write_rds(b25007_data, "data/b25007_data.rds")
 
 ```{r}
 #| label: fig-age
-#| fig-cap: "Regional change in households by age and tenure"
+#| fig-cap: "Change in households by age and tenure"
 
 b25007_data <- read_rds("data/b25007_data.rds")
 
@@ -502,29 +488,23 @@ cv_age_plot <- ggplot(cv_age,
   geom_col(position = "dodge") +
   geom_col_interactive(size = 2) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
   labs(title = "Change in households by age and tenure",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25007.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_age_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_age_plot
-}
-
+publish_plot(cv_age_plot)
 
 ```
+
 Among household types, householders not living alone grew by 1,430 from 2010 to 2021 --- more than any other household type. This household type mostly represents households with unrelated household members (i.e. living with roommates). Household types like this are expected in regions with major universities, but they can also be an indicator of affordability challenges as individuals increasingly need additional household members to contribute to rent or mortgages.
 
 Householders living alone follow at an increase of 1,133. Household formation continues to be delayed among many individuals --- contributing to the growing number of one-person households. But in the Lynchburg region, married couple households follow closely behind with an increase of 1,059 since 2010.
+
 ```{r}
 #| label: hhtype-data
 #| eval: false
@@ -533,7 +513,6 @@ Householders living alone follow at an increase of 1,133. Household formation co
 
 b11001_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 7) %in% "B11001_")
-
 
 b11001_raw <- map_dfr(years, function(yr){
   b11001_pull <- get_acs(
@@ -582,7 +561,7 @@ write_rds(b11001_data, "data/b11001_data.rds")
 
 ```{r}
 #| label: fig-hhtype
-#| fig-cap: "Regional change in households by type"
+#| fig-cap: "Change in households by type"
 
 b11001_data <- read_rds("data/b11001_data.rds")
 
@@ -594,7 +573,6 @@ cv_hhtype <- b11001_data |>
   select(hhtype, `2010`, `2021`) |> 
   transform(change = `2021` - `2010`) 
 
-
 cv_hhtype_plot <-ggplot(cv_hhtype,
        aes(x = reorder(hhtype, change),
            y = change,
@@ -604,24 +582,20 @@ cv_hhtype_plot <-ggplot(cv_hhtype,
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_negative = "minus", style_positive = "plus")) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 16)) +
-  labs(title = "Change in household type",
+  labs(title = "Change in households by type",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11001.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B11001.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_hhtype_plot,
-         height_svg = 4)
-} else {
-  
-  cv_hhtype_plot
-}
+publish_plot(cv_hhtype_plot)
 
 ```
+
 The region saw its greatest gains among households --- both homeowners and renters --- with two people or less. Two-person renter households saw the most growth between 2010 and 2021, increasing by 2,409. Household with three or more people only grew slightly, but three-person homeowner households actually saw a decline (-1,642). 
+
 ```{r}
 #| label: hhsize-data
 #| eval: false
@@ -675,7 +649,7 @@ write_rds(b25009_data, "data/b25009_data.rds")
 
 ```{r}
 #| label: fig-hhsize
-#| fig-cap: "Regional change in households by size and tenure"
+#| fig-cap: "Change in households by size and tenure"
 
 b25009_data <- read_rds("data/b25009_data.rds")
 
@@ -698,25 +672,21 @@ cv_hhsize_plot <- ggplot(cv_hhsize,
   geom_col_interactive(size = 2) +
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Change in household size by tenure",
+  labs(title = "Change in households by size and tenure",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") +
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25009.") +
   theme(axis.text.x = element_blank(),
         legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_hhsize_plot,
-         height_svg = 4)
-} else {
-  
-  cv_hhsize_plot
-}
+publish_plot(cv_hhsize_plot)
 
 ```
-The senior population grew by 9,021 individuals from 2010 to 2021. Much of that growth occurred among seniors living with family --- mainly as a householder (+3,233) or as the spouse in a family (+3,091). The third largest change in the senior population was among seniors living alone (+2,291). This senior living arrangement can be a concern for communities. With more and more seniors living alone, aging-in-place is made more difficult without support from others. 
+
+The senior population grew by 9,021 individuals from 2012 to 2021. Much of that growth occurred among seniors living with family --- mainly as a householder (+3,233) or as the spouse in a family (+3,091). The third largest change in the senior population was among seniors living alone (+2,291). This senior living arrangement can be a concern for communities. With more and more seniors living alone, aging-in-place is made more difficult without support from others. 
+
 ```{r}
 #| label: hh-seniors-data
 #| eval: false
@@ -777,7 +747,7 @@ write_rds(b09020_data, "data/b09020_data.rds")
 
 ```{r}
 #| label: fig-seniors
-#| fig-cap: "Regional change in senior population"
+#| fig-cap: "Change in senior population by living arrangement"
 
 b09020_data <- read_rds("data/b09020_data.rds")
 
@@ -790,7 +760,6 @@ cv_seniors <- b09020_data |>
   mutate(family = str_replace(family, "Group quarters", " "),
          family = fct_relevel(family, "Family", "Nonfamily", " "))
 
-
 cv_seniors_plot <- ggplot(cv_seniors,
        aes(y = reorder_within(relationship, change, family),
            x = change,
@@ -802,10 +771,11 @@ cv_seniors_plot <- ggplot(cv_seniors,
   facet_grid(rows = vars(family), scales = "free_y", space = "free", switch = "y") +
   scale_y_reordered() +
   theme_hfv() +
+  add_zero_line("x") +
   scale_fill_hfv() +
   labs(title = "Change in senior population by living arrangement",
-       subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09020.") +
+       subtitle = "From 2012 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.") +
   theme(strip.placement = "outside",
         strip.text.y = element_text(angle = 0),
         panel.grid.major.y = element_blank(),
@@ -816,16 +786,12 @@ cv_seniors_plot <- ggplot(cv_seniors,
         ) +
    scale_x_continuous(labels = number_format(big.mark = ",", style_positive = "plus"))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_seniors_plot,
-         height_svg = 4)
-} else {
-  
-  cv_seniors_plot
-}
+publish_plot(cv_seniors_plot)
+
 ```
+
 With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. These families are called subfamilies, and within the Lynchburg region subfamilies are more than likely to be single mothers. But in recent years, the number of single fathers and married couples (both with and without children) living with another family has been on the rise.
+
 ```{r}
 #| label: hh-subfam-data
 #| eval: false
@@ -876,10 +842,9 @@ write_rds(b11013_data, "data/b11013_data.rds")
 
 ```
 
-
 ```{r}
 #| label: fig-subfam
-#| fig-cap: "Regional change in families living with others"
+#| fig-cap: "Subfamilies by type and presence of own children"
 
 b11013_data <- read_rds("data/b11013_data.rds") 
 
@@ -898,25 +863,20 @@ cv_subfam_plot <- ggplot(cv_subfam,
   geom_col_interactive() +
   facet_wrap(~subfamily) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   labs(title = "Subfamilies by type and presence of own children",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B11013.") +
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B11013.") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = .2))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_subfam_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_subfam_plot
-}
-  
+publish_plot(cv_subfam_plot)
 
 ```
+
 While more and more families are living with other families, the number of multigenerational households has also increased in recent years --- especially within Lynchburg and Campbell County, where the percentage of the population living in multigenerational households increased 2.4 percentage points from 2016 (5.5 percent) to 2020 (7.9 percent).
+
 ```{r} 
 #| label: hh-multigen-data
 #| eval: false
@@ -1014,10 +974,9 @@ write_rds(multigen_data, "data/multigen_data.rds")
 
 ```{r}
 #| label: fig-multigen
-#| fig-cap: "Regional percentage of multigenerational households"
+#| fig-cap: "Percent of population living in multiple generation households"
 
 multigen_data <- read_rds("data/multigen_data.rds")
-
 
 multigen_plot <- ggplot(multigen_data,
        aes(x = YEAR,
@@ -1032,27 +991,21 @@ multigen_plot <- ggplot(multigen_data,
   facet_wrap(~geography, nrow = 1) +
   scale_y_continuous(labels = label_percent(),
                      breaks = c((1:9)/100),
-                     limits = c(0.005,0.09)) +
+                     limits = c(0,0.09)) +
   labs(title = "Percent of population living in multiple generation households",
        subtitle = "2016 to 2020",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Public Use Microdata Sample.") +
-  scale_color_pha() +
-  theme_pha() +
-  theme(axis.text.x = element_text(angle = 90))
+  scale_color_hfv() +
+  theme_hfv() +
+  add_zero_line("y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = multigen_plot,
-         height_svg = 4)
-  
-} else {
-  
-  multigen_plot
-}
-
+publish_plot(multigen_plot)
 
 ```
+
 While other parts of Virginia are seeing an increasing number of adult children returning home to live with parents, this is not so much the case in the Lynchburg region. Young adults (18 to 34 years old) are increasingly living with a partner in the region, a 38 percent increase between 2015 and 2021. Adults living with their parents only increased by 1.5 percent during this same timeframe.
+
 ```{r}
 #| label: hh-adultchild-data
 #| eval: false
@@ -1102,7 +1055,7 @@ write_rds(b09021_data, "data/b09021_data.rds")
 
 ```{r}
 #| label: fig-adultchild
-#| fig-cap: "Regional change in young adult population by living arrangement"
+#| fig-cap: "Percent change in young adult population by living arrangement"
 
 b09021_data <- read_rds("data/b09021_data.rds") 
 
@@ -1125,30 +1078,24 @@ cv_adultchild_plot <- ggplot(cv_adultchild,
   geom_col(position = "dodge") +
   geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  labs(title = "Change in 18-34 year old population by living arrangement",
-       subtitle="2015 to 2021",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, Table B09021.") +
+  labs(title = "Percent change in young adult population by living arrangement",
+       subtitle="All adults aged 18-34 from 2015 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09021.") +
   scale_y_continuous(labels = percent_format())
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_adultchild_plot,
-         height_svg = 4)
-} else {
-  
-  cv_adultchild_plot
-}
+publish_plot(cv_adultchild_plot)
 
 ```
-
 
 ## Economic trends
 
 In the region, the distribution of homeowner incomes have shifted upwards. A greater share of homeowners are now in the $100,000 and more income range than back in 2010. Renter incomes have also shifted upwards but not as dramatically towards the upper income bands. In 2021, there 5,060 more renter households making between \$50,000 and \$149,999, a 92 percent increase.
 
 Regardless of these shifts, income distributions for renter households continue to skew towards the low end.
+
 ```{r}
 #| label: hh-inc-data
 #| eval: false
@@ -1206,7 +1153,7 @@ write_rds(b25118_data, "data/b25118_data.rds")
 
 ```{r}
 #| label: fig-incdist
-#| fig-cap: "Regional income distribution by tenure"
+#| fig-cap: "Households by income and tenure"
 
 b25118_data <- read_rds("data/b25118_data.rds") 
 
@@ -1214,43 +1161,41 @@ inc_dist <- b25118_data |>
   group_by(year, tenure, income) |> 
   summarise(estimate = sum(estimate)) |> 
   filter(year == 2010 | year == 2021) |> 
-  mutate(year = as.character(year)) 
+  mutate(year = as.character(year)) |> 
+  ungroup()
 
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
 
 inc_dist_plot <- ggplot(inc_dist,
        aes(x = factor(income, level = level_order),
            y = estimate,
-           fill = tenure,
+           fill = year,
            data_id = estimate,
            tooltip = label_comma()(estimate))) +
-  geom_col(position = "dodge") +
-  geom_col_interactive(size = 1) +
-  facet_grid(tenure~year) +
-  scale_fill_hfv() +
+  geom_col(position = position_dodge()) +
+  geom_col_interactive(size = 1, position = position_dodge()) +
+  facet_grid(~tenure) +
+  scale_fill_hfv(-1) +
   theme_hfv() +
+  add_zero_line("y") +
   theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8),
         strip.text.y = element_blank(),
         legend.position = "bottom") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Income distribution",
-       subtitle = "In 2010 and 2021") 
+  labs(title = "Households by income and tenure",
+       subtitle = "2010 versus 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25118.") 
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = inc_dist_plot,
-         height_svg = 4)
-} else {
-  
-  inc_dist_plot
-}
+publish_plot(inc_dist_plot)
 
 ```
+
 Between homeowner and renter households there is a \$35,236 gap in median household income. Adjusting for inflation shows that median household income has been relatively flat for homeowners in the last decade (7 percent increase), while the typical income for renters saw modest gains (18 percent increase).
+
 ```{r}
 #| label: med-income-msa
 #| eval: false
-
 
 # "metropolitan statistical area/micropolitan statistical area"
 
@@ -1258,7 +1203,6 @@ years <- 2010:2021
 
 b25119_vars <- load_variables(2021, "acs5") |> 
   filter(str_sub(name, end = 6) %in% "B25119")
-
 
 b25119_raw <- map_dfr(years, function(yr){
   b25119_pull <- get_acs(
@@ -1312,14 +1256,14 @@ write_rds(b25119_cpi_msa, "data/b25119_cpi_msa.rds")
 
 ```{r}
 #| label: fig-medinc
-#| fig-cap: "Regional median household income by tenure"
+#| fig-cap: "Median household income by tenure"
 
 b25119_cpi_msa <- read_rds("data/b25119_cpi_msa.rds") |> 
   pivot_longer(4:5,
                names_to = "value",
                values_to = "estimate") |> 
   mutate(value = case_when(
-    value == "dollars21" ~ "2021 inflation-adjusted",
+    value == "dollars21" ~ "Constant 2021 dollars",
     value == "cdollars" ~ "Current dollars"
   ))
 
@@ -1328,34 +1272,32 @@ med_inc_plot <- ggplot(b25119_cpi_msa,
            y = estimate,
            color = tenure,
            linetype = value)) +
-  geom_line(size = .5) +
+  geom_line(linewidth = .5) +
   geom_point_interactive(
     aes(data_id = estimate,
         tooltip = dollar_format()(estimate)),
     size = 1) +
   facet_wrap(~tenure) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_color_hfv() +
-  scale_y_continuous(labels = dollar_format()) +
+  scale_x_continuous(breaks = 2010:2021) +
+  scale_y_continuous(labels = dollar_format(),
+                     limits = c(0, 73000)) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
+  guides(color = "none") +
   labs(title = "Median household income by tenure",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-Year Estimates, Table B25119.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25119.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = med_inc_plot,
-         height_svg = 4)
-} else {
-  
-  med_inc_plot
-}
+publish_plot(med_inc_plot)
 
 ```
 
 ```{r}
 #| label: med-income-county
 #| eval: false
-
 
 years <- 2010:2021 #Including Bedford City, but be mindful that you cannot aggregate medians.
 
@@ -1408,9 +1350,11 @@ b25119_cpi <- b25119_data |>
 write_rds(b25119_cpi, "data/b25119_cpi.rds")
 
 ```
+
 Gaps in income between different races and ethnicities in the region continue to further racial inequities --- especially in the housing market. Black households in the region make a fraction of what their white counterparts make. For every dollar a typical white household makes, a Black household only makes 62 percent of that dollar.
 
 Hispanic households in the region have made major gains in income. When comparing inflation-adjusted income, Hispanic households in the region saw a 17 percent increase in median household income, the largest gain among any other group.
+
 ```{r}
 #| label: inc-race-msa
 #| eval: false
@@ -1482,7 +1426,7 @@ write_rds(b19013_msa, "data/b19013_msa.rds")
 
 ```{r}
 #| label: fig-inc-race-msa
-#| fig-cap: "Regional median household income by race and ethnicity"
+#| fig-cap: "Median household income by race and ethnicity"
 
 b19013_msa <- read_rds("data/b19013_msa.rds") |> 
   select(NAME, year, race, cdollars = estimate, dollars21) |> 
@@ -1491,34 +1435,33 @@ b19013_msa <- read_rds("data/b19013_msa.rds") |>
                values_to = "estimate"
                ) |> 
   mutate(value = case_when(
-    value == "dollars21" ~ "2021 inflation-adjusted",
+    value == "dollars21" ~ "Constant 2021 dollars",
     value == "cdollars" ~ "Current dollars"))
 
 race_inc_plot <- ggplot(b19013_msa,
        aes(x = year,
            y = estimate,
-           color = race)) +
-  geom_line(size = 0.5) +
+           color = race,
+           linetype = value)) +
+  geom_line(linewidth = 0.5) +
   geom_point_interactive(
     aes(data_id = estimate,
         tooltip = dollar_format()(estimate)),
     size = 1) +
+  facet_wrap(~race, nrow = 1) +
   theme_hfv() +
+  add_zero_line("y") +
+  scale_x_continuous(breaks = c(2011,2013,2015,2017,2019,2021)) +
+  scale_y_continuous(labels = dollar_format()) +
   scale_color_hfv() +
-  facet_wrap(~value) +
-  theme(legend.position = "bottom") +
-  labs(title = "Median household income by race or ethnicity",
-       subtitle = "From 2010 to 2021") +
-  scale_y_continuous(labels = dollar_format())
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
+  guides(color = "none") +
+  labs(title = "Median household income by race and ethnicity",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25119.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = race_inc_plot,
-         height_svg = 4)
-} else {
-  
-  race_inc_plot
-}
+publish_plot(race_inc_plot)
 
 ```
 
@@ -1663,7 +1606,7 @@ write_rds(b25127_data, "data/b25127_data.rds")
 
 ```{r}
 #| label: fig-structure
-#| fig-cap: "Regional housing stock by structure type"
+#| fig-cap: "Housing stock by structure type and tenure"
 
 b25127_data <- read_rds("data/b25127_data.rds")
 
@@ -1672,41 +1615,39 @@ cv_structure <- b25127_data |>
   summarise(estimate = sum(estimate)) |> 
   group_by(year) |> 
   mutate(pct = round(estimate/sum(estimate), 4)) |> 
-  mutate(year = as.character(year))
+  mutate(year = as.character(year)) |> 
+  mutate(structure = fct_relevel(structure, "Single-family", "2 to 4 units", "5 to 19 units",
+                                 "20 or more units", "Other")) |> 
+  ungroup()
 
 cv_structure_plot <- ggplot(cv_structure,
        aes(x = year,
            y = pct,
-           fill = structure,
+           fill = fct_rev(structure),
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive() +
   facet_wrap(~tenure) +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(labels = label_percent()) +
   theme_hfv() +
-  scale_fill_hfv() +
-  labs(title = "Housing stock by structure type",
+  add_zero_line("y") +
+  scale_fill_hfv(-1) +
+  labs(title = "Housing stock by structure type and tenure",
        subtitle = "Percent of total occupied housing from 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, 5-Year ACS, Table B25127.") +
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25127.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         legend.position = "right")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_structure_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_structure_plot
-}
+publish_plot(cv_structure_plot)
 
 ```
+
 Most of the region's housing is surpassing 20 years in age. A construction boom in the late 20th century (from 1960 to 1999) contributed to much of the region's homeownership and rental housing stock. With aging housing stock, housing quality becomes an ever-present issue.
+
 ```{r}
 #| label: fig-yrbuilt
-#| fig-cap: "Regional housing stock by year built"
+#| fig-cap: "Housing stock by year built and tenure"
 
 cv_yrbuilt <- b25127_data |> 
   filter(year == 2021) |> 
@@ -1716,33 +1657,30 @@ cv_yrbuilt <- b25127_data |>
 cv_yrbuilt_plot <- ggplot(cv_yrbuilt,
        aes(x = yrbuilt,
            y = estimate,
-           fill = yrbuilt,
+           fill = tenure,
            data_id = estimate,
            tooltip = label_comma()(estimate))) +
   geom_col() +
   geom_col_interactive() +
   facet_wrap(~tenure) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
+  scale_x_discrete(labels = function(x)str_wrap(x, width = 9)) +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "Housing stock by year built and tenure",
-       caption = "U.S. Census Bureau, 5-year ACS, Table B25127.") + 
-  scale_x_discrete(labels = function(x)str_wrap(x, width = 9)) +
+       subtitle = "Total occupied housing units",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 2017-2021 5-year estimates, Table B25127.") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_yrbuilt_plot,
-         height_svg = 4)
-} else {
-  
-  cv_yrbuilt_plot
-}
+publish_plot(cv_yrbuilt_plot)
 
 ```
+
 The number of smaller bedroom homes has been declining since 2010, particularly within the existing homeowner housing stock. From 2010 to 2021, there was a loss of 2,435 two-bedroom homes in homeownership. Some of that loss could be accounted for in a transition to rental, but two-bedroom rentals only increased by 1,487. One-bedroom rentals, often in-demand by young professionals, as well as those most in need, also so a decline (-191), but two-bedroom rentals accounted for much of the growth in the rental market.
 
 Larger homes with three or more bedrooms saw the greatest increase in the region. Although larger homes are meeting a demand, they often come at the expense of affordability.
+
 ```{r}
 #| label: beds-data
 #| eval: false
@@ -1794,15 +1732,18 @@ write_rds(b25042_data, "data/b25042_data.rds")
 
 ```{r}
 #| label: fig-beds
-#| fig-cap: "Change in regional housing stock by bedroom count"
+#| fig-cap: "Change in housing stock by number of bedrooms and tenure"
 
 b25042_data <- read_rds("data/b25042_data.rds")
 
 cv_beds <- b25042_data |> 
   mutate(br = case_when(
-    br == "4 bedrooms" ~ "4 or more bedrooms",
-    br == "5 or more bedrooms" ~ "4 or more bedrooms",
-    TRUE ~ br
+    br == "1 bedroom" ~ "One",
+    br == "2 bedrooms" ~ "Two",
+    br == "3 bedrooms" ~ "Three",
+    br == "4 bedrooms" ~ "Four or more",
+    br == "5 or more bedrooms" ~ "Four or more",
+    br == "No bedroom" ~ "None"
   )) |> 
   group_by(year, tenure, br) |> 
   summarise(estimate = sum(estimate)) |> 
@@ -1810,44 +1751,41 @@ cv_beds <- b25042_data |>
     names_from = year,
     values_from = estimate
   ) |> 
-  mutate(chg = `2021` - `2010`)
-
+  mutate(chg = `2021` - `2010`) |> 
+  mutate(br = fct_relevel(br, "One", "Two", "Three", "Four or more", "None"))
 
 cv_beds_plot <- ggplot(cv_beds,
        aes(x = br,
            y = chg,
-           fill = br,
+           fill = tenure,
            data_id = chg,
            tooltip = label_comma()(chg))) +
   geom_col(position = "stack") +
   geom_col_interactive() +
   facet_wrap(~tenure) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Change in bedrooms by tenure",
-       subtitle = "From 2010 to 2021") +
-  scale_x_discrete(labels = function(x)str_wrap(x, width = 8)) +
+  labs(title = "Change in housing stock by number of bedrooms and tenure",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 2017-2021 5-year estimates, Table B25042.") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_beds_plot,
-         height_svg = 4)
-} else {
-  
-  cv_beds_plot
-}
+publish_plot(cv_beds_plot)
 
 ```
-Manufactured housing communities are spread out across the region. These homes often serve as market-rate affordable housing, but they are face several challenges, including risk of redevelopment, poor housing quality, and aging infrastructure.
+
+Manufactured home communities are spread out across the region. These homes often serve as market-rate affordable housing, but they are face several challenges, including risk of redevelopment, poor housing quality, and aging infrastructure.
 
 There are 99 manufactured home communities in the region. Three quarters of the communities in the region are small, consisting of less than 50 homes. 
 
 :::{.callout-note}
 
-Insert information about MHC tenure and issues.
+TO ADD LATER: specific issues and context on MHCs
 
 :::
+
 ```{r}
 #| label: fig-mhc-map
 #| fig-cap: "Map of manufactured home communities"
@@ -1866,7 +1804,6 @@ leaflet(mhc) |>
   addTiles() |> 
   addCircleMarkers()
 
-
 ```
 
 ```{r}
@@ -1881,7 +1818,7 @@ mhc_group <- mhc |>
   mutate(size = str_to_sentence(SIZE))
 
 mhc_group_plot <- ggplot(mhc_group,
-                         aes(x = size,
+                         aes(x = reorder(size, count, decreasing = TRUE),
                              y = count,
                              data_id = count,
                              tooltip = count,
@@ -1889,25 +1826,20 @@ mhc_group_plot <- ggplot(mhc_group,
   geom_col(position = "dodge") +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   labs(title = "Manufactured home communities by size",
+       subtitle = "Number of homes in each community",
        caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = mhc_group_plot,
-         height_svg = 4)
-} else {
-  
-  mhc_group_plot
-}
-
+publish_plot(mhc_group_plot)
 
 ```
+
 The region has still not recovered to its Great Recession building-levels, when residential building permits peaked at 1,840 in 2005. Since 2012, permits have only averaged at 768 per year, less than half of what it was in 2005.  
 
 In addition, the early 2000s saw a greater number of two to four bedroom homes. But by 2005, these diverse types of housing were nearly non-existent from the building pipeline in the region.
+
 ```{r}
 #| label: bps-data
 #| eval: false
@@ -1980,7 +1912,7 @@ write_rds(cv_cbps, "data/cv_cbps.rds")
 
 ```{r}
 #| label: fig-permits
-#| fig-cap: "Regional residential building permits"
+#| fig-cap: "New residential building permits"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") |> 
   group_by(year, type) |> 
@@ -2002,30 +1934,25 @@ cv_cbps_plot <- ggplot(cv_cbps,
   geom_col(position = "stack") +
   geom_col_interactive() +
   theme_hfv() +
-  scale_fill_hfv() +
+  add_zero_line("y") +
+  scale_fill_hfv(-1) +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "New residential building permits",
-       subtitle = "From 2000 through November 2022") +
+       subtitle = "From 2000 through November 2022",
+       caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
   theme(legend.position = "right")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cbps_plot,
-         height_svg = 4)
-} else {
-  
-  cv_cbps_plot
-}
-
+publish_plot(cv_cbps_plot)
 
 ```
 
 ## Homeownership market
 
 The regional homeownership rate has been on a slow decline in the last decade, from 72 percent in 2010 to 70 percent in 2021.
+
 ```{r}
 #| label: fig-ho-rate
-#| fig-cap: "Regional homeownership rate"
+#| fig-cap: "Homeownership rate"
 
 # Read in tenure data via Table B25003.
 
@@ -2048,32 +1975,28 @@ cv_ho <- ho_rate |>
 cv_ho_plot <- ggplot(cv_ho,
        aes(x = year, 
            y = pct)) +
-  geom_line(size = 0.5) +
+  geom_line(linewidth = 0.5) +
   geom_point_interactive(
     aes(data_id = pct,
-        tooltip = percent_format()(pct)),
+        tooltip = label_percent(accuracy = 0.1)(pct)),
     size = 1) +
   theme_hfv() +
   scale_color_hfv() +
-  scale_y_continuous(labels = percent_format(), limits = c(.65,.75)) +
+  scale_y_continuous(labels = label_percent(), limits = c(.65,.75)) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
-  labs(title = "Regional homeownership rate",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+  labs(title = "Homeownership rate",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25003.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_ho_plot,
-         height_svg = 4)
-} else {
-  
-  cv_ho_plot
-}
+publish_plot(cv_ho_plot)
 
 ```
+
 As the homeownership rate has declined slightly, the regional median residential sales price has continued to climb in recent years. Although fluctuating between \$180,000 and \$225,000 between 2016 and 2019, the region saw a major bump in early 2020 as the pandemic impacts hit the region's housing market that have kept home prices well-above \$225,000 ever since.
+
 ```{r}
 #| label: fig-mls-price
-#| fig-cap: "Regional median residential sales price"
+#| fig-cap: "Median residential sales price by month"
 
 # Utilize Lynchburg MLS data. Need median sales price for the entire region from 2000 to 2022 or at least 2010. Monthly median sales price is preferred.
 
@@ -2083,7 +2006,6 @@ cv_price <- read_excel("data/cv_mls_data.xlsx", sheet = "Median Sales Price By M
   filter(Property_Type == "RESI") |> 
   mutate(price = as.numeric(Median_Sales_Price)) |> 
   select(date, price)
-
 
 library(fredr)
 
@@ -2103,46 +2025,37 @@ cv_price_adj <- cv_price |>
                values_to = "price") |> 
   mutate(type = case_when(
     type == "price" ~ "Current dollars",
-    type == "price_adj" ~ "Inflation-adjusted dollars"
+    type == "price_adj" ~ "Constant 2022 dollars"
   )) |> 
   transform(price_label = dollar(price)) |> 
   mutate(tooltip = c(paste0("Date: ", date, "\n Price: ", price_label)))
   
-
 cv_price_plot <- ggplot(cv_price_adj,
        aes(x = date,
            y = price,
            color = type)) +
-  geom_line(size = 0.5) +
+  geom_line(linewidth = 0.5) +
   geom_point_interactive(
     aes(data_id = tooltip,
         tooltip = tooltip)) +
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = dollar_format()) +
-  geom_smooth(method = lm, col = "#B1005F") +
-  labs(title = "Median residential sales price",
-       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)") +
+#  geom_smooth(method = lm, col = "#B1005F") +
+  labs(title = "Median residential sales price by month",
+       subtitle = "January 2016 to December 2022",
+       caption = "**Source:** Lynchburg Association of REALTORS®.") +
   theme(legend.position = "bottom")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_price_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_price_plot
-  
-}
-
+publish_plot(cv_price_plot)
 
 ```
+
 The impact of the pandemic is most noticeable when looking at the number of closed home sales and average days on market. The region saw record high closed home sales during the summers of 2020 and 2021, when it hit 435 sales in June 2020 and then 448 in June 2021.
+
 ```{r}
 #| label: fig-mls-sales
-#| fig-cap: "Regional number of closed home sales"
+#| fig-cap: "Closed home sales by month"
 
 # Utilzie Lynchburg MLS data. Need mumber of closed sales for the entire region from 2000 to 2022 or at least 2010. Monthly number is preferred.
 
@@ -2163,30 +2076,23 @@ cv_sold_plot <- ggplot(cv_sold,
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() + 
+  add_zero_line("y") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Number of closed home sales",
-       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
+  labs(title = "Closed home sales by month",
+       subtitle = "January 2016 to December 2022",
+       caption = "**Source:** Lynchburg Association of REALTORS®.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_sold_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_sold_plot
-  
-}
-  
-
+publish_plot(cv_sold_plot)
 
 ```
+
 The demand in the region is further exemplified by the dramatic decline in average days on market. Already on the decline since 2017, the region hit record low average days on market in middle of 2021. Since then, homes have remained below an average of 40 days on the market.
 
 With increasing mortgage interest rates in recent months, home sales, as well as prices, have seen declines. But prices will continue to rise, although not as rapidly as during the early aughts of the pandemic when record low interest rates opened up housing opportunity for many who could not have afforded a home otherwise. 
+
 ```{r}
 #| label: fig-mls-dom
-#| fig-cap: "Regional average days on market"
+#| fig-cap: "Average days on market by month"
 
 # Utilize Lynchburg MLS data. Need days on market for the entire region from 2000 to 2022 or at least 2010. Monthly ratio is preferred.
 
@@ -2198,7 +2104,6 @@ cv_dom <- read_excel("data/cv_mls_data.xlsx", sheet = "Average DOM Per Month") |
   select(date, dom) |> 
   mutate(tooltip = c(paste0("Date: ", date, "\n Average DOM: ", dom)))
 
-
 cv_dom_plot <- ggplot(cv_dom,
        aes(x = date,
            y = dom,
@@ -2208,20 +2113,13 @@ cv_dom_plot <- ggplot(cv_dom,
   geom_col() + 
   geom_col_interactive() +
   theme_hfv() + 
+  add_zero_line("y") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Average days on market for residential",
-       caption = "**Source:** Lynchburg REALTORS Multiple Listing Service (MLS)")
+  labs(title = "Average days on market by month",
+       subtitle = "January 2016 to December 2022",
+       caption = "**Source:** Lynchburg Association of REALTORS®.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_dom_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_dom_plot
-  
-}
+publish_plot(cv_dom_plot)
 
 ```
 
@@ -2231,7 +2129,7 @@ Average rent for the region has been relatively flat since 2016. The average mar
 
 ```{r}
 #| label: fig-rent
-#| fig-cap: "Regional average market asking rent"
+#| fig-cap: "Average market asking rent by quarter"
 
 # Utilize CoStar properties search for Multi-Family. Filter by MSA - Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All.
 
@@ -2252,7 +2150,7 @@ cvpdc_rent <- read_csv("data/cvpdc_rent.csv") |>
   filter(year >= 2016) |> 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
-    value == "infl_adj" ~ "Inflation-adjusted dollars"
+    value == "infl_adj" ~ "Constant 2022 dollars"
   )) |> 
   mutate(price_label = dollar(estimate)) |> 
   mutate(tooltip = c(paste0("Date: ", period, "\n Average rent: ", price_label)))
@@ -2262,37 +2160,27 @@ cvpdc_rent_plot <- ggplot(cvpdc_rent,
            y = estimate,
            linetype = value,
            color = value)) + 
-  geom_line(size = 0.5) +
+  geom_line(linewidth = 0.5) +
   geom_point_interactive(
     aes(data_id = tooltip,
         tooltip = tooltip),
     size = 1) +
-  scale_y_continuous(labels = dollar_format(), limits = c(500,1500)) + 
+  scale_y_continuous(labels = dollar_format(), limits = c(800,1150)) + 
   scale_linetype_manual(values = c(2,1)) +
   theme_hfv() +
   scale_color_hfv() +
   theme(legend.position = "bottom") + 
-  labs(title = "Average quarterly market asking rent",
+  labs(title = "Average market asking rent by quarter",
+       subtitle = "All multifamily properties in CVPDC region",
        caption = "**Source:** CoStar Group, Inc.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cvpdc_rent_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cvpdc_rent_plot
-  
-}
-
-
+publish_plot(cvpdc_rent_plot)
 
 ```
 In spite of the minute changes in average rent over the past few years, the rental vacancy rate took a major dip in the second half of 2020, reaching a low of 3 percent in Q3 2021. Rental vacancy has increased since the end of 2021, but has yet to reach pre-COVID-19 levels. 
 ```{r}
 #| label: fig-vacancy
-#| fig-cap: "Regional rental vacancy rate"
+#| fig-cap: "Rental vacancy rate by quarter"
 
 # Utilize CoStar properties search for Multi-Family. Filter by Market for Lynchburg MSA- VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
 
@@ -2311,30 +2199,21 @@ cvpdc_vacancy <- read_csv("data/cvpdc_vacancy.csv") |>
 
 cvpdc_vacancy_plot <- ggplot(cvpdc_vacancy,
        aes(x = period,
-           y = vacancy,
-           color = vacancy)) +
-  geom_line(size = 1) +
-  theme_hfv() +
-  scale_color_hfv() +
+           y = vacancy)) +
+  geom_line(linewidth = 1, color = "#0F1A4E") +
   geom_point_interactive(
     aes(data_id = tooltip,
-        tooltip = tooltip)) +
-      scale_y_continuous(labels = percent_format()) +
-  labs(title = "Rental vacancy rate",
-       caption = "**Source:** CoStar Group, Inc.") + 
-  scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) 
-
-if (knitr::is_html_output()) {
+        tooltip = tooltip),
+    color = "#0F1A4E") +
+  scale_y_continuous(labels = percent_format()) +
+  theme_hfv() +
+  scale_color_hfv() +
+  #scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  labs(title = "Rental vacancy rate by quarter",
+       subtitle = "All multifamily properties in CVPDC region",
+       caption = "**Source:** CoStar Group, Inc.")
   
-  girafe(ggobj = cvpdc_vacancy_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cvpdc_vacancy_plot
-  
-}
-
+publish_plot(cvpdc_vacancy_plot)
 
 ```
 
@@ -2408,7 +2287,6 @@ cv_cb <- cv_cb |>
   filter(cb == "Cost-burdened") |> 
   mutate(year_label = as.character(year))
 
-
 cv_cb_plot <- ggplot(cv_cb,
        aes(x = year_label,
            y = estimate,
@@ -2417,24 +2295,17 @@ cv_cb_plot <- ggplot(cv_cb,
            tooltip = label_number(big.mark = ",")(estimate))) +
   geom_col() +
   geom_col_interactive() +
+  facet_grid(~tenure) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",")) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = .2)) +
   labs(title = "Cost-burdened households by tenure",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25106.")
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25106.")
 
-
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cb_plot,
-         height_svg = 4)
-} else {
-  
-  cv_cb_plot
-}
-  
-
+publish_plot(cv_cb_plot)
 
 ```
 
@@ -2562,8 +2433,7 @@ write_rds(cb_7, "data/cb_7.rds")
 ```{r}
 #| label: fig-cb-change
 #| eval: false
-#| fig-cap: "Regional change in cost-burdened households by tenure"
-
+#| fig-cap: "Change in cost-burdened households by tenure"
 
 cb_7 <- read_rds("data/cb_7.rds")
   
@@ -2591,7 +2461,7 @@ cb_diff <- ggplot(cb_change,
   labs(title = "Cumulative change in cost-burdened households by tenure",
        subtitle = "2012 to 2019",
        fill = "Tenure",
-       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+       caption = "**Source:** U.S Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   theme(legend.position = "right") +
   add_zero_line(axis = "y")
 
@@ -2616,8 +2486,7 @@ From 2012 to 2019, Cost burden in the region has generally been declining for hi
 
 ```{r}
 #| label: fig-cb-total
-#| fig-cap: "Total regional housing cost burden by household area median income"
-
+#| fig-cap: "Cost burden by household income"
 
 cb_7 <- read_rds("data/cb_7.rds")
   
@@ -2629,45 +2498,37 @@ cbhh_region <- cb_7 |>
   filter(cb_group == "Cost-burdened")
 
 cbhh_region$household_income <- factor(cbhh_region$household_income,
-                                       levels = c("30% AMI or less", "31 to 50% AMI", "51 to 80% AMI", "81 to 100% AMI", "101% AMI or greater"))
+                                       levels = c("30% AMI or less", "31 to 50% AMI",
+                                                  "51 to 80% AMI", "81 to 100% AMI",
+                                                  "101% AMI or greater"))
 
 cbhh_region_plot <- ggplot(cbhh_region,
        aes(x = year, 
            y = pct, 
            fill = household_income,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive(position = "stack", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
   facet_wrap(~household_income, nrow = 1) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(title = "Cost-burdened households by household area median income",
-       subtitle = "Percent of cost-burdened households by household income from 2012 to 2019",
-       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
-  add_zero_line(axis = "y") +
+  scale_y_continuous(labels = label_percent()) +
+  labs(title = "Cost burden by household income",
+       subtitle = "Percent of households with cost burden by Area Median Income from 2012 to 2019",
+       caption = "**Source:** U.S Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+  add_zero_line("y") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cbhh_region_plot,
-         height_svg = 4) 
-  
-} else {
-  
-  cbhh_region_plot
-  
-  }
-
+publish_plot(cbhh_region_plot)
 
 ```
+
 Across all household types, cost burden has been declining from 2012 to 2019. However, nearly a third of elderly, non-family (31 percent) and non-elderly, non-family (37 percent) household types are cost-burdened. These households are typically individuals living alone or with other unrelated adults. Family households are less likely to be cost-burdened, but nearly one in five large and small family households were still cost-burdened in 2019.
 
 ```{r}
 #| label: fig-hh-cb
-#| fig-cap: "Regional cost-burden by household type"
+#| fig-cap: "Cost burden by household type"
 
 cb_7 <- read_rds("data/cb_7.rds")
   
@@ -2677,37 +2538,30 @@ cbhh_region <- cb_7 |>
   group_by(year, household_type) |> 
   mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
-  mutate(year = as.character(year))
+  #mutate(year = as.character(year)) |> 
+  ungroup() |> 
+  mutate(household_type = fct_reorder(fct(household_type), pct, mean, .desc = TRUE))
 
 cb_hh_plot <- ggplot(cbhh_region,
        aes(x = year,
            y = pct,
            fill = household_type,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col() +
   geom_col_interactive() +
+  facet_wrap(~household_type, nrow = 1, labeller = label_wrap_gen(8)) +
+  scale_y_continuous(labels = label_percent()) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         strip.text = element_text(size = 8)) +
-    facet_wrap(~household_type, nrow = 1, labeller = label_wrap_gen(8)) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(title = "Regional cost-burden by household type",
+  labs(title = "Cost burden by household type",
+       subtitle = "Percent of households with cost burden by household type from 2012 to 2019",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cb_hh_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cb_hh_plot
-  
-}
-
+publish_plot(cb_hh_plot)
 
 ```
 
@@ -2749,9 +2603,10 @@ write_rds(cb_9, "data/cb_9.rds")
 There has been a decline in the share of cost-burdened white and Asian households in the region between 2012 and 2019, while there has been little to no change in cost burden for other racial and ethnic groups. Although Hispanics in the region saw an initial decline in cost burden from 2012 to 2013, that decline was negated by 2019, when the percent of cost-burdened Hispanic households reached 37 percent, a two percentage point increase from 2012.
 
 Disparities exist and have persisted in regards to race and ethnicity and cost burden. White households are less likely to be cost-burdened than any other racial or ethnic group in the region. As of 2019, 20 percent of white households were cost-burdened. The closest group were Asian households and yet they were still eight percentage points above their white counterparts. Black, Hispanic, and other racial groups (including multiracial households) experienced cost burden at least 15 percentage points above white households.
+
 ```{r}
 #| label: fig-cb-race
-#| fig-cap: "Regional percent of cost-burdened households by race and ethnicity"
+#| fig-cap: "Cost burden by race and ethnicity"
 
 cb_9 <- read_rds("data/cb_9.rds")
 
@@ -2763,36 +2618,30 @@ cv_cb9 <- cb_9 |>
   filter(cb_group == "Cost-burdened") |> 
   group_by(race) |> 
   mutate(change = pct - lag(pct)) |> 
-  mutate(year = as.character(year))
+  #mutate(year = as.character(year))
+  ungroup() |> 
+  mutate(race = fct_reorder(fct(race), pct, mean, .desc = TRUE))
 
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = year, 
            y = pct,
            fill = race,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "dodge") +
   geom_col_interactive() +
   facet_wrap(~race, nrow = 1, labeller = label_wrap_gen()) +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(labels = label_percent()) +
   scale_fill_hfv() +
   theme_hfv() +
+  add_zero_line("y") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         strip.text = element_text(size = 8)) +
   labs(title = "Cost burden by race and ethnicity",
-       subtitle = "Percent of cost-burdened households",
+       subtitle = "Percent of households with cost burden by race and ethnicity from 2012 to 2019",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cb9_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_cb9_plot
-  
-}
+publish_plot(cv_cb9_plot)
 
 ```
 
