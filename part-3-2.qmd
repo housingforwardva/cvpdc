@@ -94,7 +94,7 @@ local_growth_plot <- ggplot(local_pop,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
-  add_zero_line("y") + +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_percent(), limits = c(-.05, .2)) +
   labs(title = "Population growth by county",
