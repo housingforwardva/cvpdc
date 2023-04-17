@@ -16,6 +16,7 @@ library(janitor)
 library(sf)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
+
 cv_names <- list_counties("VA") |> 
   mutate(GEOID = paste0("51", county_code))
 
@@ -43,7 +44,7 @@ Appomattox and Campbell experienced slight to moderate growth in the last decade
 
 ```{r}
 #| label: fig-localpop
-#| fig-cap: "2020 Census population by county"
+#| fig-cap: "Total population by county"
 
 # Read in population data and filter for only the counties using the county list.
 
@@ -60,7 +61,6 @@ local_pop <- pop_data |>
   filter(year == 2020) |> 
   select(GEOID, county, value, pchg)
 
-
 local_pop_plot <- ggplot(local_pop,
        aes(x = reorder(county, -value),
            y = value,
@@ -70,21 +70,14 @@ local_pop_plot <- ggplot(local_pop,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "2020 Census population",
+  labs(title = "Total population by county",
+       subtitle = "2020 Census population",
        caption = "**Source:** U.S. Census Bureau, Decennial Census.") +
   scale_y_continuous(labels = label_comma(), limits = c(0, 100000))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_pop_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_pop_plot
-  
-}
+publish_plot(local_pop_plot)
 
 ```
 
@@ -101,24 +94,17 @@ local_growth_plot <- ggplot(local_pop,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") + +
   scale_fill_hfv() +
   scale_y_continuous(labels = percent_format(), limits = c(-.05, .2)) +
-  labs(title = "Population growth",
+  labs(title = "Population growth by county",
        subtitle = "Percent change in population from 2010",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_growth_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_growth_plot
-  
-}
+publish_plot(local_growth_plot)
 
 ```
+
 Population growth in Bedford and Appomattox can be largely attributed to domestic migration. In Bedford specifically, there has been significant losses in population due to natural decreases, but domestic migration has outpaced those decreases to lead to a net increase in population.
 
 The loss of population in Amherst County has largely been a result of domestic out migration over the decade, but also natural decreases. It was not until recently that Amherst began to see some growth again.
@@ -144,30 +130,23 @@ local_change_plot <- ggplot(local_change,
   geom_col_interactive() +
   facet_wrap(~NAMELSAD, nrow = 1) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(size = 6, angle = 90),
         legend.position = "bottom") +
-  labs(title = "Components of population change",
-       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
+  labs(title = "Components of population change by county",
+       subtitle = "Net domestic migration, international migration, and natural increase (or decrease)",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.<br>**Note:** Natural increase (or decrease) defined as births minus deaths.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_change_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_change_plot
-  
-}
-
+publish_plot(local_change_plot)
 
 ```
 Population projects show that Bedford County will continue to grow at a substantial rate over the next 30 years. Appomattox and Campbell will see slight growth, while Amherst is slated to see more population decline in the coming decades.
 
 ```{r}
 #| label: fig-localproj
-#| fig-cap: "Projected population growth 2020 to 2050 by county"
+#| fig-cap: "Projected total population by county"
 
 projections <- read_csv("data/uva_proj.csv") |> 
   subset(FIPS %in% cnty) |> 
@@ -196,22 +175,15 @@ local_proj_plot <- ggplot(pop_proj,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   facet_wrap(~NAME, nrow = 1) +
-  labs(title = "Projected growth from 2020 to 2050",
+  labs(title = "Projected total population by county",
+       subtitle = "2030, 2040, and 2050 projections",
        caption = "**Source:** U.S. Census Bureau, Decennial Census and University of Virginia, Weldon Cooper Center for Public Service.") +
   scale_y_continuous(labels = label_comma())
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_proj_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_proj_plot 
-  
-}
+publish_plot(local_proj_plot)
   
 ```
 
@@ -225,7 +197,7 @@ Meanwhile, Campbell County has seen the greatest increases in renters among the 
 
 ```{r}
 #| label: fig-localtenure
-#| fig-cap: "Local cumulative change in households by tenure"
+#| fig-cap: "Cumulative change in households by tenure"
 
 b25003_data <- read_rds("data/b25003_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -238,9 +210,7 @@ local_tenure <- b25003_data |>
   mutate(diff = estimate - lag(estimate),
          diff = replace_na(diff, 0)) |> 
   mutate(run_diff = cumsum(diff)) |>  
-  filter(run_diff != 0) |> 
-  mutate(year = as.character(year))
-
+  filter(run_diff != 0)
 
 local_tenure_plot <- ggplot(local_tenure,
        aes(x = year,
@@ -251,32 +221,25 @@ local_tenure_plot <- ggplot(local_tenure,
                                   style_negative = "minus")(run_diff))) +
   geom_col(position = "dodge") +
   geom_col_interactive(position = "dodge") +
-  facet_wrap(~county, nrow = 1) +
+  facet_grid(rows = vars(tenure), cols = vars(county)) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
-        legend.position = "bottom") +
+  scale_x_continuous(breaks = c(2011, 2014, 2017, 2020)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
   labs(title = "Cumulative change in households by tenure",
        subtitle = "From 2010 to 2021",
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25003.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_tenure_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_tenure_plot
-  
-}
-  
+publish_plot(local_tenure_plot)
 
 ```
+
 The loss of younger households is common among the counties. The percentage of both renter and homeowner householders 45 years old or less have been declining since 2010. But older renters (45 years old and older) have been coming into the counties. Appomattox, in particular, saw an 81 percent increase in renters aged 45 to 64 years old between 2010 and 2021, while Bedford experienced a 56 percent increase in renters 65 years old and over. The growth in homeowners was predominantly among householders aged 65 years and over, where all countied experienced an over 25 percent increase since 2010.
+
 ```{r}
 #| label: fig-localage
-#| fig-cap: "Local percent change in households by age and tenure"
+#| fig-cap: "Change in households by age and tenure"
 
 b25007_data <- read_rds("data/b25007_data.rds") |> 
   filter(NAME != "Lynchburg city")
