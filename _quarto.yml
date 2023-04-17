@@ -6,6 +6,25 @@ project:
 execute: 
   freeze: auto
 
+format:
+  html:
+    theme:
+      - lumen
+    grid: 
+      sidebar-width: 350px
+    fontsize: "100%"
+    template-partials:
+      - toc.html
+    toc-title: "On this page"
+  # pdf:
+  #   documentclass: scrreprt
+  #   mainfont: "Open Sans"
+  #   fig-pos: "H"
+  #   include-in-header:
+  #     text: |
+  #       \usepackage{float}
+  #       \raggedbottom
+
 book:
   title: "Central Virginia Planning District Regional Housing Market Analysis"
   repo-url: https://github.com/housingforwardva/cvpdc
@@ -42,22 +61,8 @@ knitr:
     echo: false
     warning: false
     message: false
+    
+comments: 
+  hypothesis: true
+  
 
-format:
-  html:
-    theme:
-      - lumen
-    grid: 
-      sidebar-width: 350px
-    fontsize: "100%"
-    template-partials:
-      - toc.html
-    toc-title: "On this page"
-  # pdf:
-  #   documentclass: scrreprt
-  #   mainfont: "Open Sans"
-  #   fig-pos: "H"
-  #   include-in-header:
-  #     text: |
-  #       \usepackage{float}
-  #       \raggedbottom
