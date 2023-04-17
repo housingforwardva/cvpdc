@@ -35,7 +35,7 @@ book:
       chapters: 
         - part-5-1.qmd # Regional solutions
         - part-5-2.qmd # Local solutions
-    - part: "Appendix"
+   # - part: "Appendix"
 
 knitr:
   opts_chunk: 
@@ -47,7 +47,12 @@ format:
   html:
     theme:
       - lumen
+    grid: 
+      sidebar-width: 350px
     fontsize: "100%"
+    template-partials:
+      - toc.html
+    toc-title: "On this page"
   # pdf:
   #   documentclass: scrreprt
   #   mainfont: "Open Sans"
