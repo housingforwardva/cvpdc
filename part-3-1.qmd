@@ -245,8 +245,8 @@ cv_change_plot <- ggplot(cv_change,
   add_zero_line("y") +
   scale_fill_hfv() + 
   labs(title = "Components of population change",
-       subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, Population Estimates Program (PEP).") +
+       subtitle = "Net domestic migration, international migration, and natural increase (or decrease)",
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.<br>**Note:** Natural increase (or decrease) defined as births minus deaths.") +
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus"))
   
@@ -790,7 +790,13 @@ publish_plot(cv_seniors_plot)
 
 ```
 
-With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. These families are called subfamilies, and within the Lynchburg region subfamilies are more than likely to be single mothers. But in recent years, the number of single fathers and married couples (both with and without children) living with another family has been on the rise.
+With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. This creates *subfamilies*, which the Census Bureau [defines](https://www.census.gov/glossary/?term=Subfamily) as:
+
+>A married couple (with or without children) or an unmarried parent with one or more never-married children under the age of 18, residing with the householder, but not including the householder's spouse.
+>
+>When grown children move back to the parental home with their own children under 18 or a spouse, they are considered a subfamily.
+
+Within the Lynchburg region subfamilies are more than likely to be single mothers. But in recent years, the number of single fathers and married couples (both with and without children) living with another family has been on the rise.
 
 ```{r}
 #| label: hh-subfam-data
@@ -1082,7 +1088,7 @@ cv_adultchild_plot <- ggplot(cv_adultchild,
   scale_fill_hfv() +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   labs(title = "Percent change in young adult population by living arrangement",
-       subtitle="All adults aged 18-34 from 2015 to 2021",
+       subtitle = "All adults aged 18-34 from 2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09021.") +
   scale_y_continuous(labels = percent_format())
 
@@ -1459,7 +1465,7 @@ race_inc_plot <- ggplot(b19013_msa,
   guides(color = "none") +
   labs(title = "Median household income by race and ethnicity",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25119.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Tables B19013B-I.")
 
 publish_plot(race_inc_plot)
 
@@ -1633,6 +1639,7 @@ cv_structure_plot <- ggplot(cv_structure,
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv(-1) +
+  guides(fill = guide_legend(reverse = TRUE)) +
   labs(title = "Housing stock by structure type and tenure",
        subtitle = "Percent of total occupied housing from 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25127.") +
@@ -1912,7 +1919,7 @@ write_rds(cv_cbps, "data/cv_cbps.rds")
 
 ```{r}
 #| label: fig-permits
-#| fig-cap: "New residential building permits"
+#| fig-cap: "New residential building permits by type"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") |> 
   group_by(year, type) |> 
@@ -1937,8 +1944,8 @@ cv_cbps_plot <- ggplot(cv_cbps,
   add_zero_line("y") +
   scale_fill_hfv(-1) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "New residential building permits",
-       subtitle = "From 2000 through November 2022",
+  labs(title = "New residential building permits by type",
+       subtitle = "Annual permits issues from 2000 through November 2022",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
   theme(legend.position = "right")
 
@@ -2177,7 +2184,9 @@ cvpdc_rent_plot <- ggplot(cvpdc_rent,
 publish_plot(cvpdc_rent_plot)
 
 ```
+
 In spite of the minute changes in average rent over the past few years, the rental vacancy rate took a major dip in the second half of 2020, reaching a low of 3 percent in Q3 2021. Rental vacancy has increased since the end of 2021, but has yet to reach pre-COVID-19 levels. 
+
 ```{r}
 #| label: fig-vacancy
 #| fig-cap: "Rental vacancy rate by quarter"
@@ -2278,6 +2287,8 @@ write_rds(b25106_data, "data/b25106_data.rds")
 ```
 
 ```{r}
+#| label: fig-cb-tenure
+#| fig-cap: "Cost-burdened households by tenure"
 
 cv_cb <- read_rds("data/b25106_data.rds")
 

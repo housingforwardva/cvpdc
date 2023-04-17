@@ -90,13 +90,13 @@ local_growth_plot <- ggplot(local_pop,
            y = pchg,
            fill = county,
            data_id = pchg,
-           tooltip = percent_format()(pchg))) +
+           tooltip = label_percent()(pchg))) +
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
   add_zero_line("y") + +
   scale_fill_hfv() +
-  scale_y_continuous(labels = percent_format(), limits = c(-.05, .2)) +
+  scale_y_continuous(labels = label_percent(), limits = c(-.05, .2)) +
   labs(title = "Population growth by county",
        subtitle = "Percent change in population from 2010",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
@@ -239,7 +239,7 @@ The loss of younger households is common among the counties. The percentage of b
 
 ```{r}
 #| label: fig-localage
-#| fig-cap: "Change in households by age and tenure"
+#| fig-cap: "Percent change in households by age and tenure"
 
 b25007_data <- read_rds("data/b25007_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -250,7 +250,8 @@ local_age <- b25007_data |>
   filter(year == 2010 | year == 2021) |> 
   group_by(county, tenure, age) |> 
   mutate(pchg = (estimate - first(estimate))/first(estimate)) |> 
-  filter(year == 2021)
+  filter(year == 2021) |> 
+  mutate(county = str_remove_all(county, " County"))
   
   # group_by(county, year, tenure) |> 
   # mutate(pct = estimate/sum(estimate))  |> 
@@ -262,36 +263,28 @@ local_age <- b25007_data |>
   # filter(year == 2021) |> 
   # mutate(year = as.character(year))
 
-
 local_age_plot <- ggplot(local_age,
        aes(x = county, 
            y = pchg,
            fill = tenure,
            data_id = pchg,
-           tooltip = percent_format()(pchg)))  +
+           tooltip = label_percent()(pchg)))  +
   geom_col(position = "dodge") +
   facet_wrap(~age, nrow = 1) +
   geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  scale_y_continuous(labels = percent_format()) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8),
+  scale_y_continuous(labels = label_percent()) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, size = 8),
         legend.position = "bottom",
         legend.text = element_text(size = 8)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   labs(title = "Percent change in households by age and tenure",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25007.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_age_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_age_plot
-}
+publish_plot(local_age_plot)
 
 ```
 
@@ -302,15 +295,15 @@ if (knitr::is_html_output()) {
 b11001_data <- read_rds("data/b11001_data.rds") |> 
   filter(NAME != "Lynchburg city")
 
-
 ```
+
 Although younger householders are declining in the counties, smaller households are increasing. One-person homeowners households are increasing in Amherst, Appomattox, and Bedford. Unlike its neighbors, Campbell is seeing an increase in *both* one-person renter and homeowner households. Two-person households are overwhelmingly increasing in Bedford.
 
 The counties that did see an increase in larger households were Amherst, Bedford, and Campbell. These increases were mainly among renter households, but Bedford saw an increase of four-person households for both homeowners and renters. 
 
 ```{r}
 #| label: fig-localsize
-#| fig-cap: "Local cumulative change in households by size and tenure"
+#| fig-cap: "Change in households by size and tenure"
 
 b25009_data <- read_rds("data/b25009_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -325,8 +318,8 @@ local_size <- b25009_data |>
   mutate(run_diff = cumsum(diff)) |>  
   filter(run_diff != 0) |> 
   mutate(year = as.character(year)) |> 
-  filter(year == "2021")
-
+  filter(year == "2021") |> 
+  mutate(county = str_remove_all(county, " County"))
 
 local_size_plot <- ggplot(local_size,
        aes(x = county,
@@ -338,32 +331,24 @@ local_size_plot <- ggplot(local_size,
   geom_col_interactive(position = "dodge") +
   facet_wrap(~size, nrow = 1) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.2, size = 8),
         legend.position = "bottom") +
-  labs(title = "Cumulative change in households by size and tenure",
+  labs(title = "Change in households by size and tenure",
        subtitle = "From 2010 to 2021",
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.") + 
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25009.") + 
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus"))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_size_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_size_plot
-}
-  
-
+publish_plot(local_size_plot)
 
 ```
+
 The increases in smaller households may be accounted for by increases in the senior (65 years and over) population. But increasing number of seniors living alone can be of great concern for localities. Although many seniors desire to maintain their independence, professionals note that [older adults who live alone are more likely to be poor.](https://www.merckmanuals.com/professional/geriatrics/social-issues-in-older-adults/older-adults-living-alone) Campbell had the largest increase in seniors living alone from 2012 to 2021 (+1,241), followed by Bedford at an addition of 919 seniors living alone.
 
 ```{r}
 #| label: fig-localsenior
-#| fig-cap: "Local change in senior population living alone"
+#| fig-cap: "Change in senior population living alone"
 
 b09020_data <- read_rds("data/b09020_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -389,31 +374,29 @@ local_senior_plot <- ggplot(local_senior,
   geom_col(position = "dodge") +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   labs(title = "Change in senior population living alone",
        subtitle = "From 2012 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09020.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_senior_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_senior_plot
-
-}
-  
+publish_plot(local_senior_plot)
 
 ```
-Rising costs in the region can force families to double up with others. Single parents with children are the most common family type that is experiencing this living situation. But over the last decade, there has been an increasing number of single parents with children living with others in Amherst County. Married couples with and without children are more likely to be in Amherst or Campbell, and their numbers have also been increasing in the last decade.
+
+Rising costs in the region can force families to double up with others. This creates *subfamilies*, which the Census Bureau [defines](https://www.census.gov/glossary/?term=Subfamily) as:
+
+>A married couple (with or without children) or an unmarried parent with one or more never-married children under the age of 18, residing with the householder, but not including the householder's spouse.
+>
+>When grown children move back to the parental home with their own children under 18 or a spouse, they are considered a subfamily.
+
+Single parents with children are the most common subfamily type that is experiencing this living situation. But over the last decade, there has been an increasing number of single parents with children living with others in Amherst County. Married couples with and without children are more likely to be in Amherst or Campbell, and their numbers have also been increasing in the last decade.
 
 ```{r}
 #| label: fig-localsubfam
-#| fig-cap: "Local change in families living with others"
+#| fig-cap: "Change in sufamilies living with others"
 
 b11013_data <- read_rds("data/b11013_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -444,29 +427,21 @@ local_sub_plot <- ggplot(local_sub,
   geom_col_interactive() +
   facet_wrap(children~subfamily) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(legend.position = "right",
         axis.text.x = element_blank()) +
-  labs(title = "Change in families living with others",
+  labs(title = "Change in subfamilies living with others",
        subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B11013.")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_sub_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_sub_plot
-  
-}
-
+publish_plot(local_sub_plot)
 
 ```
+
 Adult children living parents can also be an indicator of affordability challenges. Campbell has consistently seen a decrease in the number of adult children living with parents since 2015, an overall decrease of 511 adults between the age of 18 and 34. Although Amherst and Bedford experienced relatively major increases by 2020, changes in the population led to an overall minimal increase (+75) for Amherst and a decrease for Bedford (-37). Appomattox saw the largest increase in adult children living with parents compared to 2015 estimates (+151).
+
 ```{r}
 #| label: fig-localachild
 #| fig-cap: "Local cumulative change in adult children living with parents"
@@ -482,8 +457,8 @@ local_achild <- b09021_data |>
          diff = replace_na(diff, 0)) |> 
   mutate(run_diff = cumsum(diff)) |>  
   filter(run_diff != 0) |> 
-  mutate(year = as.character(year))
-
+  mutate(county = str_remove_all(county, " County"),
+         year = as.character(year))
 
 local_achild_plot <- ggplot(local_achild,
                             aes(x = year,
@@ -495,33 +470,25 @@ local_achild_plot <- ggplot(local_achild,
   geom_col_interactive(size = 1) +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   facet_wrap(~county, nrow = 1) +
-  labs(title = "Cumulative change in adult children living with parents",
-       subtitle = "From 2015 to 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B09021.") +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 90, vjust = 0.5))
+  labs(title = "Cumulative change in young adult children living with parents",
+       subtitle = "All adults aged 18-34 from 2015 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09021.") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
+publish_plot(local_achild_plot)
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_achild_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_achild_plot
-}
 ```
-
 
 ## Economic trends
 
 Across the four counties, renter household incomes skew towards the lower end when compared to their homeowner counterparts, and most lower-income renter households are located in Bedford or Campbell. Homeowner households are more likely to make \$75,000 or more, especially in Bedford.
+
 ```{r}
 #| label: fig-localinc-distribution
-#| fig-cap: "Local income distribution by tenure"
+#| fig-cap: "Households by income and tenure"
 
 b25118_data <- read_rds("data/b25118_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -532,9 +499,7 @@ local_dist <- b25118_data |>
   summarise(estimate = sum(estimate)) |> 
   filter(year == 2021)
 
-
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
-
 
 local_dist_plot <- ggplot(local_dist,
        aes(x = factor(income, level = level_order),
@@ -543,31 +508,27 @@ local_dist_plot <- ggplot(local_dist,
            data_id = estimate,
            tooltip = label_comma()(estimate))) +
   geom_col(position = "dodge") +
-  geom_col_interactive(size = 1) +
-  facet_grid(tenure~county) +
+  geom_col_interactive(size = 1, position = "dodge") +
+  facet_grid(~county) +
   scale_fill_hfv() +
   theme_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
+  add_zero_line("y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8),
+        legend.position = "bottom") +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Income distribution in 2021",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") 
+  labs(title = "Households by income and tenure",
+       subtitle = "Number of homeowner and renter households",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 2017-2021 5-year estimates, Table B25118.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_dist_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_dist_plot
-  
-}
+publish_plot(local_dist_plot)
 
 ```
+
 Median household income shows that the typical renter income has continued to lag behind homeowners. The income gap between renters and homeowners has only widened in Amherst County and Bedford, while it has narrowed in Appomattox and Campbell. The latter has largely occurred due to the decrease in incomes for homeowners and rises in renter incomes, while the former is the result of diverging incomes. 
+
 ```{r}
 #| label: fig-med-inc
-#| fig-cap: "Local median household income by tenure"
+#| fig-cap: "Median household income by tenure"
 
 b25119_data <- read_rds("data/b25119_cpi.rds") |> 
   filter(NAME != "Lynchburg city, Virginia")
@@ -577,7 +538,6 @@ local_inc <- b25119_data |>
   mutate(county = str_remove_all(county, ", Virginia")) |> 
   filter(county != "Bedford city")
 
-
 local_inc_plot <- ggplot(local_inc,
                          aes(x = year,
                              y = dollars21,
@@ -585,34 +545,27 @@ local_inc_plot <- ggplot(local_inc,
   geom_line() +
   geom_point_interactive(
     aes(data_id = dollars21,
-        tooltip = dollar_format()(dollars21)),
+        tooltip = label_dollar()(dollars21)),
     size = 1) +
   facet_wrap(~county, nrow = 1) +
   theme_hfv() +
   scale_color_hfv() +
-  scale_y_continuous(labels = dollar_format()) +
+  scale_y_continuous(labels = label_dollar()) +
   labs(title = "Median household income by tenure",
        subtitle = "From 2010 to 2021 in 2021 adjusted dollars",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_inc_plot,
-         height_svg = 4)
-} else {
-  
-  local_inc_plot
-
-}
-
+publish_plot(local_inc_plot)
 
 ```
+
 The graph below shows the median household incomes of the different racial and ethnic groups for the four counties in 2021. There are varying disparities between groups depending on locality. Hispanic households in Bedford and Appomattox have much higher median incomes than their Hispanic counterparts in Amherst and Campbell. Meanwhile,  Black households have median household incomes grouped towards the low-end of the spectrum, except for in Bedford, where Black median household income is comparable to white household incomes in neighboring localities.
+
 ```{r}
 #| label: fig-localrace-inc
-#| fig-cap: "Local median household income by race and ethnicity"
+#| fig-cap: "Median household income by race and ethnicity"
 
 b19013_data <- read_rds("data/b19013_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -624,105 +577,91 @@ local_rinc <- b19013_data |>
   mutate(label = paste(county, "-", race))
   
 local_rinc_plot <- ggplot(local_rinc,
-       aes(x = reorder_within(county, cdollars, race),
+       aes(x = reorder_within(race, cdollars, county),
            y = cdollars,
            fill = race,
            data_id = cdollars,
-           tooltip = dollar_format()(cdollars))) +
+           tooltip = label_dollar()(cdollars))) +
   geom_col(position = "dodge") +
   geom_col_interactive(size = 1) +
+  facet_wrap(~county, scales = "free_x") +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+  theme(axis.text.x = element_blank(),
         legend.position = "right") +
   scale_x_reordered() +
-  scale_y_continuous(labels = dollar_format()) +
+  scale_y_continuous(labels = label_dollar()) +
   labs(title = "Median household income by race and ethnicity",
        subtitle = "In 2021 inflation-adjusted dollars",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B19013B - I.")
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Tables B19013B-I.")
 
-if (knitr::is_html_output()){
-  
-  girafe(ggobj = local_rinc_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_rinc_plot
-}
-  
-
+publish_plot(local_rinc_plot)
 
 ```
 
-
 ## Housing stock
 
-The counties contribute to 72 percent of the region's total housing stock. The majority of that share consists of single-family housing that is utilized for homeownership. Among the homeownership housing stock in the counties, there is little diversity as the only other type of housing is in the "Other" category, which includes manufactured homes. Two to four unit homes, like duplexes and quads, can look like single-family housing and can often be more affordable, but the counties only contribute one percent of this type of housing to the region's total stock.
+The counties contribute to 72 percent of the region's total housing stock. The majority of that share consists of single-family homes occupied by homeowners. Among the owner-occupied housing stock in the counties, there is little diversity as the only other type of housing with noticeable amounts is the "Other" category, which includes manufactured homes.
 
-Renter housing stock in the counties is diverse, but still largely made up of single-family housing. 
+Renter housing stock in the counties is diverse, but still largely made up of single-family homes and manufactured homes. Two to four unit homes, like duplexes and quads, can look like single-family housing and can often be more affordable, but the counties only contribute one percent of this type of housing to the region's total stock.
+
+Bedford and Campbell counties are the two jurisdictions with the largest share of actual multifamily rental units, while Appomattox County has the lowest. Amherst County has the highest share of two to four unit apartment buildings, which make up just over 25 percent of the county's total rental stock.
 
 ```{r}
 #| label: fig-localstructure
-#| fig-cap: "Distribution of house stock in the region"
+#| fig-cap: "Housing stock by structure type and tenure"
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
 local_str <- b25127_data |> 
-  select(county = NAME, year, tenure, structure, estimate) |> 
-  group_by(county, year, tenure, structure) |> 
+  filter(year == 2021,
+         NAME != "Lynchburg city") |>
+  select(county = NAME, tenure, structure, estimate) |> 
+  group_by(county, tenure, structure) |> 
   summarise(estimate = sum(estimate)) |> 
-  filter(year == 2010 | year == 2021) |> 
-  group_by(year) |> 
+  group_by(county, tenure) |> 
   mutate(pct = estimate/sum(estimate)) |> 
-  mutate(county = fct_reorder(county, pct, .desc = TRUE)) |> 
-  filter(year == 2021) |> 
-  filter(county != "Lynchburg city")
-
-level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
+  mutate(structure = fct_relevel(structure, "Single-family", "2 to 4 units", "5 to 19 units",
+                                 "20 or more units", "Other")) |> 
+  ungroup()
 
 local_str_plot <- ggplot(local_str,
-       aes(x = factor(structure, level = level_order),
+       aes(x = structure,
            y = pct,
-           fill = county,
+           fill = structure,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive() +
-  facet_wrap(~tenure, nrow = 1) +
+  facet_grid(tenure ~ county, switch = "y") +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() + 
-  scale_y_continuous(labels = percent_format()) +
-  theme(legend.position = "right") + 
-   scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
-  labs(title = "Distribution of the housing stock in the region",
-      subtitle = "Percent of total occupied housing in 2021",
-      caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
+  scale_y_continuous(labels = label_percent()) +
+  theme(legend.position = "right",
+        axis.text.x = element_blank(),
+        strip.placement = "outside") + 
+  labs(title = "Housing stock by structure type and tenure",
+      subtitle = "Percent of occupied housing units by tenure in 2021",
+      caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25127.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_str_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_str_plot
-  
-}
+publish_plot(local_str_plot)
 
-sums <- local_str |> 
-  filter(structure == "2 to 4 units") 
-
-sum(sums$pct)
+# sums <- local_str |> 
+#   filter(structure == "2 to 4 units") 
+# 
+# sum(sums$pct)
 
 ```
+
 Manufactured home communities are prevalent among the four counties. Campbell alone has 41 manufactured home communities, most of which are communities of less than 50 homes. Bedford follows at 30 communities, 22 of which are small communities. 
 
 Although many of these communities make up a bulk of rural communities' affordable housing stock, they are often plagued with housing quality issues. This is due to the prevalence of pre-HUD Code mobile homes located in parks. 
+
 ```{r}
 #| label: mhc
 #| eval: false
-
 
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
   filter(STATE == "VA") |> 
@@ -734,7 +673,7 @@ write_rds(mhc, "data/mhc_cnty.rds")
 
 ```{r}
 #| label: fig-mhc-county
-#| fig-cap: "Local manufactured home communities by size"
+#| fig-cap: "Manufactured home communities by size"
 
 mhc <- read_rds("data/mhc_cnty.rds")
 
@@ -742,7 +681,8 @@ cv_mhc <- mhc  |>
   group_by(COUNTY, SIZE) |> 
   summarise(count = n_distinct(OBJECTID)) |> 
   st_drop_geometry() |> 
-  mutate(COUNTY = str_to_sentence(COUNTY))
+  mutate(COUNTY = str_to_sentence(COUNTY),
+         SIZE = str_to_sentence(SIZE))
 
 cv_mhc_plot <- ggplot(cv_mhc,
        aes(x = reorder(COUNTY,count),
@@ -753,33 +693,26 @@ cv_mhc_plot <- ggplot(cv_mhc,
   geom_col(position = "stack") +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   labs(title = "Manfactured home communities by size",
+      subtitle = "Number of homes in each community by county",
        caption = "**Source:** U.S. Department of Homeland Security, Homeland Infrastructure Foundation-Level Data (HIFLD).") +
   theme(legend.position = "right")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_mhc_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_mhc_plot
-  
-}
-
+publish_plot(cv_mhc_plot)
 
 ```
+
 Local residential building permits show that the four counties have experienced the Great Recession and subsequent recovery differently. Bedford was on the rise pre-Recession but has struggled to recover to those previous levels, especially throughout the pandemic. But development in Bedford in recent years has focused on multifamily development (5 or more units), where it is undoubtedly centralized in the Town of Bedford.
 
 Campbell was also seeing major growth ahead of the Great Recession but has seen starts and stops throughout the last decade. On the other hand, Amherst and Appomattox have seen little change in their building permit trends over the last two decades.
 
 Regardless of these changes, there is a severe lack of diverse housing being built in the counties. Homes like duplexes are virtually non-existent in the development pipeline.
+
 ```{r}
 #| label: fig-localbps
-#| fig-cap: "Local esidential building permits by type"
+#| fig-cap: "New residential building permits by type"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") |> 
   filter(NAMELSAD != "Lynchburg city")
@@ -794,21 +727,14 @@ cv_cbps_plot <- ggplot(cv_cbps,
   geom_col_interactive() +
   facet_wrap(~NAMELSAD) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Residential building permits by type",
-       caption = "**Source:** U.S. Census Bureau, Building Permits Survey.") +
+  labs(title = "New residential building permits by type",
+       subtitle = "Annual permits issued by locality from 2000 through November 2022",
+       caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
   theme(legend.position = "right")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cbps_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_cbps_plot
-  
-}
+publish_plot(cv_cbps_plot)
 
 ```
 
@@ -820,7 +746,7 @@ Bedford's homeownership rate was affected by the reversion of the city to town s
 
 ```{r}
 #| label: fig-localho
-#| fig-cap: "Local homeownership rates"
+#| fig-cap: "Homeownership rate"
 
 b25003_data <- read_rds("data/b25003_data.rds") |> 
   filter(NAME != "Lynchburg city") |> 
@@ -840,29 +766,28 @@ local_ho_plot <- ggplot(local_ho,
   geom_line(size = 0.5) +
   geom_point_interactive(
     aes(data_id = pct,
-        tooltip = percent_format()(pct)),
+        tooltip = label_percent()(pct)),
     size = 1) +
   theme_hfv() +
   scale_color_hfv() +
   facet_wrap(~NAME, nrow = 1) +
-  scale_y_continuous(labels = percent_format()) +
-  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
+  scale_y_continuous(limits = c(0.71, 0.85),
+                     breaks = seq(from = 0.70, to = 0.86, by = 0.02 ), labels = label_percent()) +
+  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 2)) +
   labs(title = "Homeownership rate",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.") +
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25003.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_ho_plot,
-         height_svg = 4)
-} else {
-  
-  local_ho_plot
-  
-}
-
+publish_plot(local_ho_plot)
 
 ```
+
+:::{.callout-note}
+
+TO ADD LATER: sales prices, closings, and days on market by locality -- pending new data from LAR
+
+:::
 
 ```{r}
 #| label: fig-sales-price
@@ -892,23 +817,23 @@ if (knitr::is_html_output()) {
 
 ```
 
-
 ## Rental market
 
-From 2015 to 2020, rental housing costs in the counties have remained relatively flat. But as rental prices in Bedford began to rise gradually, prices in Amherst, Appomattox, and Campbell saw declines.
+From 2016 to 2020, rental housing costs in the counties have remained relatively flat (relative to inflation). Since then, rents increased significantly in Bedford and Campbell counties. This growth coincided with rising inflation, so increases have not been significant in constant dollars. However, that adjustment does not account for the much more limited increases in renter incomes in recent years.
 
 :::{.callout-note}
 
-Add blurb about small sample sizes for Amherst and Appomattox.
+The CoStar data used for this section does not have complete coverage of smaller scale rental properties, such as single-family homes and duplexes. Average rents are primarily sourced from larger, professionally managed apartment communities.
+
+As a result, the sample sizes for Amherst and Appomattox counties---whose rental stock is more significantly comprised of small scale units---are small. Data for these localities should be viewed with caution.
+
+TO ADD LATER: Single-family rent estimates from ACS by county
 
 :::
 
-
-
-
 ```{r}
 #| label: fig-localrent
-#| fig-cap: "Local quarterly average market asking rents"
+#| fig-cap: "Average market asking rent by quarter"
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Market Asking Rent Per Unit for entire region. Do not bring in Forecast and set History to All. Combine Bedford City and Bedford County.
 
@@ -945,46 +870,48 @@ local_rent <- rbind(amherst_rent, appomattox_rent, bedford_rent, campbell_rent) 
                values_to = "rent") |> 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
-    value == "inf" ~ "Inflation-adjusted dollars"
+    value == "inf" ~ "Constant 2022 dollars"
   )) |> 
-  filter(value == "Inflation-adjusted dollars") |> 
+  #filter(value == "Inflation-adjusted dollars") |> 
   mutate(year = year(period)) |> 
-  filter(year >= 2015) |> 
+  filter(year >= 2016) |> 
   mutate(rent_label = dollar(rent)) |> 
   mutate(tooltip = c(paste0("Date: ", period, "\n Rent: ", rent_label)))
 
 local_rent_plot <- ggplot(local_rent,
        aes(x = period,
            y = rent,
-           group = value,
-           color = county,
-           data_id = tooltip,
-           tooltip = tooltip
-           )) +
+           linetype = value,
+           #group = value,
+           color = value)) +
   geom_line() + 
-  geom_point_interactive(size = 1) +
+  geom_point_interactive(
+    aes(data_id = tooltip,
+        tooltip = tooltip),
+    size = 0.5) +
   facet_wrap(~county, nrow = 1) +
   scale_linetype_manual(values = c("dotted", "solid")) +
+  scale_y_continuous(labels = label_dollar(),
+                     limits = c(525,1350),
+                     breaks = seq(from = 500, to = 1300, by = 100)) +
   theme_hfv() +
   scale_color_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
-  scale_y_continuous(labels = dollar_format()) +
-  labs(title = "Quarterly average rent",
-       subtitle = "Market asking rent from 2015 through 2022",
-       caption = "**Source:** CoStar Group Inc.")
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "bottom") +
+  labs(title = "Average market asking rent by quarter",
+       subtitle = "All multifamily properties by locality",
+       caption = "**Source:** CoStar Group, Inc.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = local_rent_plot,
-         height_svg = 4)
-  
-} else {
-  
-  local_rent_plot
-  
-}
+publish_plot(local_rent_plot)
 
 ```
+
+:::{.callout-note}
+
+TO ADD LATER: Rental vacancy rates by locality
+
+:::
+
 
 ```{r}
 #| label: vacancy
@@ -1012,7 +939,7 @@ Campbell is not represented among federal housing programs, but it is important 
 
 ```{r}
 #| label: fig-nhpd
-#| fig-cap: "Federally assisted rental homes by county"
+#| fig-cap: "Federally-assisted rental homes"
 
 nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") |> 
   clean_names() |> 
@@ -1023,7 +950,6 @@ nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") |>
            grepl("appomattox", city, ignore.case = TRUE)) |> 
   select(subsidy_name, subsidy_subname, end_date, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude) |> 
   mutate(city = str_to_title(city))
-
 
 cnty_nhpd <- nhpd_subsidies |> 
   group_by(city, subsidy_name) |> 
@@ -1038,22 +964,14 @@ cnty_nhpd_plot <- ggplot(cnty_nhpd,
   geom_col(position = "stack") +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title= "Federally-assisted rental homes",
+  labs(title = "Federally-assisted rental homes",
+       subtitle = "Number of rental homes with active assistance by primary subsidy program",
        caption = "**Source:** National Housing Preservation Database (NHPD).") +
   theme(legend.position = "right")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cnty_nhpd_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cnty_nhpd_plot
-  
-}
+publish_plot(cnty_nhpd_plot)
 
 ```
 
@@ -1063,7 +981,7 @@ In the counties, there are 248 HCVs being used by low-income households. Forty-t
 
 ```{r}
 #| label: fig-hcv-map
-#| fig-cap: "Housing Choice Voucher utilization in the counties"
+#| fig-cap: "Households with Housing Choice Vouchers"
 
 hcv <- read_rds("data/hcv.rds") %>% 
   st_transform(crs = 4326) %>% 
@@ -1089,13 +1007,13 @@ hcv_grp_plot <- ggplot(hcv_group,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Housing Choice Voucher utilization in the counties",
-       caption = "**Source:** U.S. Department of Housing and Urban Development. ")
+  labs(title = "Households with Housing Choice Vouchers",
+       subtitle = "Number of renters using HCVs in private rental homes",
+       caption = "**Source:** U.S. Department of Housing and Urban Development.")
 
-
-hcv_grp_plot
-  
+publish_plot(hcv_grp_plot)
 
 # library(mapview)
 # 
@@ -1108,7 +1026,6 @@ hcv_grp_plot
 #   addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
 #               fillOpacity = 1)
 
-
 ```
 
 ## Affordability
@@ -1117,7 +1034,7 @@ Locally, trends in cost burden follow regional patterns of decreasing cost burde
 
 ```{r}
 #| label: fig-local-cb
-#| fig-cap: "Local cost burden by tenure"
+#| fig-cap: "Cost-burdened households by tenure"
 
 cv_cb <- read_rds("data/b25106_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -1128,36 +1045,26 @@ local_cb <- cv_cb |>
   filter(cb == "Cost-burdened") |> 
   mutate(year_label = as.character(year))
 
-
 cv_cb_plot <- ggplot(local_cb,
        aes(x = year_label,
            y = estimate,
            fill = tenure,
            data_id = estimate,
            tooltip = label_number(big.mark = ",")(estimate))) +
-  geom_col(position = "stack") +
-  geom_col_interactive(position = "stack") +
-  facet_wrap(~NAME, nrow = 1) +
+  geom_col() +
+  geom_col_interactive() +
+  facet_grid(tenure ~ NAME, switch = "y") +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",")) + 
-  labs(title = "Local cost-burdened households by tenure",
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25106.") +
-  theme(legend.position = "bottom",
-        axis.text.x = element_text(angle = 90, vjust = 0.5))
+  labs(title = "Cost-burdened households by tenure",
+       subtitle = "From 2010 to 2021",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25106.") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        strip.placement = "outside")
 
-
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cb_plot,
-         height_svg = 4)
-} else {
-  
-  cv_cb_plot
-}
-  
-
+publish_plot(cv_cb_plot)
 
 ```
 
@@ -1209,17 +1116,18 @@ if (knitr::is_html_output()) {
   
 
 ```
+
 Cost burden by race and ethnicity shows that white households across all four counties are less likely to be cost-burdened. This has been consistent since 2012. 
 
-
-:::{.callout-warning}
+:::{.callout-caution}
 
 Need to address margins of error on the estimates for Asian, another race, and Hispanic households. It may be best to exclude them from this.
 
 :::
+
 ```{r}
 #| label: fig-cb-race
-#| fig-cap: "Local cost burden by race and ethnicity"
+#| fig-cap: "Cost burden by race and ethnicity"
 
 cb_9 <- read_rds("data/cb_9.rds")
 
@@ -1237,31 +1145,24 @@ cv_cb9_plot <- ggplot(cv_cb9,
            y = pct,
            fill = str_wrap(race, width = 10),
            data_id = pct,
-           tooltip = percent_format()(pct))) +
-  geom_col(position = "dodge") +
-  geom_col(position = "dodge") +
+           tooltip = label_percent()(pct))) +
+  facet_wrap(~county, nrow = 1, scales = "free_x") +
+  geom_col() +
   geom_col_interactive(size = 1) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
-        legend.position = "right") +
+  theme(axis.text.x = element_blank(),
+        legend.position = "right",
+        #legend.text = element_text(lineheight = .8),
+        legend.key.height = unit(2, "lines")) +
   scale_x_reordered() +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(labels = label_percent()) +
   labs(title = "Cost burden by race and ethnicity",
-       subtitle = "Percent of cost-burdened households in 2019",
+       subtitle = "Percent of households with cost burden by race and ethnicity in 2019",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cv_cb9_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cv_cb9_plot
-  
-}
-
+publish_plot(cv_cb9_plot)
 
 ```
 
@@ -1269,7 +1170,6 @@ if (knitr::is_html_output()) {
 #| label: fig-cb-total
 #| eval: false
 #| fig-cap: "Local housing cost burden by household area median income"
-
 
 cb_7 <- read_rds("data/cb_7.rds") |> 
   filter(county != "Lynchburg city")
@@ -1290,13 +1190,13 @@ cbhh_region_plot <- ggplot(cbhh_region,
            y = pct, 
            fill = household_income,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent()(pct))) +
   geom_col(position = "dodge") +
   geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
   facet_wrap(~county, nrow = 1, labeller = label_wrap_gen(10)) +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(labels = label_percent()) +
   scale_x_reordered() +
   labs(title = "Local cost burden by household area median income",
        subtitle = "Percent of cost-burdened households by household income in 2019",
@@ -1318,12 +1218,13 @@ if (knitr::is_html_output()) {
   
   }
 
-
 ```
+
 In Amherst and Bedford, non-elderly, non-family households (i.e. individuals living alone or with unrelated persons) are more likely to be cost-burdened than any other household type, 44 and 30 percent cost-burdened, respectively. Meanwhile, in Appomattox and Campbell, 29 percent of elderly, non-family households (i.e. seniors living alone or with unrelated persons) were cost-burdened in 2019. These two household types face the most difficult challenges in affordability, most likely due to the challenges of affording housing alone. But interestingly, just over one in four (26 percent) large families in Appomattox are cost-burdened, a divergence from trends in the other three counties. 
+
 ```{r}
 #| label: fig-hh-cb
-#| fig-cap: "Local cost-burden by household type"
+#| fig-cap: "Cost burden by household type"
 
 cb_7 <- read_rds("data/cb_7.rds") |> 
   filter(county != "Lynchburg city")
@@ -1341,40 +1242,42 @@ cb_hh_plot <- ggplot(cbhh_region,
            y = pct,
            fill = household_type,
            data_id = pct,
-           tooltip = percent_format()(pct))) +
+           tooltip = label_percent()(pct))) +
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
   theme(axis.text.x = element_blank(),
         strip.text = element_text(size = 8),
         legend.position = "right") +
     facet_wrap(~county, nrow = 1, labeller = label_wrap_gen(10)) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(title = "Local cost-burden by household type",
+  scale_y_continuous(labels = label_percent()) +
+  labs(title = "Cost burden by household type",
+       subtitle = "Percent of households with cost burden by household type in 2019",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.")
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cb_hh_plot,
-         height_svg = 4)
-  
-} else {
-  
-  cb_hh_plot
-  
-}
-
+publish_plot(cb_hh_plot)
 
 ```
 
+The chart below shows whether renter households are currently living in affordable or unaffordable apartments, broken down by Area Median Income by to 80 percent AMI. For example, among all renters at or below 30 percent AMI in Amherst County, 365 are able to afford their current home, while another 410 cannot.
+
+This represents a rental housing "gap" of more than 400 homes that must be created or made affordable to alleviate cost burden among those renters. Across the region, this gap is most severe for renters below 50 percent AMI. Very few renters between 50 and 80 percent AMI currently struggle to afford their home.
+
+:::{.callout-caution}
+
+As of spring 2023, the latest available CHAS estimates published by HUD are based on the 2015-2019 American Community Survey 5-year estimates. Therefore, these estimates **do not** reflect changes that have occurred since the beginning of the COVID-19 pandemic.
+
+:::
+
+Across all four counties, the rental housing gap below 30 percent AMI is 2070 units, 913 units between 30 and 50 percent AMI, and 135 units between 50 and 80 percent AMI. The total rental housing gap is 3,118.
+
 ```{r}
 #| label: fig-gap
-#| fig-cap: "Local rental housing gap by AMI"
+#| fig-cap: "Rental housing gap by household income"
 
 tb_18_match <- read_rds("data/tb_18_match.rds")
-
 
 gap <- tb_18_match |> 
   subset(fips %in% cnty) |> 
@@ -1388,42 +1291,31 @@ gap <- tb_18_match |>
   mutate(gapcode = case_when(
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
-  )) 
+  )) |> 
+  filter(year == 2019)
 
 gap_plot <- ggplot(gap,
-       aes(x = year, 
+       aes(x = household_income, 
            y = estimate,
            fill = gapcode,
            data_id = estimate,
            tooltip = label_number(big.mark = ",", style_positive = "plus")(estimate))) +
   geom_col() +
   geom_col_interactive() +
-  facet_grid(household_income~county, labeller = label_wrap_gen(10)) +
+  facet_grid(~county, labeller = label_wrap_gen(10)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_continuous(labels = label_comma()) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_hfv() +
-  labs(title = "Local rental housing gap by AMI",
+  labs(title = "Rental housing gap by household income",
+       subtitle = "Affordability of existing rental homes by AMI of current occupants (2019)",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
   theme(
     legend.position = "bottom",
-    axis.text.x = element_text(angle = 90, vjust = 0.5),
-    axis.title = element_blank(),
-    panel.background = element_blank(),
-    panel.grid.major.y = element_line(color = "grey95",
-                                      linewidth = 0.05),
-    axis.ticks = element_blank()
+    axis.text.x = element_text(angle = 90, vjust = 0.5)
   )
 
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = gap_plot,
-         height_svg = 4)
-  
-} else {
-  
-  gap_plot
-  
-}
+publish_plot(gap_plot)
 
 ```
