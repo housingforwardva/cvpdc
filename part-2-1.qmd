@@ -2,19 +2,19 @@
 
 From December 2022 to February 2023, HousingForward Virginia conducted meetings with local government officials, as well as focus groups of housing practitioners, from communities served by the Central Virginia Planning District Commission. The findings from this engagement are foundational context for the analysis and solutions that will follow in the full regional report. Participants' responses were organized into four sections: housing market dynamics, challenges and needs, service provision, and proposed solutions. Key highlights are summarized below.
 
-#### 1. Housing market dynamics
+### 1. Housing market dynamics
 
 | Housing demand outstrips supply in the Central Virginia region in nearly all sectors of the market. This dynamic has led rents and home prices to surge. Local residents are increasingly outbid by newcomers from larger metro areas who are relocating and have higher purchasing power. Affordable options for low-income renters are now disappearing, leading to increased housing insecurity.
 
-#### 2. Challenges and needs
+### 2. Challenges and needs
 
 | A wide range of regulatory, economic, and political barriers prevent new housing from being easily produced today. Local governments only have control over some of these areas---notably land use---but have room to make improvements. Some challenges, such as limited senior housing options and an accelerating short-term rental market, will require unique solutions.
 
-#### 3. Service provision
+### 3. Service provision
 
 | Housing agencies and nonprofit providers are doing good work, but their current capacity is far below the current (and growing) needs of low-income renters, homeowners, and persons experiencing homelessness.
 
-#### 4. Proposed solutions
+### 4. Proposed solutions
 
 | Participants' ideas for improving housing opportunities included (but were not limited to) new messaging strategies, expanding cross-sector collaborations, reducing zoning barriers, and generating new locally-funded housing assistance programs.
 
@@ -42,13 +42,13 @@ In December 2022, HousingForward Virginia and CVPDC staff met with representativ
 Following HousingForward Virginia's visit to the region to attend kick-off meetings with local government, a series of virtual focus group sessions were held to hear from other organizations, businesses, and professions connected to housing in the CVPDC. Four focus groups were held from the end of January into the month of February, and included the following parties, with some attending multiple sessions:
 
 ::: {layout-ncol="2"}
-#### Real estate and listing agents
+### Real estate and listing agents
 
 -   Karl Miller Realty
 -   Kathy Carlson Realty
 -   Mark Dalton Realty
 
-#### Housing/service providers
+### Housing/service providers
 
 -   James River Housing Partners
 -   Thalhimer
@@ -62,7 +62,7 @@ Following HousingForward Virginia's visit to the region to attend kick-off meeti
 -   Bedford Housing Coalition
 -   Legal Aid Society -- Lynchburg
 
-#### Homebuilders and developers
+### Homebuilders and developers
 
 -   Amherst County Habitat
 -   Scott Insurance
@@ -72,7 +72,7 @@ Following HousingForward Virginia's visit to the region to attend kick-off meeti
 -   Perrow Corporation
 -   Gerdy Construction Company
 
-#### Employers
+### Employers
 
 -   Campbell County Schools
 -   Georgia-Pacific Corporation
