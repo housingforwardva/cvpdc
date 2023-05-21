@@ -2,6 +2,74 @@
 
 The following provides an analysis of major trends impacting housing within the City of Lynchburg. 
 
+```{r}
+
+# THINGS TO UPDATE ----------
+
+# Update plot styles to match previous chapters
+
+# POPULATION
+
+# Add Census PEP through 2022 (https://twitter.com/kyle_e_walker/status/1659651850331725824)
+
+# HOUSEHOLD
+
+# Add ACS selected disability (2010-2021) -- maybe collapse ages into just <65 and 65+
+# - Ambulatory difficulty (B18105 or C18105)
+# - Independent Living difficulty (B18107 or C18107)
+
+# ECONOMIC
+
+# Add QCEW data -- total employment and average wage?
+
+# Add LEHD data -- commute inflow/outflow?
+# See lehd examples in sandbox repo
+
+# Add LAUS unemployment data (low priority, but in our proposal)
+
+# HOUSING STOCK
+
+# Add Census BPS through March 2023 (or just through end of 2022)
+
+# Add ACS overall vacancy rates for owner- and renter-occupied (2010-2021)
+
+# Add ACS vacancy status/reason (B25004, 2010-2021) -- split into 3 plots?
+# 1. Total units for rent and rented, not occupied
+# 2. Total units for sale only or sold, not occupied
+# 3. Total units for seasonal, for migrant workers, or other vacant (not split by tenure)
+
+# Update map to style used here https://hdadvisors.github.io/rrh-framework/part-2-4.html#manufactured-home-communities
+
+# HOMEOWNERSHIP
+
+# Add specific home market data pending transaction-level MLS data
+# - New build vs resale prices (and by bedrooms, sqft)
+
+# Mortgage delinquency from CPFB (low priority, but in our proposal)
+
+# Add HMDA data (low priority, but in our proposal)
+
+# RENTAL
+
+# Add single-family rent estimates from ACS for MSA
+
+# Add details on public housing (map, units by community, age)
+
+# Add more preservation details
+# - More on non-LIHTC properties that could expire (i.e. everything not public housing)
+# - Map of LIHTC props colored by exp year
+# - Map of Section 8 props colored by exp year
+
+# Move rental housing gap plot to next section
+
+# AFFORDABILITY
+
+# From proposal:
+# "Current and projected affordable rental housing gaps within the city
+# to determine the number of new units needed now and into the future"
+# - Not sure what to do about "projected"
+
+```
 
 ```{r}
 #| label: setup
