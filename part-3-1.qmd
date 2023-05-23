@@ -125,6 +125,17 @@ pep_total_raw <- get_estimates(
   time_series = TRUE
 )
 
+pep_2020s <- get_estimates( 
+  geography = "county",
+  state = "VA",
+  variables = "POPESTIMATE",
+  year = 2022,
+  time_series = TRUE
+) |> 
+  filter(year != 2020) |> 
+  mutate(counttype = "Population estimate") |> 
+  select(GEOID, year, counttype, value)
+
 # Get decennial Census estimates.
 
 census_raw <- get_decennial( 
@@ -133,7 +144,7 @@ census_raw <- get_decennial(
   year = 2020,
   sumfile = "pl",
   variables = "P1_001N"
-)
+) 
 
 pep_total_clean <- pep_total_raw |>
   filter(!DATE %in% c(2, 3)) |> # Remove non-decennial 2010 counts
@@ -172,8 +183,7 @@ census_clean <- census_raw |>
     value
   )
 
-population_data <-pep_total_clean |> 
-  bind_rows(census_clean) |> 
+population_data <- rbind(pep_total_clean, census_clean, pep_2020s) |> 
   subset(GEOID %in% cv)
 
 write_rds(population_data, "data/pop_data.rds")
