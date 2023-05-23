@@ -237,7 +237,16 @@ These changes within the region were no doubt a result of the COVID-19 pandemic'
 pep_change_raw <- get_estimates(
   geography = "county",
   state = "VA",
+  year = 2019,
   variables = c("NATURALINC", "DOMESTICMIG", "INTERNATIONALMIG"),
+  time_series = TRUE
+)
+
+change_2020s <- get_estimates(
+  geography = "county",
+  state = "VA",
+  year = 2022,
+  variables = c("NATURALCHG", "DOMESTICMIG", "INTERNATIONALMIG"),
   time_series = TRUE
 )
 
