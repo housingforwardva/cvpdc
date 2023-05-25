@@ -109,7 +109,9 @@ cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 ## Population trends
 
-From 2010 to 2020, the Lynchburg region only grew by six percent, an increase of just over 15,000 people. This slow but steady growth across the last decade was punctuated by a slight decrease in population between 2019 and 2020. 
+### Total population
+
+From 2010 to 2020, the Lynchburg region only grew by six percent, an increase of just over 15,000 people. This slow but steady growth across the last decade was punctuated by a slight decrease in population between 2019 and 2020. In more recent years, the population has recovered to its 2019 estimate, now having an estimated population of 263,613 as of 2022.
 
 ```{r}
 #| label: pop-data
@@ -226,13 +228,14 @@ publish_plot(pop_bar)
 
 For much of the last decade, growth in the region has been a result of both domestic migration and international migration. But from 2020 to 2021, there were significant shifts in the causes of population change in the region. Deaths outpaced births during this time, leading to a loss of over 600 individuals. International migration decreased, while domestic migration overwhelmingly became the reason for growth in the region.
 
-These changes within the region were no doubt a result of the COVID-19 pandemic's impact. With the increase in work-from-home (WFH), households from outside the region saw an opportunity to benefit from the relative affordability of the region, while still earning high wages from elsewhere. And sadly, the pandemic's impact also contributed to losses among the community.
+These changes within the region were no doubt a result of the COVID-19 pandemic's impact. With the increase in work-from-home (WFH), households from outside the region saw an opportunity to benefit from the relative affordability of the region, while still earning high wages from elsewhere. And sadly, the pandemic's impact also contributed to losses among the community. 
+
+Recent changes in the population from 2020 to 2022 have shown the overwhelming impact of domestic migration to the region. The natural decreases post-2020 have been substantial for the region, resulting in a loss of 1,100 residents from 2020 to 2022.
 
 ```{r}
 #| label: components-data
 #| eval: false
 
-# PEP does not have data available for 2020 and 2021. There is a gap between 2019 and 2021 because Census uses 2020 as a baseline. 
 
 pep_change_raw <- get_estimates(
   geography = "county",
@@ -248,7 +251,17 @@ change_2020s <- get_estimates(
   year = 2022,
   variables = c("NATURALCHG", "DOMESTICMIG", "INTERNATIONALMIG"),
   time_series = TRUE
-)
+) |> 
+  mutate(component = case_when(
+      variable == "NATURALCHG" ~ "Natural increase",
+      variable == "DOMESTICMIG" ~ "Domestic migration",
+      variable == "INTERNATIONALMIG" ~ "International migration")) |>  
+  select( # Simplify columns
+    GEOID,
+    year,
+    component,
+    value
+  )
 
 pep_change_clean <- pep_change_raw |>  
   mutate(GEOID = as.character(GEOID)) |>  
@@ -277,21 +290,8 @@ pep_change_clean <- pep_change_raw |>
     value
   )
 
-pep_2021 <- read_csv("data/comp_chang_2021.csv") |> 
-  pivot_longer(4:6,
-               names_to = "component",
-               values_to = "value") |> 
-  mutate(year = 2021,
-         component =
-    case_when(
-      component == "NATURALINC" ~ "Natural increase",
-      component == "DOMESTICMIG" ~ "Domestic migration",
-      component == "INTERNATIONALMIG" ~ "International migration")) |> 
-  select(GEOID, year, component, value) |> 
-  mutate(GEOID = as.character(GEOID))
-
 cv_comp_change <- pep_change_clean |> 
-  rbind(pep_2021) |>
+  rbind(change_2020s) |>
   filter(GEOID %in% cv) |>
   left_join(counties("VA", year = 2021), by = "GEOID") |>
   select(NAMELSAD, year, component, value)
@@ -333,9 +333,12 @@ cv_change_plot <- ggplot(cv_change,
   
 publish_plot(cv_change_plot)
 
-```
+# girafe(ggobj = cv_change_plot)
 
-Despite the slight population decline from from 2019 to 2020, the region is projected to near 300,000 people by 2050 --- a 13 percent increase from the 2020 Census.
+```
+### Population projections
+
+Despite the slight population decline from from 2019 to 2020 and the slow growth in recent years, the region is projected to near 300,000 people by 2050 --- a 13 percent increase from the 2020 Census.
 
 ```{r}
 #| label: fig-projections
@@ -387,6 +390,8 @@ publish_plot(cv_proj_plot)
 ```
 
 ## Household trends
+
+### Household tenure
 
 From 2010 to 2021, there has been a continuous increase in the number of renter households in the region. Cumulatively, there has been an increase of 3,226 renters since 2010. Although, there has been a cumulative increase in the number of homeowner households since 2010 --- that increase is only recent as of 2020 and 2021. 
 
@@ -481,6 +486,8 @@ cv_tenure_plot <- ggplot(cv_tenure,
 publish_plot(cv_tenure_plot)
 
 ```
+
+### Householder age
 
 The growing number of homeowners in the region are overwhelmingly the result of seniors (65 years and over). Between 2010 and 2021, there was an increase of 5,796 senior homeowners. The growth in homeowners was offset by major decreases in homeowners aged between 25 and 64 years old --- an overall decrease of 5,180. Renter households saw increases across all age groups, but the greatest increase was among 45 to 64 year olds (+1,323).
 
@@ -581,6 +588,8 @@ cv_age_plot <- ggplot(cv_age,
 publish_plot(cv_age_plot)
 
 ```
+
+### Household types
 
 Among household types, householders not living alone grew by 1,430 from 2010 to 2021 --- more than any other household type. This household type mostly represents households with unrelated household members (i.e. living with roommates). Household types like this are expected in regions with major universities, but they can also be an indicator of affordability challenges as individuals increasingly need additional household members to contribute to rent or mortgages.
 
@@ -766,6 +775,8 @@ publish_plot(cv_hhsize_plot)
 
 ```
 
+### Seniors and individuals with disabilities
+
 The senior population grew by 9,021 individuals from 2012 to 2021. Much of that growth occurred among seniors living with family --- mainly as a householder (+3,233) or as the spouse in a family (+3,091). The third largest change in the senior population was among seniors living alone (+2,291). This senior living arrangement can be a concern for communities. With more and more seniors living alone, aging-in-place is made more difficult without support from others. 
 
 ```{r}
@@ -870,6 +881,178 @@ cv_seniors_plot <- ggplot(cv_seniors,
 publish_plot(cv_seniors_plot)
 
 ```
+Ambulatory difficulties (serious difficulty walking or climbing stairs) among adults presents challenges when it comes to accessible and affordable housing. These individuals often need single-story homes that have been retrofitted to make getting around easier. The number of adults with an ambulatory difficulty in the region has declined only slightly over the last decade from 18,264 in 2010 to 17,753 by 2021, a 511 person decrease. 
+
+```{r}
+
+# B18105 Ambulatory Difficulty
+
+years <- 2012:2021 
+
+b18105_vars <- load_variables(2021, "acs5") |>
+  filter(str_sub(name, end = 6) %in% "B18105")
+
+b18105_raw <- map_dfr(years, function(yr){
+  b18105_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B18105",
+    year = yr,
+    survey = "acs5"
+  ) |>
+    mutate(year = yr)
+})
+
+b18105_raw <- b18105_raw |>
+  subset(GEOID %in% cv)
+
+b18105_vars_clean <- b18105_vars |> 
+  separate(label, into = c("est", "total", "sex", "age", "ad"), sep = "!!") |> 
+  select(variable = name, sex, age, ad) |> 
+  drop_na() |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":")))
+
+b18105_data <- b18105_raw  |> 
+  right_join(b18105_vars_clean, by = "variable") |> 
+  mutate(age_grp = case_when(
+    age == "65 to 74 years" ~ "65 years and over",
+    age == "75 years and over" ~ "65 years and over",
+    TRUE ~ "Under 65 years old"
+  )) |> 
+  group_by(GEOID, NAME, year, age_grp, ad) |> 
+  summarise(estimate = sum(estimate)) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME
+         ))
+
+write_rds(b18105_data, "data/b18105_data.rds")
+
+```
+
+```{r}
+#| label: fig-ad
+#| fig-cap: "Adults with ambulatory difficulty"
+
+b18105_data <- read_rds("data/b18105_data.rds")
+
+cv_ad <- b18105_data |> 
+  group_by(year, age_grp, ad) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(ad == "With an ambulatory difficulty") |> 
+  mutate(year = as.character(year))
+
+cvad_plot <- ggplot(cv_ad,
+                    aes(x = year,
+                        y = estimate,
+                        fill = age_grp,
+                        data_id = estimate,
+                        tooltip = estimate)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = number_format(big.mark = ",")) + 
+  labs(title = "Adults with an ambulatory difficulty",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+  
+
+publish_plot(cvad_plot)
+
+
+
+```
+```{r}
+
+# B18107 Independent Living Difficulty
+
+years <- 2012:2021 
+
+b18107_vars <- load_variables(2021, "acs5") |>
+  filter(str_sub(name, end = 6) %in% "B18107")
+
+b18107_raw <- map_dfr(years, function(yr){
+  b18107_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B18107",
+    year = yr,
+    survey = "acs5"
+  ) |>
+    mutate(year = yr)
+})
+
+b18107_raw <- b18107_raw |>
+  subset(GEOID %in% cv)
+
+b18107_vars_clean <- b18107_vars |> 
+  separate(label, into = c("est", "total", "sex", "age", "id"), sep = "!!") |> 
+  select(variable = name, sex, age, id) |> 
+  drop_na() |> 
+  mutate(across(.fns = ~str_remove_all(.x, ":")))
+
+b18107_data <- b18107_raw  |> 
+  right_join(b18107_vars_clean, by = "variable") |> 
+  mutate(age_grp = case_when(
+    age == "65 to 74 years" ~ "65 years and over",
+    age == "75 years and over" ~ "65 years and over",
+    TRUE ~ "Under 65 years old"
+  )) |>
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME
+         )) |> 
+  group_by(GEOID, NAME, year, age_grp, id) |> 
+  summarise(estimate = sum(estimate))
+
+write_rds(b18107_data, "data/b18107_data.rds")
+
+```
+The number of adults with an independent living difficulty has also seen little change over the past 10 years. Although a decline, 
+```{r}
+#| label: fig-id
+#| fig-cap: "Adults with independent difficulty"
+
+b18107_data <- read_rds("data/b18107_data.rds")
+
+cv_id <- b18107_data |> 
+  group_by(year, age_grp, id) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(id == "With an independent living difficulty") |> 
+  mutate(year = as.character(year))
+
+cvid_plot <- ggplot(cv_id,
+                    aes(x = year,
+                        y = estimate,
+                        fill = age_grp,
+                        data_id = estimate,
+                        tooltip = estimate)) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = number_format(big.mark = ",")) + 
+  labs(title = "Adults with an independent living difficulty",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+  
+
+publish_plot(cvad_plot)
+
+girafe(ggobj = cvid_plot,
+       height_svg = 4)
+
+
+
+```
+### Subfamilies and multigenerational households
 
 With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. This creates *subfamilies*, which the Census Bureau [defines](https://www.census.gov/glossary/?term=Subfamily) as:
 
@@ -1178,6 +1361,8 @@ publish_plot(cv_adultchild_plot)
 ```
 
 ## Economic trends
+
+### Household incomes
 
 In the region, the distribution of homeowner incomes have shifted upwards. A greater share of homeowners are now in the $100,000 and more income range than back in 2010. Renter incomes have also shifted upwards but not as dramatically towards the upper income bands. In 2021, there 5,060 more renter households making between \$50,000 and \$149,999, a 92 percent increase.
 
@@ -1623,7 +1808,201 @@ b19013_data <- b19013_raw |>
 write_rds(b19013_data, "data/b19013_data.rds")
 ```
 
+### Wages
+
+::: callout-note
+Wage data in this section is sourced from the Occupational Employment and Wage Statistics (OEWS) program of the Bureau of Labor Statistics. OEWS is updated annually, most recently for 2022 data. This dataset provides a rich look into wage distribution by industry and occupation. 
+
+However, OEWS is only available at the national, state, and metro levels. Therefore, the data below covers the full Lynchburg, Virginia Metropolitan Statistical Area (MSA).
+:::
+
+Like other regions in the state, regional wages increased across the board from May 2019 to May 2022. The largest percent increases in average wages were among jobs that paid at and below the median wage. In fact, the largest growth occurred in the lowest 10th percentile of wages, due in large part to state lawmakers adopting incremental increases to Virginia's minimum wage in 2020. The first increase from \$7.25 to \$9.50 per hour took effect in 2021.
+
+::: callout-note
+Today, state minimum wage is \$11.00 per hour. Under [current law](https://lis.virginia.gov/cgi-bin/legp604.exe?201+sum+SB7), it will increase again to \$12.00 in 2023. Lawmakers must reenact the measure by July 2024 to initiative further increases to \$15.00 per hour by 2026.
+:::
+
+
+```{r}
+#| label: wage-pct-data
+#| eval: FALSE
+
+# Load OEWS files filtered to Lynchburg, VA MSA
+
+oews_2019 <- read_xlsx("data/oews_va_19.xlsx",
+                       sheet = "m2019",
+                       na = c("*", "**", "#")) |> 
+  filter(area_title == "Lynchburg, VA")
+
+oews_2022 <- read_xlsx("data/oews_va_22.xlsx",
+                       sheet = "m2022",
+                       na = c("*", "**", "#")) |> 
+  janitor::clean_names(case = "snake") |> 
+  filter(area_title == "Lynchburg, VA")
+
+
+# Pull out annual wage percentiles for each year
+
+percentiles_2019 <- oews_2019 |> 
+  filter(occ_code == "00-0000") |> 
+  select(9, 24:28) |> 
+  mutate(year = "y2019", .before = 1)
+
+percentiles_2022 <- oews_2022 |> 
+  filter(occ_code == "00-0000") |> 
+  select(10, 26:30) |> 
+  mutate(year = "y2022", .before = 1)
+
+# Combine years, rearrange, and calculate percent change over time
+
+percentiles <- bind_rows(percentiles_2019, percentiles_2022) |> 
+  pivot_longer(3:7) |> 
+  pivot_wider(names_from = year,
+              values_from = value) |> 
+  mutate(pct_change = (y2022 - y2019)/y2019,
+         wage = case_when(
+           name == "a_pct10" ~ "10th percentile",
+           name == "a_pct25" ~ "25th percentile",
+           name == "a_median" ~ "Median",
+           name == "a_pct75" ~ "75th percentile",
+           name == "a_pct90" ~ "90th percentile"
+         )) |> 
+  mutate(wage = fct_relevel(wage,
+                            "10th percentile",
+                            "25th percentile",
+                            "Median",
+                            "75th percentile",
+                            "90th percentile"))
+
+write_rds(percentiles, "data/oews_pct.rds")
+
+```
+
+```{r}
+#| label: fig-wage-pct-plot
+#| fig.cap: "Percent change in annual wage in Richmond, VA MSA"
+
+oews_pct <- read_rds("data/oews_pct.rds")
+
+wage_pct_plot <- ggplot(oews_pct,
+       aes(x = pct_change,
+           y = wage,
+           fill = wage,
+           data_id = pct_change,
+           tooltip = label_percent()(pct_change))) +
+  geom_col() +
+  geom_col_interactive(size = 2) +
+  scale_x_continuous(labels = label_percent()) +
+  scale_fill_hfv() +
+  labs(title = "Percent change in annual wage by wage percentile",
+       subtitle = "Lynchburg, VA MSA | May 2019 to May 2022",
+       caption = "**Source:** U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics.") +
+  theme_hfv() +
+  add_zero_line(axis = "x") +
+  flip_gridlines()
+
+
+publish_plot(wage_pct_plot)
+
+
+```
+
+Over this same period, wages in the region grew for all five of the most common occupation categories by total employment numbers. Workers in the Food Preparation and Serving Related sector saw the largest increases---from an average annual salary of \$19,950 to \$25,680 (nearly 30 percent).
+
+Jobs in Production, Transportation and Material Moving, Office and Administrative Support, and Sales and Related sectors---totaling 46,610 in the region as of May 2022---also saw wage growth more than the 13 percent average increase.
+
+```{r}
+#| label: wage-occ-data
+#| eval: FALSE
+
+# Find 5 most common major occupation categories from 2022
+
+oews_occ <- oews_2022 |> 
+  filter(o_group == "major") |> 
+  slice_max(tot_emp, n = 5) |> 
+  select(9, 10, tot_emp_2022 = 12, a_median_2022 = 28)
+
+# Add 2019 wage data for those occupations
+
+oews_occ <- oews_occ |> 
+  left_join(oews_2019, by = "occ_code")|> 
+  select(1, occ_title = 2, 3, 4, tot_emp_2019 = 14, a_median_2019 = 29)
+
+# Calculate wage percent change and add median for all occupations
+
+oews_occ <- oews_occ |> 
+  mutate(pct_change = (a_median_2022 - a_median_2019) / a_median_2019) |> 
+  add_row(occ_title = "All Occupations", pct_change = as.numeric(oews_pct[oews_pct$wage == "Median",5]))
+
+write_rds(oews_occ, "data/oews_occ.rds")
+
+```
+
+```{r}
+#| label: fig-wage-occ-plot
+#| fig.cap: "Percent change in annual wage for top 5 most common occupation categories"
+
+oews_occ <- read_rds("data/oews_occ.rds")
+
+wage_occ_plot <- ggplot(oews_occ,
+       aes(x = pct_change,
+           y = reorder(occ_title, pct_change),
+           fill = occ_title,
+           data_id = pct_change,
+           tooltip = label_percent()(pct_change))) +
+  geom_col() +
+  geom_col_interactive(size = 2) +
+  scale_x_continuous(labels = label_percent()) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = 30)) +
+  scale_fill_hfv() +
+  labs(title = "Percent change in annual wage for top 5 most common occupation categories",
+       subtitle = "Lynchburg, VA MSA | May 2019 to May 2022",
+       caption = "**Source:** U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics.") +
+  theme_hfv() +
+  add_zero_line(axis = "x") +
+  flip_gridlines()
+
+publish_plot(wage_occ_plot)
+```
+### Unemployment
+
+Through much of the early parts of the pandemic, the Lynchburg region saw record high unemployment rates, topping out at 10.5 percent in April 2020. This rate surpassed the post-Recession fall out when the unemployment rate was 8.7 percent in February 2010.
+
+More recently, employment recovery post COVID-19 brought about a record low unemployment rate in November 2021. But recent trends are showing growing unemployment on par with pre-pandemic levels.
+```{r}
+#| label: laus
+
+laus <- read_csv("data/laus_lynchburg.csv") |> 
+  clean_names() |> 
+  mutate(month = str_sub(label, -3)) |> 
+  mutate(month = match(month, month.abb)) |> 
+  mutate(date = as.Date(as.yearmon(paste(year, month), "%Y %m"))) |> 
+  select(date, rate = value) |> 
+  mutate(rate = rate/100)
+  
+laus_plot <- ggplot(laus,
+       aes(x = date,
+           y = rate,
+           color = rate)) +
+  geom_line(linewidth = 0.5) + 
+  geom_point_interactive(
+    aes(data_id = rate,
+        tooltip = percent_format()(rate)),
+    size = 1) +
+  theme_hfv() +
+  scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) + # Use custom HFV gradient.
+  labs(title = "Unemployment rate",
+       subtitle = "From 2008 through March 2023",
+       caption = "**Source:** U.S. Bureau of Labor Statistics. Local Area Unemployment Statistics.") +
+  scale_y_continuous(labels = percent_format())
+
+publish_plot(laus_plot)
+
+
+```
 ## Housing stock
+
+### Housing type
 
 The bulk of the region's housing stock is composed of single-family housing (74 percent). Much of the single-family housing stock resides in homeownership, but in 2015 single-family housing decreased roughly two percentage points from homeownership towards rental. Manufactured homes, which is included in the Other category, has continued to make up the second largest portion of the region's housing stock (10 percent overall). 
 
@@ -1923,6 +2302,81 @@ mhc_group_plot <- ggplot(mhc_group,
 publish_plot(mhc_group_plot)
 
 ```
+### Vacancy
+
+```{r}
+#| label: vacancy-data
+#| eval: false
+
+years <- 2010:2021
+
+b25004_vars <- load_variables(2021, "acs5") |> 
+   filter(str_sub(name, end = 6) %in% "B25004") 
+
+b25004_raw <- map_dfr(years, function(yr){
+  b25004_pull <- get_acs(
+    geography = "county",
+    state = "VA",
+    table = "B25004",
+    year = yr,
+    survey = "acs5",
+    cache_table = TRUE
+  ) |>
+    mutate(year = yr)
+})
+
+b25004_raw <- b25004_raw |> 
+  subset(GEOID %in% cv)
+  
+b25004_vars_clean <- b25004_vars |> 
+  separate(label, into = c("est", "total", "status"), sep = "!!") |> 
+  select(variable = name, status)
+
+b25004_data <- b25004_raw |> 
+  left_join(b25004_vars_clean, by = "variable") |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia"),
+         NAME = case_when(
+           NAME == "Bedford city" ~ "Bedford County", # Aggregate Bedford City and Bedford County
+           TRUE ~ NAME
+         )) |> 
+  select(GEOID, NAME, year, status, estimate) |> 
+  drop_na()
+
+
+write_rds(b25004_data, "data/b25004_data.rds")
+
+
+```
+
+
+```{r}
+#| label: fig-salerent-vacancy
+
+rs_vacancy <- read_rds("data/b25004_data.rds") |> 
+  filter(status == c("For rent", "Rented, not occupied", "For sale only", "Sold, not occupied")) |> 
+  group_by(year, status) |> 
+  summarise(estimate = sum(estimate)) |> 
+  mutate(tenure = case_when(
+    status == "For rent" ~ "Rental",
+    status == "Rented, not occupied" ~ "Rental",
+    TRUE ~ "Homeownership"
+  )) |> 
+  mutate(year = as.character(year))
+
+ggplot(rs_vacancy,
+       aes(x = year,
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+           tooltip = estimate)) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack")
+
+
+```
+
+
+### Building trends
 
 The region has still not recovered to its Great Recession building-levels, when residential building permits peaked at 1,840 in 2005. Since 2012, permits have only averaged at 768 per year, less than half of what it was in 2005.  
 
@@ -1932,7 +2386,7 @@ In addition, the early 2000s saw a greater number of two to four bedroom homes. 
 #| label: bps-data
 #| eval: false
 
-bps_years <- 2000:2021
+bps_years <- 2000:2022
 
 header_rows <- read_csv("https://www2.census.gov/econ/bps/County/co2020a.txt", 
                         col_names = FALSE,
@@ -1963,12 +2417,12 @@ cbps_raw <- map_df(bps_years, ~{
 
 # Read in latest 2022 cumulative data (through November)
 
-cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2211y.txt", 
+cbps_ytd <- read_csv("https://www2.census.gov/econ/bps/County/co2304y.txt", 
                      col_names = FALSE,
                      skip = 2) |> 
   select(X1:X18) |> 
   set_names(column_names) |> 
-  mutate(`Survey: Date` = 2022)
+  mutate(`Survey: Date` = 2023)
 
 cbps_data <- cbps_raw |> 
   bind_rows(cbps_ytd) |> 
@@ -2026,7 +2480,7 @@ cv_cbps_plot <- ggplot(cv_cbps,
   scale_fill_hfv(-1) +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "New residential building permits by type",
-       subtitle = "Annual permits issues from 2000 through November 2022",
+       subtitle = "Annual permits issues from 2000 through April 2023",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
   theme(legend.position = "right")
 
