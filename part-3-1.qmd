@@ -95,6 +95,37 @@ library(zoo)
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
 
+cnty_code <- c("009", "011", "019", "031", "515", "680")
+
+
+```
+
+```{r}
+#| label: geo-setup
+#| eval: false
+
+library(mapboxapi)
+library(tigris)
+library(ggspatial)
+
+sf_use_s2(TRUE)
+
+options(tigris_use_cache = TRUE)
+
+
+cv_boundary <- counties("VA") |> 
+  filter(GEOID %in% cv)
+
+cv_basemap <- layer_static_mapbox(
+  location = cv_boundary,
+  style_id = "light-v10",
+  username = "mapbox"
+  )
+
+write_rds(cv_basemap, "data/cv_basemap.rds")
+
+write_rds(cv_boundary, "data/cv_boundary.rds")
+
 ```
 
 ## Takeaways
@@ -2760,6 +2791,169 @@ cvpdc_vacancy_plot <- ggplot(cvpdc_vacancy,
 publish_plot(cvpdc_vacancy_plot)
 
 ```
+Throughout the region, there are 4,505 federally-assisted rental units located across 52 properties. 
+```{r}
+#| label: fig-nhpd
+#| fig-cap: "Federally-assisted rental homes"
+
+nhpd_properties <- read_csv("data/nhpd_properties.csv") |> 
+  clean_names() |> 
+  filter(property_status != "Inactive") |> 
+  filter(grepl("amherst", city, ignore.case = TRUE) |
+           grepl("bedford", city, ignore.case = TRUE) |
+           grepl("campbell", city, ignore.case = TRUE) |
+           grepl("appomattox", city, ignore.case = TRUE) |
+           grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  select(total_active_subsidies, units = total_units, property_name, property_address, owner_type, target_tenant_type, city, longitude, latitude) |> 
+  mutate(city = str_to_title(city))
+
+cv_nhpd <- nhpd_properties
+  # group_by(subsidy_name) |> 
+  # summarise(units = sum(units))
+
+cv_nhpd_plot <- ggplot(cv_nhpd,
+       aes(x = property_name, 
+           y = units,
+           fill = property_name,
+           data_id = units,
+           tooltip = units)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge") +
+  theme_hfv() +
+  add_zero_line("y") +
+  scale_fill_hfv() +
+  labs(title = "Federally-assisted rental homes",
+       subtitle = "Number of rental homes with active assistance by primary subsidy program",
+       caption = "**Source:** National Housing Preservation Database (NHPD).") +
+  theme(legend.position = "right") +
+  scale_y_continuous(labels = number_format(big.mark = (",")))
+
+# sum(cv_nhpd$units)
+
+publish_plot(cv_nhpd_plot)
+```
+The bulk of assisted rental units are supported by Low-Income Housing Tax Credits
+```{r}
+#| label: fig-nhpd
+#| fig-cap: "Federally-assisted rental homes by subsidy"
+
+nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(subsidy_status != "Inactive") |> 
+  filter(grepl("amherst", city, ignore.case = TRUE) |
+           grepl("bedford", city, ignore.case = TRUE) |
+           grepl("campbell", city, ignore.case = TRUE) |
+           grepl("appomattox", city, ignore.case = TRUE) |
+           grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  select(subsidy_name, units = assisted_units, property_name, owner_type, target_population, city, longitude, latitude) |> 
+  mutate(city = str_to_title(city))
+
+cv_nhpd <- nhpd_subsidies |> 
+  group_by(subsidy_name) |> 
+  summarise(units = sum(units))
+
+cv_nhpd_plot <- ggplot(cv_nhpd,
+       aes(x = subsidy_name, 
+           y = units,
+           fill = subsidy_name,
+           data_id = units,
+           tooltip = units)) +
+  geom_col(position = "dodge") +
+  geom_col_interactive(position = "dodge") +
+  theme_hfv() +
+  add_zero_line("y") +
+  scale_fill_hfv() +
+  labs(title = "Federally-assisted rental homes",
+       subtitle = "Number of rental homes with active assistance by primary subsidy program",
+       caption = "**Source:** National Housing Preservation Database (NHPD).") +
+  theme(legend.position = "right") +
+  scale_y_continuous(labels = number_format(big.mark = (",")))
+
+# sum(cv_nhpd$units)
+
+publish_plot(cv_nhpd_plot)
+```
+
+
+```{r}
+
+cnty_code <- c("009", "011", "019", "031", "515", "680")
+
+hcv <- read_rds("data/hcv.rds") %>% 
+  st_transform(crs = 4326) %>% 
+  clean_names() %>%
+  subset(county %in% cnty_code)
+
+hcv_group <- hcv |> 
+  drop_na(hcv_public) |> 
+  group_by(county) |> 
+  summarise(estimate = sum(hcv_public)) |> 
+  mutate(county_name = case_when(
+    county == "009" ~ "Amherst County",
+    county == "011" ~ "Appomattox County", 
+    county == "031" ~ "Campbell County",
+    county == "019" ~ "Bedford County",
+    county == "680" ~ "Lynchburg city"
+  )) |> 
+  st_drop_geometry()
+  
+hcv_grp_plot <- ggplot(hcv_group,
+       aes(x = county_name,
+           y = estimate,
+           fill = county_name)) +
+  geom_col() +
+  geom_col_interactive() +
+  theme_hfv() +
+  add_zero_line("y") +
+  scale_fill_hfv() +
+  labs(title = "Households with Housing Choice Vouchers",
+       subtitle = "Number of renters using HCVs in private rental homes",
+       caption = "**Source:** U.S. Department of Housing and Urban Development.")
+
+publish_plot(hcv_grp_plot)
+```
+
+```{r}
+#| label: fig-hcv
+#| fig.cap: "Percent of renters with Housing Choice Vouchers by tract"
+
+library(mapview)
+
+hcv <- read_rds("data/hcv.rds") |> 
+  clean_names() |> 
+  subset(county %in% cnty_code)
+  
+
+if (knitr::is_html_output()) {
+  
+  mapview(hcv,
+          zcol= "hcv_public_pct",
+          legend = T,
+          layer.name = "Percent renters with HCVs")
+  
+  } else {
+    
+  ggplot() +
+    cv_basemap +
+    layer_spatial(hcv, aes(fill = hcv_public_pct)) +
+    scale_fill_gradient2(low = "#edf8b1", high = "#253494", mid = "#41b6c4",
+                         midpoint = 10,
+                         labels = label_percent(scale = 1)) +
+    labs(title = "Percent of renters\nwith Housing Choice Vouchers by tract",
+         fill = "Percent",
+         caption = "Source: U.S. Department of Housing and Urban Development.") +
+    #fixed_plot_aspect(ratio = 0.8) +
+    theme(panel.background = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.1, "npc"),
+          plot.caption = element_text(hjust = 0))
+    
+  }
+
+```
+
 
 ## Affordability
 
@@ -3190,5 +3384,6 @@ cv_cb9_plot <- ggplot(cv_cb9,
 publish_plot(cv_cb9_plot)
 
 ```
+
 
 
