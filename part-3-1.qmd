@@ -4,42 +4,39 @@
 
 # THINGS TO UPDATE ----------
 
-# POPULATION
-
-# Add Census PEP through 2022 (https://twitter.com/kyle_e_walker/status/1659651850331725824)
-
-# HOUSEHOLD
-
-# Add ACS selected disability (2010-2021) -- maybe collapse ages into just <65 and 65+
-# - Ambulatory difficulty (B18105 or C18105)
-# - Independent Living difficulty (B18107 or C18107)
-
 # ECONOMIC
 
-# Add selected wage stats (data only for Lynchburg MSA)
-# Recreate https://hdadvisors.github.io/rrh-framework/part-1-3.html#wages
 
 # Add LEHD data -- maybe total regional commute inflow/outflow?
 # See lehd examples in sandbox repo
 
-# Add LAUS unemployment data (low priority, but in our proposal)
+# Eric says this was not in the sandbox repo to review as far as he could see
+
 
 # HOUSING STOCK
 
-# Add Census BPS through March 2023 (or just through end of 2022)
 
 # Add ACS overall vacancy rates for owner- and renter-occupied (2010-2021)
+
+# Eric is iffy on my methods to reach the above - needs to be checked
 
 # Add ACS vacancy status/reason (B25004, 2010-2021) -- split into 3 plots?
 # 1. Total units for rent and rented, not occupied
 # 2. Total units for sale only or sold, not occupied
 # 3. Total units for seasonal, for migrant workers, or other vacant (not split by tenure)
 
+# Eric's above plots should be reviewed - I used the vacancy status of for rent/rented and for sale/sold to create vacancy rates for those; And then created a different plot for just seasonal/other vacant
+
 # Manufactured home communities
 # - Describe locations and distribution across region
+
 # - Update map to style used here https://hdadvisors.github.io/rrh-framework/part-2-4.html#manufactured-home-communities
 
+# Eric ouldn't get the ggplot map to work because I can't figure out the limit bounds on the x and y axis. 
+
 # Age of manufactured homes -- use PUMS to show pre/post-1976 (low priority)
+
+# Eric did not do the above
 
 # HOMEOWNERSHIP
 
@@ -54,6 +51,8 @@
 # RENTAL
 
 # Add single-family rent estimates from ACS by county
+
+# Eric doesn't know what ACS table this is??
 
 # Add supply of affordable rental units (NHPD) and HCVs (HUD)
 # - Recreate parts of https://hdadvisors.github.io/rrh-framework/part-2-3.html
@@ -93,6 +92,33 @@ library(zoo)
 # Create a vector of FIPS codes of the region in order to easily pull localities from data sets.
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
+
+
+```
+```{r}
+#| label: geo-setup
+#| eval: false
+
+library(mapboxapi)
+
+sf_use_s2(TRUE)
+
+options(tigris_use_cache = TRUE)
+
+cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
+
+cv_boundary <- counties("VA") |> 
+  filter(GEOID %in% cv)
+
+cv_basemap <- layer_static_mapbox(
+  location = cv_boundary,
+  style_id = "light-v10",
+  username = "mapbox"
+  )
+
+write_rds(cv_basemap, "data/cv_basemap.rds")
+
+write_rds(cv_boundary, "data/cv_boundary.rds")
 
 
 ```
@@ -2263,13 +2289,52 @@ TO ADD LATER: specific issues and context on MHCs
 # 
 # write_rds(mhc, "data/cv_mhc.rds")
 
+# Status for all is OPEN or NOT AVAILABLE - NONE ARE CLOSED
+
 library(leaflet)
+library(ggtext)
+library(mapview)
 
-mhc <- read_rds("data/cv_mhc.rds")
+mhc <- read_rds("data/cv_mhc.rds") |> 
+  mutate(SIZE = str_to_sentence(SIZE))
 
-leaflet(mhc) |> 
-  addTiles() |> 
-  addCircleMarkers()
+# if (knitr::is_html_output()) {
+  
+  mapview(
+    mhc,
+    zcol = "SIZE",
+    legend = T,
+    popup = F,
+    burst = F,
+    layer.name = "Units in park"
+  )
+
+# Not sure what the extents need to be in order to get this right.
+  
+  # } else {
+  # 
+  # ggplot() +
+  #   cv_basemap +
+  #   geom_sf(mhc, mapping = aes(color = SIZE), show.legend = "point") +
+  #   scale_color_hfv() +
+  #   scale_x_continuous(expand = expansion(mult = 0),
+  #                      limits = c(-8660000, -8585000)) +
+  #   scale_y_continuous(expand = expansion(mult = 0),
+  #                      limits = c(4466959, 4548000)) +
+  #   labs(title = "Manufactured housing communities in Lynchburg region",
+  #        color = "Units in park",
+  #        caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).") +
+  #   theme_pha() +
+  #   theme(plot.title = element_markdown(margin = margin(b = 10, unit = "pt")),
+  #         panel.grid = element_blank(),
+  #         axis.title = element_blank(),
+  #         axis.text = element_blank(),
+  #         legend.position = "right",
+  #         legend.title = element_text(),
+  #         legend.key = element_blank())
+  #   
+  # }
+
 
 ```
 
@@ -2352,29 +2417,81 @@ write_rds(b25004_data, "data/b25004_data.rds")
 ```{r}
 #| label: fig-salerent-vacancy
 
+# Vacancy rate for for sale and for rent housing = vacant/occupied by tenure - uses B25004 and B25003
+
 rs_vacancy <- read_rds("data/b25004_data.rds") |> 
   filter(status == c("For rent", "Rented, not occupied", "For sale only", "Sold, not occupied")) |> 
   group_by(year, status) |> 
   summarise(estimate = sum(estimate)) |> 
   mutate(tenure = case_when(
-    status == "For rent" ~ "Rental",
-    status == "Rented, not occupied" ~ "Rental",
-    TRUE ~ "Homeownership"
+    status == "For rent" ~ "Renter",
+    status == "Rented, not occupied" ~ "Renter",
+    TRUE ~ "Homeowner"
   )) |> 
+  mutate(year = as.character(year)) |> 
+  mutate(status = "Vacant") |> 
+  group_by(year, tenure, status) |> 
+  summarise(estimate = sum(estimate))
+
+b25003_data <- read_rds("data/b25003_data.rds") |> 
+  mutate(status = "Occupied") |> 
+  group_by(year, tenure, status) |> 
+  summarise(estimate = sum(estimate)) |> 
   mutate(year = as.character(year))
 
-ggplot(rs_vacancy,
+rs_rate <- rbind(rs_vacancy, b25003_data) |> 
+  pivot_wider(names_from = status,
+              values_from = estimate) |> 
+  mutate(rate = (Vacant/Occupied))
+
+ggplot(rs_rate,
        aes(x = year,
-           y = estimate,
-           fill = tenure,
-           data_id = estimate,
-           tooltip = estimate)) +
-  geom_col(position = "stack") +
-  geom_col_interactive(position = "stack")
+           y = rate,
+           group = tenure,
+           color = tenure)) +
+    geom_line() +
+     geom_point_interactive(
+    aes(data_id = rate,
+        tooltip = percent_format()(rate)),
+    size = 1) +
+  scale_y_continuous(labels = percent_format()) +
+  theme_hfv() +
+  scale_color_hfv() +
+  labs(title = "Vacancy rate among rental and homeowner stock",
+       caption = "**Source:** U.S. Census Bureau. American Community Survey, 2010 to 2021, 5-year estimates, Table B25003 and B25004.")
 
 
 ```
 
+```{r}
+#| label: fig-vstatus
+
+# Leaving out migrant workers because it is so minimal
+
+ostatus <- read_rds("data/b25004_data.rds") |> 
+  filter(status == c("For seasonal, recreational, or occasional use", "Other vacant")) |> 
+  group_by(year, status) |> 
+  summarise(estimate = sum(estimate)) |> 
+  mutate(year = as.character(year))
+
+ggplot(ostatus,
+       aes(x = year,
+           y = estimate,
+           fill = status,
+           data_id = estimate,
+           tooltip = number_format(big.mark = ",")(estimate))) +
+  geom_col(position = "dodge") + 
+  facet_wrap(~status, labeller = label_wrap_gen(15)) + 
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = number_format(big.mark = ",")) +
+  labs(title = "Vacant housing status (not for sale or rent)",
+       caption = "**Source:** U.S. Census Bureau. American Community Survey, 2010 to 2021, 5-year estimates, Table B25004.")
+
+
+
+```
 
 ### Building trends
 
@@ -2662,6 +2779,31 @@ cv_dom_plot <- ggplot(cv_dom,
        caption = "**Source:** Lynchburg Association of REALTORS®.")
 
 publish_plot(cv_dom_plot)
+
+```
+
+```{r}
+#| label: hmda
+
+# cv_hmda <- read_csv("data/hmda_va.csv") |> 
+#   mutate(GEOID = as.character(county_code)) |> 
+#   subset(GEOID %in% cv) |> 
+#   select(GEOID, 
+#          loan = derived_loan_product_type,
+#          hometype = derived_dwelling_category, 
+#          ethnicity = derived_ethnicity,
+#          race = derived_race, 
+#          action_taken,
+#          loan_type,
+#          loan_purpose, 
+#          loan_amount, 
+#          occupancy_type,
+#          applicant_age
+#          )
+
+# write_rds(cv_hmda, "data/cv_hmda.rds")
+
+cv_hmda <- read_rds("data/cv_hmda.rds")
 
 ```
 
