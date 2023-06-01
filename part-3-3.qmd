@@ -8,9 +8,6 @@ The following provides an analysis of major trends impacting housing within the 
 
 # Update plot styles to match previous chapters
 
-# POPULATION
-
-# Add Census PEP through 2022 (https://twitter.com/kyle_e_walker/status/1659651850331725824)
 
 # HOUSEHOLD
 

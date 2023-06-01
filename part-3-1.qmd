@@ -1103,8 +1103,8 @@ cvid_plot <- ggplot(cv_id,
 
 publish_plot(cvad_plot)
 
-girafe(ggobj = cvid_plot,
-       height_svg = 4)
+# girafe(ggobj = cvid_plot,
+#        height_svg = 4)
 
 
 
@@ -2451,7 +2451,10 @@ write_rds(b25004_data, "data/b25004_data.rds")
 # Vacancy rate for for sale and for rent housing = vacant/occupied by tenure - uses B25004 and B25003
 
 rs_vacancy <- read_rds("data/b25004_data.rds") |> 
-  filter(status == c("For rent", "Rented, not occupied", "For sale only", "Sold, not occupied")) |> 
+    filter(status == "For rent" |
+           status == "Rented, not occupied" |
+           status == "For sale only" |
+           status == "Sold, not occupied") |> 
   group_by(year, status) |> 
   summarise(estimate = sum(estimate)) |> 
   mutate(tenure = case_when(
@@ -3476,7 +3479,7 @@ cb_9 <- read_csv("data/Table9_2012to2019.csv") |>
     cost_burden == "Severely cost-burdened" ~ "Cost-burdened",
     TRUE ~ cost_burden
   )) |> 
-  select(county, fips, year, race, cost_burden, cb_group, estimate)
+  select(county, fips, year, race, cost_burden, cb_group, estimate, moe)
 
 write_rds(cb_9, "data/cb_9.rds")
 

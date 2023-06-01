@@ -4,52 +4,30 @@
 
 # THINGS TO UPDATE ----------
 
-# POPULATION
-
-# Add Census PEP through 2022 (https://twitter.com/kyle_e_walker/status/1659651850331725824)
-
-# HOUSEHOLD
-
-# Add ACS selected disability (2010-2021) -- maybe collapse ages into just <65 and 65+
-# - Ambulatory difficulty (B18105 or C18105)
-# - Independent Living difficulty (B18107 or C18107)
 
 # ECONOMIC
-
-# Add QCEW data -- total employment and average wage by locality?
 
 # Add LEHD data -- commute inflow/outflow by locality?
 # See lehd examples in sandbox repo
 
 # Add LAUS unemployment data (low priority, but in our proposal)
 
-# HOUSING STOCK
-
-# Add Census BPS through March 2023 (or just through end of 2022)
-
-# Add ACS overall vacancy rates for owner- and renter-occupied (2010-2021)
-
-# Add ACS vacancy status/reason (B25004, 2010-2021) -- split into 3 plots?
-# 1. Total units for rent and rented, not occupied
-# 2. Total units for sale only or sold, not occupied
-# 3. Total units for seasonal, for migrant workers, or other vacant (not split by tenure)
-
 # HOMEOWNERSHIP
 
 # Add specific home market data pending transaction-level MLS data
 # - New build vs resale prices (and by bedrooms, sqft)
 
-# Mortgage delinquency from CPFB (low priority, but in our proposal)
+# Mortgage delinquency from CPFB (low priority, but in our proposal) - this isn't available for the region or localities in the region
 
 # Add HMDA data (low priority, but in our proposal)
 
 # RENTAL
 
-# Add single-family rent estimates from ACS for MSA
+# Add single-family rent estimates from ACS for MSA - not sure what table this is? Would you take aggregate gross rents by units in structure and then divide by the total number of structures in those categories to get the average???
 
 # AFFORDABILITY
 
-# Assess errors for Fig 5.22
+# Assess errors for Fig 5.22 - remove all but Black and White households - MOE is high
 
 ```
 
@@ -91,9 +69,9 @@ cnty_code <- c("009", "011", "019", "031", "515")
 
 ## Population trends
 
-From 2010 to 2020, Bedford County has grown more than any other locality in the region, experiencing a 16 percent increase. In fact, as of the 2020 Census, Bedford County (is more populous than the City of Lynchburg (79,462 versus 79,009, respectively).
+From 2010 to 2022, Bedford County has grown more than any other locality in the region, experiencing a 18 percent increase. In fact, as of the 2020 Census, Bedford County was more populous than the City of Lynchburg (79,462 versus 79,009, respectively).
 
-Appomattox and Campbell experienced slight to moderate growth in the last decade, while Amherst County's population declined by three percent.
+Appomattox and Campbell experienced slight to moderate growth in the last decade, while Amherst County's population declined by two percent.
 
 ```{r}
 #| label: fig-localpop
@@ -111,11 +89,11 @@ local_pop <- pop_data |>
   select(GEOID, year, county, counttype, value) |> 
   group_by(county) |> 
   mutate(pchg = (value - first(value))/first(value)) |> 
-  filter(year == 2020) |> 
-  select(GEOID, county, value, pchg)
+  # filter(year == 2020) |> 
+  select(GEOID, year, county, value, pchg)
 
 local_pop_plot <- ggplot(local_pop,
-       aes(x = reorder(county, -value),
+       aes(x = year,
            y = value,
            fill = county,
            data_id = value,
@@ -125,10 +103,12 @@ local_pop_plot <- ggplot(local_pop,
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv() +
+  facet_wrap(~county, nrow = 1)+
   labs(title = "Total population by county",
        subtitle = "2020 Census population",
        caption = "**Source:** U.S. Census Bureau, Decennial Census.") +
-  scale_y_continuous(labels = label_comma(), limits = c(0, 100000))
+  scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 publish_plot(local_pop_plot)
 
@@ -137,6 +117,8 @@ publish_plot(local_pop_plot)
 ```{r}
 #| label: fig-local-pchg
 #| fig-cap: "Population growth by county"
+local_pop <- local_pop |> 
+  filter(year == 2022)
 
 local_growth_plot <- ggplot(local_pop,
        aes(x = reorder(county, -pchg),
@@ -195,7 +177,7 @@ local_change_plot <- ggplot(local_change,
 publish_plot(local_change_plot)
 
 ```
-Population projects show that Bedford County will continue to grow at a substantial rate over the next 30 years. Appomattox and Campbell will see slight growth, while Amherst is slated to see more population decline in the coming decades.
+Population projections show that Bedford County will continue to grow at a substantial rate over the next 30 years. Appomattox and Campbell will see slight growth, while Amherst is slated to see more population decline in the coming decades.
 
 ```{r}
 #| label: fig-localproj
@@ -439,6 +421,85 @@ publish_plot(local_senior_plot)
 
 ```
 
+```{r}
+#| label: fig-ad
+#| fig-cap: "Adults with ambulatory difficulty"
+
+b18105_data <- read_rds("data/b18105_data.rds") |> 
+  filter(NAME != "Lynchburg city")
+
+cv_ad <- b18105_data |> 
+  group_by(year, NAME, age_grp, ad) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(ad == "With an ambulatory difficulty") |> 
+  mutate(year = as.character(year))
+
+cvad_plot <- ggplot(cv_ad,
+                    aes(x = year,
+                        y = estimate,
+                        fill = age_grp,
+                        data_id = estimate,
+                        tooltip = estimate)) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack") +
+  facet_wrap(~NAME, nrow = 1) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = number_format(big.mark = ",")) + 
+  labs(title = "Adults with an ambulatory difficulty",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+  
+
+publish_plot(cvad_plot)
+
+
+
+```
+
+```{r}
+#| label: fig-id
+#| fig-cap: "Adults with independent difficulty"
+
+b18107_data <- read_rds("data/b18107_data.rds") |> 
+  filter(NAME != "Lynchburg city")
+
+cv_id <- b18107_data |> 
+  group_by(year, NAME, age_grp, id) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(id == "With an independent living difficulty") |> 
+  mutate(year = as.character(year))
+
+cvid_plot <- ggplot(cv_id,
+                    aes(x = year,
+                        y = estimate,
+                        fill = age_grp,
+                        data_id = estimate,
+                        tooltip = estimate)) +
+  geom_col(position = "stack") +
+  geom_col_interactive(position = "stack") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  facet_wrap(~NAME, nrow = 1) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_y_continuous(labels = number_format(big.mark = ",")) + 
+  labs(title = "Adults with an independent living difficulty",
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+  
+
+publish_plot(cvid_plot)
+
+girafe(ggobj = cvid_plot,
+       height_svg = 4)
+
+
+
+```
+
 Rising costs in the region can force families to double up with others. This creates *subfamilies*, which the Census Bureau [defines](https://www.census.gov/glossary/?term=Subfamily) as:
 
 >A married couple (with or without children) or an unmarried parent with one or more never-married children under the age of 18, residing with the householder, but not including the householder's spouse.
@@ -658,7 +719,7 @@ publish_plot(local_rinc_plot)
 
 years <- 2015:2021
 
-cnty <- c(51009, 51011, 51019, 51031)
+cnty <- c(51009, 51011, 51019, 51031, 51680)
 
 qcewGetAreaData <- function(year, qtr, area) {
 	url <- "http://data.bls.gov/cew/data/api/YEAR/QTR/area/AREA.csv"
@@ -682,6 +743,57 @@ qcew_data <- map_dfr(cnty, function(cnty){
 #   filter(own_code == 0) |> 
 #   filter(industry_code == 10) |> 
 #   select(area_fips, annual_avg_emplvl, annual_avg_wkly_wage,avg_annual_pay)
+
+
+write_rds(qcew_data, "data/qcew_data.rds")
+```
+
+```{r}
+#| label: qcew
+
+cv_qcew <- read_rds("data/qcew_data.rds") |> 
+  filter(area_fips != 51680) |> 
+  mutate(GEOID = as.character(area_fips)) |> 
+  left_join(cv_names, by = "GEOID") |> 
+  select(county, year, emplvl = annual_avg_emplvl, wkwage = annual_avg_wkly_wage, salary = avg_annual_pay)
+
+ggplot(cv_qcew,
+       aes(x = year,
+           y = emplvl,
+           color = county)) +
+  geom_line() +
+  geom_point() +
+  theme_hfv() +
+  scale_color_hfv() +
+  facet_wrap(~county) +
+  labs(title = "Employment levels",
+       caption = "**Source:** U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages (QCEW).") +
+  scale_y_continuous(labels = number_format(big.mark = ","))
+  
+
+
+
+```
+
+```{r}
+
+# Need to adjust to 2021 dollars.
+
+ggplot(cv_qcew,
+       aes(x = year,
+           y = wkwage,
+           color = county)) +
+  geom_line() +
+  geom_point() +
+  theme_hfv() +
+  scale_color_hfv() +
+  facet_wrap(~county) +
+  labs(title = "Annual average weekly wage levels",
+       caption = "**Source:** U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages (QCEW).") +
+  scale_y_continuous(labels = number_format(big.mark = ","))
+  
+
+
 
 
 ```
@@ -801,7 +913,8 @@ Regardless of these changes, there is a severe lack of diverse housing being bui
 #| fig-cap: "New residential building permits by type"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") |> 
-  filter(NAMELSAD != "Lynchburg city")
+  filter(NAMELSAD != "Lynchburg city") |> 
+  mutate(year = as.character(year))
 
 cv_cbps_plot <- ggplot(cv_cbps,
        aes(x = year,
@@ -816,11 +929,98 @@ cv_cbps_plot <- ggplot(cv_cbps,
   add_zero_line("y") +
   scale_fill_hfv() +
   labs(title = "New residential building permits by type",
-       subtitle = "Annual permits issued by locality from 2000 through November 2022",
+       subtitle = "Annual permits issued by locality from 2000 through April 2023",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
-  theme(legend.position = "right")
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 publish_plot(cv_cbps_plot)
+
+```
+
+```{r}
+#| label: fig-salerent-vacancy
+
+# Vacancy rate for for sale and for rent housing = vacant/occupied by tenure - uses B25004 and B25003
+
+rs_vacancy <- read_rds("data/b25004_data.rds") |> 
+  filter(NAME != "Lynchburg city") |> 
+  filter(status == "For rent" |
+           status == "Rented, not occupied" |
+           status == "For sale only" |
+           status == "Sold, not occupied") |> 
+  group_by(year, NAME, status) |> 
+  summarise(estimate = sum(estimate)) |> 
+  mutate(tenure = case_when(
+    status == "For rent" ~ "Renter",
+    status == "Rented, not occupied" ~ "Renter",
+    TRUE ~ "Homeowner"
+  )) |> 
+  mutate(year = as.character(year)) |> 
+  mutate(status = "Vacant") |> 
+  group_by(year, NAME, tenure, status) |> 
+  summarise(estimate = sum(estimate))
+
+# b25003_data <- read_rds("data/b25003_data.rds") |> 
+#   mutate(status = "Occupied") |> 
+#   group_by(year, NAME, tenure, status) |> 
+#   summarise(estimate = sum(estimate)) |> 
+#   mutate(year = as.character(year))
+# 
+# rs_rate <- rbind(rs_vacancy, b25003_data) |> 
+#   pivot_wider(names_from = status,
+#               values_from = estimate) |> 
+#   mutate(rate = (Vacant/Occupied))
+
+ggplot(rs_vacancy,
+       aes(x = year,
+           y = estimate,
+           fill = tenure,
+           data_id = estimate,
+        tooltip = number_format()(estimate))) +
+    geom_col(position = "stack") +
+     geom_col_interactive(position = "stack") +
+  facet_wrap(~NAME, nrow = 1) +
+  scale_y_continuous(labels = number_format()) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Vacancy among rental and homeowner stock",
+       caption = "**Source:** U.S. Census Bureau. American Community Survey, 2010 to 2021, 5-year estimates, Table B25003 and B25004.")
+
+
+```
+
+```{r}
+#| label: fig-vstatus
+
+# Leaving out migrant workers because it is so minimal
+
+ostatus <- read_rds("data/b25004_data.rds") |> 
+  filter(NAME != "Lynchburg city") |> 
+  filter(status == "For seasonal, recreational, or occasional use" |
+           status == "Other vacant") |> 
+  group_by(year, NAME, status) |> 
+  summarise(estimate = sum(estimate)) |> 
+  mutate(year = as.character(year))
+
+ggplot(ostatus,
+       aes(x = year,
+           y = estimate,
+           fill = str_wrap(status, 15),
+           data_id = estimate,
+           tooltip = number_format(big.mark = ",")(estimate))) +
+  geom_col(position = "stack") + 
+  geom_col_interactive(position = "stack") +
+  facet_wrap(~NAME, labeller = label_wrap_gen(15)) + 
+  theme_hfv() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "right") +
+  scale_fill_hfv() +
+  scale_y_continuous(labels = number_format(big.mark = ",")) +
+  labs(title = "Vacant housing status (not for sale or rent)",
+       caption = "**Source:** U.S. Census Bureau. American Community Survey, 2010 to 2021, 5-year estimates, Table B25004.")
+
+
 
 ```
 
@@ -902,6 +1102,8 @@ TO ADD LATER: sales prices, closings, and days on market by locality -- pending 
 
 
 ```
+
+
 
 ## Rental market
 
@@ -1207,7 +1409,7 @@ Cost burden by race and ethnicity shows that white households across all four co
 
 :::{.callout-caution}
 
-Need to address margins of error on the estimates for Asian, another race, and Hispanic households. It may be best to exclude them from this.
+The margins of error for Asian and Hispanic households, as well as other minority groups in the region (multiracial households included), are significantly high. This is most often due to the small sample sizes.
 
 :::
 
@@ -1220,11 +1422,13 @@ cb_9 <- read_rds("data/cb_9.rds")
 cv_cb9 <- cb_9 |> 
   subset(fips %in% cnty) |> 
   group_by(year, county, race, cb_group) |> 
-  summarise(estimate = sum(estimate)) |> 
+  summarise(estimate = sum(estimate),
+            moe = sum(moe)) |> # MOE are very high for Another race, including multiracial and Asian and Hispanic
   group_by(year, county, race) |> 
   mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
-  filter(year == 2019)
+  filter(year == 2019) |> 
+  filter(race != "Hispanic or Latino" & race != "Another race, including multiracial" & race != "Asian")
 
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = reorder_within(county, pct, race),  
