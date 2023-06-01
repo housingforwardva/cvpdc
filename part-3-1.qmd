@@ -10,35 +10,31 @@
 # Add LEHD data -- maybe total regional commute inflow/outflow?
 # See lehd examples in sandbox repo
 
-# Eric says this was not in the sandbox repo to review as far as he could see
+# I don't think this got committed in the sandbox repo? I couldn't find it.
 
 
 # HOUSING STOCK
 
-
-# Add ACS overall vacancy rates for owner- and renter-occupied (2010-2021)
-
-# Eric is iffy on my methods to reach the above - needs to be checked
 
 # Add ACS vacancy status/reason (B25004, 2010-2021) -- split into 3 plots?
 # 1. Total units for rent and rented, not occupied
 # 2. Total units for sale only or sold, not occupied
 # 3. Total units for seasonal, for migrant workers, or other vacant (not split by tenure)
 
-# Eric's above plots should be reviewed - I used the vacancy status of for rent/rented and for sale/sold to create vacancy rates for those; And then created a different plot for just seasonal/other vacant
+# above plots should be reviewed - I used the vacancy status of for rent/rented and for sale/sold to create vacancy rates for those; And then created a different plot for just seasonal/other vacant
 
 # Manufactured home communities
 # - Describe locations and distribution across region
 
 # - Update map to style used here https://hdadvisors.github.io/rrh-framework/part-2-4.html#manufactured-home-communities
 
-# Eric ouldn't get the ggplot map to work because I can't figure out the limit bounds on the x and y axis. 
+# I couldn't get the ggplot map to work because I can't figure out the limit bounds on the x and y axis. 
 
-# Age of manufactured homes -- use PUMS to show pre/post-1976 (low priority)
-
-# Eric did not do the above
+# Age of manufactured homes -- use PUMS to show pre/post-1976 (low priority) - I did not do this.
 
 # HOMEOWNERSHIP
+
+# Emailed Meredith again - waiting on response 
 
 # Add specific home market data pending transaction-level MLS data
 # - Sales prices
@@ -52,14 +48,12 @@
 
 # Add single-family rent estimates from ACS by county
 
-# Eric doesn't know what ACS table this is??
+# I doesn't know what ACS table this is??
 
 # Add supply of affordable rental units (NHPD) and HCVs (HUD)
 # - Recreate parts of https://hdadvisors.github.io/rrh-framework/part-2-3.html
 
 ```
-
-
 
 The following provides a regional-level analysis of major trends impacting housing within Central Virginia Planning District region. All data has been aggregated to the regional-level and includes:
 
@@ -126,33 +120,7 @@ write_rds(cv_basemap, "data/cv_basemap.rds")
 write_rds(cv_boundary, "data/cv_boundary.rds")
 
 ```
-```{r}
-#| label: geo-setup
-#| eval: false
 
-library(mapboxapi)
-
-sf_use_s2(TRUE)
-
-options(tigris_use_cache = TRUE)
-
-cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
-
-cv_boundary <- counties("VA") |> 
-  filter(GEOID %in% cv)
-
-cv_basemap <- layer_static_mapbox(
-  location = cv_boundary,
-  style_id = "light-v10",
-  username = "mapbox"
-  )
-
-write_rds(cv_basemap, "data/cv_basemap.rds")
-
-write_rds(cv_boundary, "data/cv_boundary.rds")
-
-
-```
 
 ## Takeaways
 
@@ -1961,7 +1929,6 @@ wage_pct_plot <- ggplot(oews_pct,
 
 publish_plot(wage_pct_plot)
 
-
 ```
 
 Over this same period, wages in the region grew for all five of the most common occupation categories by total employment numbers. Workers in the Food Preparation and Serving Related sector saw the largest increases---from an average annual salary of \$19,950 to \$25,680 (nearly 30 percent).
@@ -2818,28 +2785,134 @@ publish_plot(cv_dom_plot)
 
 ```{r}
 #| label: hmda
+#| eval: false
+library(tidyverse)
+library(httr)
+library(jsonlite)
 
-# cv_hmda <- read_csv("data/hmda_va.csv") |> 
-#   mutate(GEOID = as.character(county_code)) |> 
-#   subset(GEOID %in% cv) |> 
-#   select(GEOID, 
-#          loan = derived_loan_product_type,
-#          hometype = derived_dwelling_category, 
-#          ethnicity = derived_ethnicity,
-#          race = derived_race, 
-#          action_taken,
-#          loan_type,
-#          loan_purpose, 
-#          loan_amount, 
-#          occupancy_type,
-#          applicant_age
-#          )
+col_spec <- cols_only(
+  "activity_year" = col_double(),
+  "lei" = col_character(),
+  "county_code" = col_character(),
+  "census_tract" = col_character(),
+  "derived_loan_product_type" = col_character(),
+  "derived_dwelling_category" = col_character(),
+  "derived_ethnicity" = col_character(),
+  "derived_race" = col_character(),
+  "derived_sex" = col_character(),
+  "action_taken" = col_integer(),
+  "purchaser_type" = col_integer(),
+  "loan_type" = col_integer(),
+  "loan_purpose" = col_integer(),
+  "reverse_mortgage" = col_integer(),
+  "loan_amount" = col_character(),
+  "loan_to_value_ratio" = col_character(),
+  "interest_rate" = col_character(),
+  "total_loan_costs" = col_character(),
+  "loan_term" = col_character(),
+  "property_value" = col_character(),
+  "construction_method" = col_integer(),
+  "occupancy_type" = col_integer(),
+  "manufactured_home_secured_property_type" = col_integer(),
+  "manufactured_home_land_property_interest" = col_integer(),
+  "total_units" = col_character(),
+  "applicant_age" = col_character(),
+  "income" = col_double(),
+  "debt_to_income_ratio" = col_character(),
+  "denial_reason-1" = col_integer(),
+  "denial_reason-2" = col_integer(),
+  "denial_reason-3" = col_integer(),
+  "denial_reason-4" = col_integer(),
+  "tract_minority_population_percent" = col_double(),
+  "ffiec_msa_md_median_family_income" = col_double(),
+  "tract_to_msa_income_percentage" = col_double(),
+  "tract_owner_occupied_units" = col_double()
+)
 
-# write_rds(cv_hmda, "data/cv_hmda.rds")
+hmda_pull <- map_dfr(2018:2021, ~{
+  GET("https://ffiec.cfpb.gov/v2/data-browser-api/view/csv", 
+      query = list(
+        states = "VA",
+        years = .x
+      ), 
+      progress()) %>%
+    content(as = "text") %>%
+    read_csv(col_types = col_spec) 
+})
+
+
+cv_hmda <- hmda_pull |> 
+  mutate(GEOID = as.character(county_code)) |>
+  subset(GEOID %in% cv) |>
+  select(GEOID,
+         activity_year,
+         loan = derived_loan_product_type,
+         hometype = derived_dwelling_category,
+         ethnicity = derived_ethnicity,
+         race = derived_race,
+         action_taken,
+         loan_type,
+         loan_purpose,
+         loan_amount,
+         occupancy_type,
+         applicant_age
+         ) |> 
+  mutate(action_taken = case_when(
+    action_taken == 1 ~ "Loan originated",
+    action_taken == 2 ~ "Application approved but not accepted",
+    action_taken == 3 ~ "Application denied",
+    action_taken == 4 ~ "Application withdrawn by applicant",
+    action_taken == 5 ~ "File closed for incompleteness",
+    action_taken == 6 ~ "Purchased loan",
+    action_taken == 7 ~ "Preapproval request denied",
+    action_taken == 8 ~ "Preapproval request approved but not accepted"),
+    loan_type = case_when(
+      loan_type == 1 ~ "Conventional (not insured or guaranteed by FHA, VA, RHS, or FSA)",
+      loan_type == 2 ~ "Federal Housing Administration insured (FHA)",
+      loan_type == 3 ~ "Veterans Affairs guaranteed (VA)",
+      loan_type == 4 ~ "USDA Rural Housing Service or Farm Service Agency guaranteed (RHS or FSA)"),
+    loan_purpose = case_when(
+      loan_purpose == 1 ~ "Home purchase",
+      loan_purpose == 2 ~ "Home improvement",
+      loan_purpose == 31 ~ "Refinancing",
+      loan_purpose == 32 ~ "Cash-out refinancing",
+      loan_purpose == 4 ~ "Other purpose",
+      loan_purpose == 5 ~ "Not applicable"),
+    occupancy_type = case_when(
+      occupancy_type == 1 ~ "Principal residence",
+      occupancy_type == 2 ~ "Second residence",
+      occupancy_type == 3 ~ "Investment property"))
+
+
+write_rds(cv_hmda, "data/cv_hmda.rds") 
+
+
+```
+
+```{r}
 
 cv_hmda <- read_rds("data/cv_hmda.rds")
 
+cv_mort <- cv_hmda |> 
+  filter(action_taken == "Loan originated", 
+         loan_purpose == "Home purchase") |> 
+  group_by(activity_year, occupancy_type) |> 
+  summarise(loans = n())
+
+ggplot(cv_mort,
+       aes(x = activity_year, 
+           y = loans,
+           fill = factor(occupancy_type, levels = c("Investment property", "Second residence", "Principal residence")))) +
+  geom_col() +
+  labs(fill = "Occupancy type") +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(legend.position = "right") +
+  scale_y_continuous(labels = number_format(big.mark = ","))
+
+
 ```
+
 
 ## Rental market
 
