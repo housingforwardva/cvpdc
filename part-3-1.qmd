@@ -909,6 +909,8 @@ publish_plot(cv_seniors_plot)
 Ambulatory difficulties (serious difficulty walking or climbing stairs) among adults presents challenges when it comes to accessible and affordable housing. These individuals often need single-story homes that have been retrofitted to make getting around easier. The number of adults with an ambulatory difficulty in the region has declined only slightly over the last decade from 18,264 in 2010 to 17,753 by 2021, a 511 person decrease. 
 
 ```{r}
+#| label: amb-diff-data
+#| eval: false
 
 # B18105 Ambulatory Difficulty
 
@@ -991,7 +993,10 @@ publish_plot(cvad_plot)
 
 
 ```
+
 ```{r}
+#| label: ind-diff-data
+#| eval: false
 
 # B18107 Independent Living Difficulty
 
@@ -2890,6 +2895,7 @@ write_rds(cv_hmda, "data/cv_hmda.rds")
 ```
 
 ```{r}
+#| label: fig-loans
 
 cv_hmda <- read_rds("data/cv_hmda.rds")
 
@@ -3011,7 +3017,8 @@ publish_plot(cvpdc_vacancy_plot)
 ```
 Throughout the region, there are 4,505 federally-assisted rental units located across 52 properties. 
 ```{r}
-#| label: fig-nhpd
+#| label: fig-nhpd-prop
+#| eval: false
 #| fig-cap: "Federally-assisted rental homes"
 
 nhpd_properties <- read_csv("data/nhpd_properties.csv") |> 
@@ -3094,6 +3101,7 @@ publish_plot(cv_nhpd_plot)
 
 
 ```{r}
+#| label: fig-hcv-bar
 
 cnty_code <- c("009", "011", "019", "031", "515", "680")
 
