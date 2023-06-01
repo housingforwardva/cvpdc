@@ -26,7 +26,6 @@ The following provides an analysis of major trends impacting housing within the 
 
 # HOUSING STOCK
 
-# Add Census BPS through March 2023 (or just through end of 2022)
 
 # Add ACS overall vacancy rates for owner- and renter-occupied (2010-2021)
 
@@ -42,22 +41,21 @@ The following provides an analysis of major trends impacting housing within the 
 # Add specific home market data pending transaction-level MLS data
 # - New build vs resale prices (and by bedrooms, sqft)
 
-# Mortgage delinquency from CPFB (low priority, but in our proposal)
+# Mortgage delinquency from CPFB (low priority, but in our proposal) - not available for region or localities
 
 # Add HMDA data (low priority, but in our proposal)
 
 # RENTAL
 
-# Add single-family rent estimates from ACS for MSA
+# Add single-family rent estimates from ACS for MSA - not sure what table this would unless you combine two and do calculation
 
-# Add details on public housing (map, units by community, age)
+# Add details on public housing (map, units by community, age) - Added HUD Public Housing Buildings data
 
 # Add more preservation details
 # - More on non-LIHTC properties that could expire (i.e. everything not public housing)
-# - Map of LIHTC props colored by exp year
+# - Map of LIHTC props colored by exp year 
 # - Map of Section 8 props colored by exp year
 
-# Move rental housing gap plot to next section
 
 # AFFORDABILITY
 
@@ -860,15 +858,15 @@ lburg_cbps_plot <- ggplot(lburg_cbps,
            fill = type, 
            data_id = units,
            tooltip = label_comma()(units))) +
-  geom_col(position = "dodge") + 
+  geom_col(position = "stack") + 
   geom_col_interactive() +
-  facet_grid(~type) +
+  # facet_grid(~type) +
   theme_hfv() +
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-  scale_x_continuous(breaks = seq(from = 2000, to = 2022, by = 2.0)) +
+  scale_x_continuous(breaks = seq(from = 2000, to = 2023, by = 2.0)) +
   labs(title = "Residential building permits by unit type in Lynchburg",
-       subtitle = "From 2000 through 2022",
+       subtitle = "From 2000 through April 2023",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey.")
 
 if (knitr::is_html_output()) {
@@ -1450,130 +1448,51 @@ lihtc_plot
 
 }
 
+
+```
+
+```{r}
+
+# Plot expiration of non-public housing subsidies
+
+subsidy_exp <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(city == "LYNCHBURG",
+         subsidy_status != "Inactive",
+         subsidy_name != "LIHTC")
   
 
 ```
 
 ```{r}
-#| label: gap-data
-#| eval: false
 
-tb_18c <- read_csv("data/Table18C_2012to2019.csv")
+# Map LIHTC properties by exp year
 
-colnames(tb_18c)[16] <- "Cost"
+lihtc_map <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(city == "LYNCHBURG",
+         subsidy_status != "Inactive",
+         subsidy_name == "LIHTC")
 
-renter <- tb_18c %>% 
-  clean_names() %>% 
-  filter(line_type == "Detail") %>% 
-  select(county, fips, year, estimate, tenure, cost, household_income) %>% 
-  group_by(county, fips, year, tenure, cost, household_income) %>% 
-  summarise(estimate = sum(estimate))
-
-
-tb_18_match <- renter %>% 
-  filter(tenure == "Renter occupied") %>% 
-  mutate(cost = case_when(
-    cost == "greater than RHUD30 and less than or equal to RHUD50" ~ "31 to 50 percent AMI",
-    cost == "greater than RHUD50 and less than or equal to RHUD80" ~ "51 to 80 percent AMI",
-    cost == "greater than RHUD80" ~ "80 percent AMI or greater",
-    cost == "less than or equal to RHUD30" ~ "30 percent AMI or below"
-  )) %>% 
-  mutate(household_income = case_when(
-    household_income == "greater than 100% of HAMFI" ~ "80 percent AMI or greater",
-    household_income == "greater than 80% of HAMFI but less than or equal to 100% of HAMFI" ~ "80 percent AMI or greater",
-    household_income == "greater than 50% of HAMFI but less than or equal to 80% of HAMFI" ~ "51 to 80 percent AMI",
-    household_income == "greater than 30% of HAMFI but less than or equal to 50% of HAMFI" ~ "31 to 50 percent AMI",
-    household_income == "less than or equal to 30% of HAMFI" ~ "30 percent AMI or below"
-  )) |>
-  group_by(county, fips, year, cost, household_income) %>% 
-  summarise(estimate = sum(estimate))
-
-
-tb_18_match <- tb_18_match %>% 
-  mutate(match = case_when(
-    cost == household_income ~ "Affordable",
-    cost == "30 percent AMI or below" & household_income == "31 to 50 percent AMI" ~ "Very affordable",
-    cost == "30 percent AMI or below" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
-    cost == "30 percent AMI or below" & household_income == "80 percent AMI or greater" ~ "Very affordable",
-        cost == "31 to 50 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Affordable",
-    cost == "31 to 50 percent AMI" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
-    cost == "31 to 50 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
-        cost == "31 to 50 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
-    cost == "51 to 80 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
-        cost == "51 to 80 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
-    cost == "51 to 80 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
-    cost == "80 percent AMI or greater" & household_income == "30 percent AMI or below" ~ "Unaffordable",
-    cost == "80 percent AMI or greater" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
-    cost == "80 percent AMI or greater" & household_income == "51 to 80 percent AMI" ~ "Unaffordable"
-  )) %>% 
-  mutate(gapcode = case_when(
-    match == "Unaffordable" ~ "Gap",
-    TRUE ~ "Matches or less than income"
-  ))
-
-write_rds(tb_18_match, "data/tb_18_match.rds")
 
 ```
 
 ```{r}
-#| label: fig-gap
-#| fig-cap: "Rental housing gap by AMI in Lynchburg"
 
-tb_18_match <- read_rds("data/tb_18_match.rds") %>% 
-  filter(fips == lburg)
+# Map Section 8 properties by exp year
 
-
-gap <- tb_18_match %>% 
-  group_by(year, household_income, gapcode) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  mutate(estimate = case_when(
-    gapcode == "Gap" ~ estimate * -1,
-    gapcode == "Matches or less than income" ~ estimate
-  )) %>% 
-  filter(household_income != "80 percent AMI or greater") %>% 
-  mutate(gapcode = case_when(
-    gapcode == "Gap" ~ "Unaffordable",
-    TRUE ~ "Affordable"
-  )) %>% 
-  mutate(year = as.character(year))
-
-gap_plot <- ggplot(gap,
-       aes(x = year, 
-           y = estimate,
-           fill = gapcode,
-           data_id = estimate,
-           tooltip = label_number(big.mark = ",")(estimate))) +
-  geom_col() +
-  geom_col_interactive() +
-  facet_grid(~household_income) +
-  scale_y_continuous(labels = label_comma()) +
-  theme_hfv() +
-  scale_fill_hfv() +
-  labs(title = "Rental housing gap by AMI in Lynchburg",
-       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
-  theme(
-    legend.position = "bottom",
-    axis.text.x = element_text(angle = 90, vjust = 0.5),
-    axis.title = element_blank(),
-    panel.background = element_blank(),
-    panel.grid.major.y = element_line(color = "grey95",
-                                      size = 0.05),
-    axis.ticks = element_blank()
-  )
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = gap_plot,
-         height_svg = 4)
-  
-} else {
-  
-  gap_plot
-  
-}
+s8_map <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(city == "LYNCHBURG",
+         subsidy_status != "Inactive",
+         subsidy_name == "Section 8")
 
 
 ```
+
+
+
+
 
 ```{r}
 #| label: hcv-data
@@ -1604,6 +1523,19 @@ mapview(hcv, zcol = "hcv_pct_renter_occ_units")
 #   addTiles() %>% 
 #   addPolygons(fillColor = ~palette(hcv_pct_renter_occ_units),
 #               fillOpacity = 1)
+
+
+```
+
+```{r}
+#| label: public-housing
+
+library(mapview)
+
+ph <- st_read("data/Public_Housing_Buildings.geojson")
+
+
+mapview(ph) 
 
 
 ```
@@ -1768,5 +1700,124 @@ if (knitr::is_html_output()) {
 
 ```
 
+```{r}
+#| label: gap-data
+#| eval: false
 
+tb_18c <- read_csv("data/Table18C_2012to2019.csv")
+
+colnames(tb_18c)[16] <- "Cost"
+
+renter <- tb_18c %>% 
+  clean_names() %>% 
+  filter(line_type == "Detail") %>% 
+  select(county, fips, year, estimate, tenure, cost, household_income) %>% 
+  group_by(county, fips, year, tenure, cost, household_income) %>% 
+  summarise(estimate = sum(estimate))
+
+
+tb_18_match <- renter %>% 
+  filter(tenure == "Renter occupied") %>% 
+  mutate(cost = case_when(
+    cost == "greater than RHUD30 and less than or equal to RHUD50" ~ "31 to 50 percent AMI",
+    cost == "greater than RHUD50 and less than or equal to RHUD80" ~ "51 to 80 percent AMI",
+    cost == "greater than RHUD80" ~ "80 percent AMI or greater",
+    cost == "less than or equal to RHUD30" ~ "30 percent AMI or below"
+  )) %>% 
+  mutate(household_income = case_when(
+    household_income == "greater than 100% of HAMFI" ~ "80 percent AMI or greater",
+    household_income == "greater than 80% of HAMFI but less than or equal to 100% of HAMFI" ~ "80 percent AMI or greater",
+    household_income == "greater than 50% of HAMFI but less than or equal to 80% of HAMFI" ~ "51 to 80 percent AMI",
+    household_income == "greater than 30% of HAMFI but less than or equal to 50% of HAMFI" ~ "31 to 50 percent AMI",
+    household_income == "less than or equal to 30% of HAMFI" ~ "30 percent AMI or below"
+  )) |>
+  group_by(county, fips, year, cost, household_income) %>% 
+  summarise(estimate = sum(estimate))
+
+
+tb_18_match <- tb_18_match %>% 
+  mutate(match = case_when(
+    cost == household_income ~ "Affordable",
+    cost == "30 percent AMI or below" & household_income == "31 to 50 percent AMI" ~ "Very affordable",
+    cost == "30 percent AMI or below" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
+    cost == "30 percent AMI or below" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+        cost == "31 to 50 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Affordable",
+    cost == "31 to 50 percent AMI" & household_income == "51 to 80 percent AMI" ~ "Very affordable",
+    cost == "31 to 50 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+        cost == "31 to 50 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+    cost == "51 to 80 percent AMI" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+        cost == "51 to 80 percent AMI" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
+    cost == "51 to 80 percent AMI" & household_income == "80 percent AMI or greater" ~ "Very affordable",
+    cost == "80 percent AMI or greater" & household_income == "30 percent AMI or below" ~ "Unaffordable",
+    cost == "80 percent AMI or greater" & household_income == "31 to 50 percent AMI" ~ "Unaffordable",
+    cost == "80 percent AMI or greater" & household_income == "51 to 80 percent AMI" ~ "Unaffordable"
+  )) %>% 
+  mutate(gapcode = case_when(
+    match == "Unaffordable" ~ "Gap",
+    TRUE ~ "Matches or less than income"
+  ))
+
+write_rds(tb_18_match, "data/tb_18_match.rds")
+
+```
+
+```{r}
+#| label: fig-gap
+#| fig-cap: "Rental housing gap by AMI in Lynchburg"
+
+tb_18_match <- read_rds("data/tb_18_match.rds") %>% 
+  filter(fips == lburg)
+
+
+gap <- tb_18_match %>% 
+  group_by(year, household_income, gapcode) %>% 
+  summarise(estimate = sum(estimate)) %>% 
+  mutate(estimate = case_when(
+    gapcode == "Gap" ~ estimate * -1,
+    gapcode == "Matches or less than income" ~ estimate
+  )) %>% 
+  filter(household_income != "80 percent AMI or greater") %>% 
+  mutate(gapcode = case_when(
+    gapcode == "Gap" ~ "Unaffordable",
+    TRUE ~ "Affordable"
+  )) %>% 
+  mutate(year = as.character(year))
+
+gap_plot <- ggplot(gap,
+       aes(x = year, 
+           y = estimate,
+           fill = gapcode,
+           data_id = estimate,
+           tooltip = label_number(big.mark = ",")(estimate))) +
+  geom_col() +
+  geom_col_interactive() +
+  facet_grid(~household_income) +
+  scale_y_continuous(labels = label_comma()) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  labs(title = "Rental housing gap by AMI in Lynchburg",
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = 90, vjust = 0.5),
+    axis.title = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "grey95",
+                                      size = 0.05),
+    axis.ticks = element_blank()
+  )
+
+if (knitr::is_html_output()) {
+  
+  girafe(ggobj = gap_plot,
+         height_svg = 4)
+  
+} else {
+  
+  gap_plot
+  
+}
+
+
+```
 
