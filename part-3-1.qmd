@@ -1910,7 +1910,7 @@ write_rds(percentiles, "data/oews_pct.rds")
 
 ```{r}
 #| label: fig-wage-pct-plot
-#| fig.cap: "Percent change in annual wage in Richmond, VA MSA"
+#| fig.cap: "Percent change in annual wage in Lynchburg, VA MSA"
 
 oews_pct <- read_rds("data/oews_pct.rds")
 
