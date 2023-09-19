@@ -1,0 +1,31 @@
+---
+title: "Central Virginia Regional Housing Study"
+subtitle: "Draft Report Summary"
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    logo: img/hfv_logo.png
+    css: styles.css
+    footer: <https://housingforwardva.org>
+resources:
+  - cvpdc_presentation.pdf
+---
+
+## What we’ll cover today
+
+SOME TEXT
+
+
+
+
+## About
+
+SOME TEXT
+
+## Today
+
+
+SOME TEXT

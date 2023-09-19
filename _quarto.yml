@@ -53,7 +53,13 @@ book:
     - part: "PART 5: Policy recommendations"
       chapters: 
         - part-5-1.qmd # Regional solutions
-        - part-5-2.qmd # Local solutions
+        - part-5-2.qmd # Local partnerships
+        - part-5-3.qmd # Amherst
+        - part-5-4.qmd # Appomattox
+        - part-5-5.qmd # Bedford
+        - part-5-6.qmd # Campbell
+        - part-5-7.qmd # Lynchburg
+        - part-5-8.qmd # Towns
    # - part: "Appendix"
 
 knitr:

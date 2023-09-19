@@ -1,2 +1,461 @@
 # Policy Evaluation
 
+This report assesses housing-related policies and programs currently operating within the Central Virginia Planning District. These include efforts to expand housing supply through land use reform, improve the quality and condition of existing homes, deliver federally-funded housing assistance, prevent homelessness, and other activities.
+
+Overall, communities across the region have become increasingly aware of their growing spectrum of housing needs---especially since the onset of COVID-19 and its economic ripple effects. Today, local governments, agencies, and nonprofits alike all play important roles in the design and implementation of housing policies.
+
+We assigned a preliminary rating to each effort based on its current ability to address its associated challenges. We recommend policymakers to either [**Continue**]{style="color: #259591;font-size: 120%"}, [**Reevaluate**]{style="color: #E0592A;font-size: 120%"}, or [**Stop**]{style="color: #B1005F;font-size: 120%"} each action based on this evaluation. To avoid significant repetition, concurrent (but perhaps differing) approaches by multiple localities to address a single issue are consolidated and evaluated as a group.
+
+Most of the policies and programs reviewed demonstrated at least some capacity to improve housing opportunities and did not show any significant flaws. We therefore recommended to continue (and expand) these.
+
+Examples of well-designed but underpowered initiatives include a pilot program to remediate blight and ongoing eviction diversion activities. Additional research and policy design will be required to recommend specific solutions for increasing their impact.
+
+On the other hand, we also identified a range of inefficiencies, competing priorities, and missed opportunities for some efforts that led us to suggest reevaluating their designs. Examples of initiatives with room for improvement include building code enforcement and the regulation of short-term rentals across the region. These may become the focus of targeted policy recommendations later in the complete report.
+
+Importantly, none of the efforts we assessed were found to be counterproductive enough to recommend termination. This demonstrates an effective foundation of housing policy and program execution throughout the region that will set up future solutions for success.
+
+## How policies are evaluated
+
+**Methods:** Major themes identified through focus groups and meetings with local government were the guide posts in beginning the second stage of policy review. Programs and policies related to these themes, as well as major housing issues, were collected and evaluated by investigating comprehensive plans, annual budget reports, locality announcements, and other official reports from the area.
+
+**Categories:** We identified six distinct policy categories connected to housing through this evaluation:
+
+-   Land use and zoning
+-   Housing and community revitalization
+-   Housing assistance programs
+-   Homelessness prevention
+-   Infrastructure investments and planning
+-   Miscellaneous
+
+**Rating:** After outlining successes, challenges, and other relevant factors for each topic, policies and programs are assigned one of these ratings:
+
+-   [**Continue**]{style="color: #259591;font-size: 120%"}: This effort should continue as designed without significant changes, and should scale up to further address needs when opportunities arise.
+-   [**Reevaluate**]{style="color: #E0592A;font-size: 120%"}: This effort may not be working as intended, and should be reexamined for potential changes.
+-   [**Stop**]{style="color: #B1005F;font-size: 120%"}: This effort has clear drawbacks and should be ended to no longer be counterproductive to the region's housing goals.
+
+## Land use and zoning
+
+This section focused on the relationship between local land use planning/administration and residential development.
+
+### Single-family infill incentives in Lynchburg
+
+**Issue:** Demand for new homeownership opportunities in the city continues to increase, especially at more affordable prices. However, land and construction costs have also risen, which makes it difficult to build new single-family homes at relatively affordable prices. There is also less easily-developed land within the city limits compared to surrounding counties.
+
+**Status:** The City of Lynchburg has created infrastructure incentives and revised its zoning code to help promote the development of new infill homes. These efforts include covering most water/sewer extensions and cost-sharing curb, gutter, and sidewalk installations. The city has also revised its subdivision regulations to reduce setbacks, lot sizes, and allow cluster-style development.
+
+**Successes:**
+
+-   From 2017 to 2022, over 600 new single-family homes and over 200 new townhomes were built in the city.
+-   As of October 2022, the city had more than 250 new single-family and townhomes under review.
+-   Developers are finding ways to build small homes (under 1,000 sqft) on infill lots with topography issues that otherwise prevent larger homes.
+
+**Challenges:**
+
+-   Limited coverage of water and sewer service continue to add extra costs and delays. Some lots that meet all zoning requirements are still unbuildable due to steep slopes and drainage problems. Transportation and accessibility infrastructure (roads, sidewalks, etc.) remain a limiting factor.
+
+**Other factors:**
+
+-   The city will soon begin its comprehensive plan update. This process is an opportunity to proactively align future infrastructure and residential development.
+-   The success of single-family infill development is still dependent on certain exogenous factors, especially material/labor costs and mortgage interest rates.
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} The city should maintain its current regulatory approach to promote new attainable homeownership opportunities, and use the upcoming comprehensive plan update to leverage infrastructure development opportunities to support its infill goals
+
+### Residential zoning requirements in counties
+
+**Issue:** Every county in the region is experiencing demand for new housing, including denser for-sale options and multifamily apartments. Counties will generally require most larger-scale development proposals to go through an entitlement process, such as a rezoning or subdivision plan, outlined in the zoning ordinance. These regulations influence the type, amount, and costs of new residential developments.
+
+**Status:** Every county in the region has an active zoning ordinance. Overall, each county across the region has seen, or has under review, notable amounts of new homes. These include both single-family, townhome, and multifamily units.
+
+**Successes:**
+
+-   Developers have been able to build townhomes and other smaller homes to meet buyer demand. All homebuilding activity is not concentrated among high-end homes.
+-   For the most part, counties are able to direct denser development to designated growth areas through proactive land use planning and service boundaries.
+-   Limited requirements for curb, gutter, and other similar development components (compared to the City of Lynchburg) reduce upfront costs.
+
+**Challenges:**
+
+-   New demand continues to outpace added supply. Some areas are concerned about an increase in new manufactured home placements on agricultural lots, which is allowed by-right. Those homes remain an attainable source of affordable homeownership.
+-   Development that is not by-right will often introduce citizen opposition during required public meetings. This NIMBYism can be successful in minimizing or outright ending some proposals. Other factors: Homebuilders and other practitioners explained how elements outside of local control (interest rates, supply issues, etc.) can be just as burdensome as land use regulations.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} Counties have the opportunity to reexamine their zoning codes to not just build on current successes, but also consider significant changes to better meet post-COVID housing demand.
+
+### Accessory dwelling unit (ADU) regulations
+
+**Issue:** ADUs are smaller homes found on the same property as a larger, primary dwelling. These units can be fully standalone, above a detached garage, or within a home's existing envelope (e.g., a basement). ADUs can serve relatives, caregivers, and regular tenants, and can provide a lower maintenance, lower cost housing option.
+
+**Status:** Jurisdictions have the authority to regulate the location, size, type, and other characteristics of ADUs in their zoning ordinance. These policies vary across the region. For example, the towns of Appomattox and Altavista have broad flexibility for property owners to build ADUs, and Lynchburg allows them by-right for all residential zones (with certain requirements).
+
+On the other hand, ADUs are a special use in Campbell County, and are required to be attached to the main dwelling (not standalone), and occupied only by persons related to the homeowner.
+
+**Successes:**
+
+-   Localities are generally tolerant of ADUs in their zoning code and do not impose stringent restrictions in most circumstances.
+-   Successful permitting of ADUs of different types and in different communities demonstrates viable development opportunities.
+
+**Challenges:**
+
+-   Localities that do have permissible regulations have still not seen significant amounts of ADU permit applications.
+-   Many homeowners are likely unaware of their potential to create ADUs, and would not know where to start.
+-   Complete and updated counts of ADUs by locality are not regularly reported by planning departments.
+
+**Other factors:**
+
+-   HB 2100 was introduced in the 2023 General Assembly session and would have required localities to permit ADUs in all single-family zones, with certain requirements. The bill failed in committee but ADUs will likely be addressed by lawmakers in the near future.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} If localities want to promote additional ADU supply, they can explore aligning ordinances with state and national best practices, and creating resources to proactively help homeowners with ADU development.
+
+## Housing and community revitalization
+
+The following policies and programs are connected through their focus on addressing blight and vacancy in the region. They represent a mixture of inspection and enforcement measures alongside redevelopment initiatives.
+
+### Building code enforcement and rental inspection programs
+
+**Issue:** Inspections are needed in order to identify homes in need of repair, preserve the existing affordable housing stock, and protect existing occupants. This is particularly true in areas with an aging inventory and naturally occurring affordable housing (NOAH) that is limited and typically of a lower quality.
+
+**Status:** The City of Lynchburg has engaged in a variety of initiatives designed to improve the quality of the housing stock while still ensuring attainability and affordability, notably including the Rental Inspection Program, which includes a process for tenants to report quality complaints landlords are not addressing. This has been in effect since 1993, when the city first adopted minimum building maintenance and residential rental dwelling standards for properties within the city limits.
+
+The Town of Bedford uses the Redevelopment and Housing Authority as the resource to abate problems related to code enforcement, blight, or development issues, but other counties in the region either do not have explicit inspection programs or recommend future strategies towards enforcing codes as a part of their comprehensive plans.
+
+Throughout smaller towns in the region, officials noted long-standing issues with code enforcement on properties owned by absentee or negligent owners. However, modest budgets prevent these jurisdictions from hiring staff to enforce the law.
+
+**Successes:**
+
+-   According to HOME's 2020 Analysis of Impediments to Fair Housing report, the Lynchburg rental inspection program completed 1,500 rental inspections as of 2018 with hundreds of units brought up to code.
+-   The Town of Bedford's Redevelopment and Housing Authority is working to rebuild and improve properties in disrepair by leveraging CDBG grants.
+
+**Challenges:** - There remain renters that are falling through the cracks of the Lynchburg program, living in unsafe conditions and unable to find or afford alternatives. - Current needs exceed staff capacity in many of the smaller towns in the counties. - Rural blight is less visible and is especially shaped by circumstances including population scarcity, limited physical and economic access to resources, and local government capacity to track and enforce. Many condemned homes in the area are inhabited, and code enforcement could relocate these residents into homelessness.
+
+**Other factors:**
+
+-   Most of the region's housing is surpassing 20 years in age. A construction boom in the late 20th century (from 1960 to 1999) contributed to much of the region's homeownership and rental housing stock.
+-   Complicated relationships between town and county code administration can add additional challenges for residents and developers interested in rehabilitating properties.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} While most counties include a recommendation or strategy aimed towards addressing aging inventory through code inspection, very little exists in the way of concrete code enforcement plans beyond the Lynchburg rental program. Furthermore, while the Lynchburg rental inspection program has been largely successful, there are opportunities for improvement and outreach with legal aid or other programs working to support low-income renters in the city. Likewise, smaller jurisdictions can explore creative options for increasing their administrative capacity to address property conditions.
+
+### Tax foreclosures and blight remediation
+
+**Issue:** Local governments can enforce the payment of delinquent taxes or, where the initial enforcement process fails, force the transfer of property ownership through tax foreclosure as a way to deal with persistent blight. The ideal tax foreclosure system efficiently and equitably collects tax revenue needed to pay for government services while promoting community stabilization and property maintenance.
+
+**Status:** Lynchburg and Campbell County both reported that their administrations are actively addressing blighted and delinquent properties. In Lynchburg, staff began a pilot vacant/derelict program to improve or demolish problem properties. Of the more than 400 vacant properties tracked by the city, just over 300 have been designated as blight. In Campbell County, conducting tax foreclosures on delinquent properties was described as one of the primary duties currently undertaken by the county attorney.
+
+**Successes:**
+
+-   As of October 2022, the 17 properties in Lynchburg's pilot derelict program were already slated to be rehabilitated and resold (10), demolished by the city (4), or demolished by the owner (3).
+
+**Challenges:**
+
+-   Many foreclosure proceedings are drawn-out and confusing. Further complications can come from the problem of reaching absentee landowners who sometimes live out of state. Though the law provides mechanisms to hold these owners accountable, the procedures are often tedious and span years.
+-   Collecting accurate counts and relevant data about delinquent and blighted properties can be difficult and time-consuming. As a result, the full scale and scope of these problems is not always easy to ascertain.
+
+**Other factors:**
+
+-   Virginia state code is very prescriptive on local governments' abilities to foreclose on privately-owned properties, even when they are significantly tax delinquent or in very poor condition.
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} Lynchburg and Campbell County are proactively tackling their housing quality and vacancy problems, although the challenge is much larger than what current efforts are able to address. If these---and other---localities want to expand their capacity to reclaim properties, possible places to begin include better data collection schemes and collaborations with nonprofit and private developers.
+
+### Main street redevelopment programs
+
+**Issue:** Main street redevelopment of small historic towns has been identified as an important investment to stimulate economic growth, promote cultural preservation, improve quality of life and attract new residents, and promote sustainable development practices to preserve the predominantly rural nature of the region. These efforts can help create and retain more diverse housing opportunities in the heart of small towns.
+
+**Status:** Lynchburg and Altavista have successfully utilized funding through the Virginia Main Street Program (VMS) to bring new energy and development into historic downtown areas. The Towns of Bedford and Brookneal are exploring the main street approach for downtown commercial or neighborhood revitalization.
+
+**Successes:**
+
+-   The Town of Altavista received a 2023 Financial Feasibility Grant (FFG) award to determine the highest and best use of the community's historic Vista Theatre.
+-   Bedford and Brookneal are able to access organizational development services and grant opportunities through the VMS program to prepare them for future grant investments. Bedford is now zoned for upper-level living thanks to help from this program.
+
+**Challenges:**
+
+-   Some main street programs, including VMS, are more focused on economic development and do not specifically address housing.
+-   The amount of housing specifically generated through main street development can be limited by few actual development opportunities and low developer capacity.
+
+**Other factors:**
+
+-   The Virginia Main Street Program is a preservation-based economic and community development program. The program is administered through DHCD and offers a range of services and assistance to communities interested in revitalizing their historic commercial districts; it was specifically designed to address the need for revitalization and on-going management of smaller to mid-sized downtowns
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} The Virginia Main Street Program has been a successful resource for towns across the state and within the region to build capacity. New policies and programs connected to these initiatives should consider how to incorporate housing into historic structures or nearby these centers to maximize the benefits of cluster-style developments.
+
+### Acquire, Renovate, Sell (ARS) program
+
+**Issue:** The Virginia Department of Housing and Community Development (DHCD) administers the "Acquire, Renovate and Sell" program to eligible providers including local governments, nonprofits, housing authorities, and planning district commissions. This program aims to create affordable homeownership opportunities for low-to moderate income, first-time homebuyers while allowing providers discretion over acquisition type, region and resale. Providers acquire existing undervalued homes using their own lines of credit, renovate using ARS funding and other leveraged sources if necessary, and resell the property at fair market value to a first-time homebuyer.
+
+**Status:** Currently, only the town of Altavista has utilized ARS funding in the region. In 2021, Altavista was awarded grant funding through DHCD with the goal of acquiring properties in need of repair or build homes on vacant lots and turn them into habitable, affordable homes.
+
+**Successes:**
+
+-   Altavista has used the ARS program to develop homes themselves, leveraging philanthropic funds to buy, renovate, and sell homes. Net proceeds from the sales have remained in the town as program income to reinvest in local, affordable housing efforts, like main street revitalization efforts, or to be used to build greater staffing capacity.
+
+**Challenges:**
+
+-   The program is designed for the resale of homes and does not contain a rental component.
+-   The program is designed to specifically target homes assessed below market value and cannot be used on other types of homes. This may include but is not limited to homes that are foreclosed, abandoned, vacant, distressed, investor-owned and economically-challenged, estate/divorce/tax sales, or have suffered years of deferred maintenance.
+
+**Other factors:**
+
+-   ARS is a partnership between the provider, DHCD, and the Virginia Housing Development Authority (VHDA) as financial backer. VHDA provides down payment assistance should the homebuyer obtain their first mortgage through VHDA (FHA, FNMA, USDA, VA).
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} This has been a successful program in Altavista for recapturing old and vacant properties while generating modest proceeds to pay for local staff and other housing initiatives. This program could be an ideal fit in other parts of the region struggling to address blight and vacancies of single-family homes.
+
+## Housing assistance programs
+
+These programs are administered by local governmental agencies and nonprofits to provide financial subsidy and rental stabilization assistance in the region.
+
+### Housing Choice Vouchers
+
+**Issue:** Tenant-based Housing Choice Vouchers (HCVs) allow very low-income families to choose and lease or purchase safe, decent, and affordable privately-owned rental housing. HCVs are federally funded by the U.S. Department of Housing and Urban Development. In Virginia, HCVs are locally administered by a combination of public housing authorities and other government agencies.
+
+**Status:** Housing Choice Vouchers are currently utilized by residents of Lynchburg, the Town of Altavista, Amherst County and Appomattox County. The Nelson County Community Development Foundation in Lovingston administers HCVs for Amherst County and Appomattox County.
+
+**Successes:**
+
+-   HCVs have been successful and essential tools in providing suitable housing for low-income residents.
+-   While most of Lynchburg's assisted housing is located in lower opportunity areas, these areas have better access to public transit that serve important roles for assisted housing tenants.
+-   LRHA is starting their first phase of a redevelopment project where they hope to increase the total number of HCV units at the Dearington Apartment Complex from 100 to over 242.
+
+**Challenges:**
+
+-   In Lynchburg, landlord resistance to HCVs and transportation are continuing barriers for residents looking for affordable housing options in higher opportunity areas across the city.
+-   Residents of Appomattox and Amherst counties are in the same voucher pool as residents from Buckingham County, Cumberland County, Nelson County, and Prince Edward County, likely resulting in longer waiting times. Transportation also poses accessibility challenges in the counties, especially for those who live more than thirty minutes away from the voucher office.
+
+**Other factors:**
+
+-   Not all families who receive vouchers are able to find a house or apartment where they can use them. Shortages of moderately priced rental housing, tight market conditions, racial and ethnic discrimination, landlords who are unwilling to accept voucher payments, and ineffective local administration all contribute to this problem across the country.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} LRHA could expand Section 8 HCV Program to higher opportunity areas and continue ongoing landlord recruitment and education programs. Regionally, new collaborations around voucher administration could be explored to address challenges in the counties.
+
+## Public housing redevelopment
+
+**Issue:** Decades-long shifts in federal policy and funding priorities have led to the deterioration of many older public housing communities across the nation. Virginia and the Lynchburg region are no exception. Housing authorities must now look to other programs and resources to transform aging units and continue offering them as a much-needed source of deeply affordable rental housing. These options include Project-based Vouchers, and LIHTC, among others.
+
+**Status:** Most public housing in the region is located in Lynchburg (LRHA) and the Town of Bedford, administered by their respective housing authorities. LRHA owns and operates four public housing locations with a total of 328 units, and currently in Bedford there are seven different housing projects containing 424 individual housing units.
+
+**Successes:**
+
+-   In 2016, \$662,772 (63%) of CDBG funds were allocated to Lynchburg's downtown infrastructure project and rehabilitation of a public housing complex.
+-   LRHA operates the Affordable Housing Resource Center (AHRC) to serve people with a one stop shop for resources, housing navigation, education, and training opportunities as well as work in City selected neighborhoods on improving housing stock for rental or home-ownership.
+
+**Challenges:**
+
+-   The elderly and persons with disabilities show relatively high representation in voucher-based housing but an underrepresentation in public housing.
+-   Due to limited resources and hilly topography throughout Lynchburg, handicapped accessible units are limited within LRHA's public housing inventory, although some progress is being made to address this.
+-   Lengthy wait lists and geographic concentration of public housing are persistent challenges facing public housing.
+
+**Rating:**
+
+[**Continue**]{style="color: #259591;font-size: 150%"} / [**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} Public housing authorities should continue to review and assess the public housing units to meet the Section 504 requirements. PHAs can also continue to monitor and explore HUD programs that can be used to reposition public housing communities for revitalization/redevelopment.
+
+### Homebuyer readiness programs
+
+**Issue:** Homebuyer readiness programs can help participants lower their housing costs, save more income, improve their credit, avoid delinquency, address defaults, and avoid foreclosure. Increased funding for homeowner education programs has a direct, positive impact on the number of people able to become successful long-term owners.
+
+**Status:** The Lynchburg Community Action Group (Lyn-CAG) is currently the region's only certified HUD center offering classes to first time homeowners. Both Lyn-CAG and the Greater Lynchburg Habitat for Humanity (GLHFH) offer down payment assistance to first-time homebuyers through HOME funds.
+
+**Successes:**
+
+Since 2019, GLFHF and Lyn-CAG have assisted at least four income eligible homebuyers a year to receive down payment assistance towards a home purchase.
+
+**Challenges:**
+
+-   While some non profit developers like Habitat for Humanity also offer home buying counseling and down payment assistance, in general there is a lack of this type of program in the region outside of Lynchburg.
+-   The shortage of affordable homes available to purchase leaves many homebuyers ready with little to no options.
+
+**Other factors:**
+
+-   In addition to serving first time homebuyers, Lyn-CAG has also received and allocated HOME funds towards substantial rehabilitations for existing homeowners.
+-   Residents in the region are also able take advantage of DHCD's statewide financial assistance programs, including the Virginia Individual Development Accounts (VIDA) program, which helps qualified individuals save for a down payment on a home, and the Down Payment Assistance (DPA) program, although it's unclear how many use this in practice.
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} As new homes are built in the region, homebuyer readiness programs and financial assistance are vital tools that help first time homebuyers and low-income buyers compete in a crowded market. Assistance should continue and further funding considered to make a larger impact in the region.
+
+### Low-cost transportation services
+
+**Issue:** Affordable housing can become unaffordable if transportation costs are not taken into account. Low-cost transportation is essential for residents to access essential services, stimulate economic development, facilitate social connections, and access education and training opportunities, especially in more geographically dispersed areas.
+
+**Status:** Lynchburg is working to place housing near mobility hubs, park and ride, and other transit stops, and the GLTC operates 14 bus routes within the City of Lynchburg and a portion of Madison Heights every day of the week. The Central Virginia Alliance for Community Living offers the Dial-A-Ride service to provide individuals aged 60 and over with transportation across the counties.
+
+**Successes:**
+
+-   The Bedford County Otter Bus service provides free handicap accessible transportation for residents living in the Town of Bedford. Buses run from apartment complexes directly to grocery stores, government offices, and health resources. Bedford County also provides the Bedford Ride service, which operates similarly to Dial-A-Ride.
+
+**Challenges:**
+
+-   Dial-A-Ride is not free, has limited hours, and is first-come-first served, making it difficult for regular transportation needs.
+-   Transportation access will continue to be a challenge if new housing remains spread out across the counties.
+
+**Other factors:**
+
+Transportation accessibility and flexibility directly impact the costs and options of childcare for low-income families.
+
+**Rating:**
+
+[**Continue**]{style="color: #259591;font-size: 150%"} / [**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} The region should continue to explore low-cost or subsidized transportation options where feasible and consider how new housing and services can be clustered in the region.
+
+## Homelessness prevention
+
+Housing policies are incomplete without a connection to the problem of homelessness. The following programs address efforts to prevent homelessness as well as respond to the emergency needs of unhoused people in the region.
+
+### Eviction diversion
+
+**Issue:** Eviction diversion programs are an effective tool in preventing homelessness by providing a safety net for tenants who may otherwise fall through the cracks of the housing system. By keeping people in their homes, these programs not only prevent homelessness but also promote housing stability, financial security, and overall well-being.
+
+**Status:** A number of nonprofit organizations and congregations in the region offer rental assistance and legal aid to assist in eviction diversion efforts. The Central Virginia Continuum of Care (CVCoC) has Coordinated Homeless Intake and Access (CHIA) counselors that assist at-risk families across the region with landlord mediation and referrals to the CoC diversion program.
+
+**Successes:**
+
+-   In 2019, 94% of the 103 people that passed through the CVCoC's eviction diversion program remained housed and avoided the trauma of homelessness.
+-   Lynchburg Community Action Group (Lyn-CAG) also administered an emergency rental assistance program from July 1, 2020, through June 30, 2022, assisting 231 households comprised of 286 persons.
+
+**Challenges:**
+
+-   Evictions have continued to rise across the state while funding and resources have failed to keep pace.
+-   Rural regions with more dispersed populations often struggle to account for the often significant number of information evictions in their data.
+
+**Other factors:**
+
+-   DHCD's Virginia Eviction Reduction Pilot is continuing its third year of funding to nonprofits across the state engaged in the work of eviction diversion.
+
+**Rating:**
+
+[**Continue.**]{style="color: #259591;font-size: 150%"} Coordinated care and funding to prevent eviction in the region should continue to be prioritized as a way to avoid long-lasting impacts on families and to prevent the public costs of eviction (including emergency healthcare, shelter, etc.). Efforts to improve tracking of informal evictions is recommended.
+
+### Coordinated services
+
+**Issue:** Coordinated entry processes help communities prioritize assistance based on the type, vulnerability, and severity of service needs to ensure that people who need assistance the most can receive it in a timely manner. Having multiple organizations and contact points in this process ensures that people can reach assistance in a variety of ways.
+
+**Status:** The CVCoC has four major access points for those seeking assistance in the region. LRHA and Lyn-CAG are responsible for the Coordinated Homeless Intake and Access (CHIA) services while the YMCA of Central Virginia offers a 24/7 domestic violence hotline and Miriam's House is responsible for Homeless Outreach & Mobile Engagement (HOME) services.
+
+**Successes:**
+
+-   In 2022 alone, 462 persons, including 140 homeless children, were reconnected with the safety and security of a home through the work of Miriam's House, which has continued to increase capacity since 2012.
+-   In 2019, the CoC reported 97% of the 300 people who passed through rapid rehousing found permanent supportive housing. CVCoC providers follow a "Housing First" approach to minimize the time households experience homelessness by lowering barriers to project entry, decreasing involuntary discharge and not predicating services on housing readiness.
+
+**Challenges:**
+
+-   Emergency shelter capacity is under 200 beds for the entire region, with only 20 located outside of Lynchburg. Getting referred to and finding transportation to these beds can be a challenge for vulnerable populations living outside of the city and little to no options exist through the CoC elsewhere.
+
+**Rating:**
+
+[**Continue**]{style="color: #259591;font-size: 150%"} Low recidivism rates are evidence of the success of the housing-first model. The CVCoC should continue to tackle the issue of homelessness, potentially adding new shelters or transit opportunities in areas of the region that are farther away from existing resources.
+
+## Infrastructure investments and planning
+
+Infrastructure investments are related to the livability and accessibility of housing, making them crucial aspects of current and future planning. The following policies address critical utilities necessary to sustainable development in the region.
+
+### Water and sewer expansion
+
+**Issue:** Water and sewer infrastructure play a critical role in determining the amount and location of new housing development in a community. Without adequate infrastructure, housing development can be limited, and delays and disruptions accessing these services can make it difficult to secure financing for new construction.
+
+**Status:** The Lynchburg City Council is considering increasing water, storm water and sewer rates in the newest proposed budget to pay for infrastructure investment, increasing regulatory requirements, and rising costs. The Bedford Water Regional Authority is looking to expand a number of its current services, including a rapidly growing area near Smith Mountain Lake.
+
+**Successes:**
+
+-   In 2021, the Bedford Water Regional Authority added 241 new water connections and 134 new sewer connections for residents in the county .
+-   The Town of Amherst is working to upgrade their water treatment plant at no cost to the taxpayer through a combination of grants, loans, and city reserves, and should be complete in 2023.
+
+**Challenges:**
+
+-   Initial fees for water, wastewater, and other basic infrastructure can be a significant hard cost for affordable housing developers. These expenses are rolled into the project's financing, increasing the level of debt service needed, and adding to the eventual rent or sales price amounts.
+-   Distance and logistics, costs, and regulatory requirements are some of the primary barriers to water and sewer expansion in the rural areas of Appomattox, Amherst, and Bedford counties.
+-   Having residents share the cost of new infrastructure can add to the overall housing cost burden of the lowest-income populations.
+
+**Other factors:**
+
+-   In 2020, the typical customer in Virginia paid more than \$80 for both water and sewer, or roughly \$25 more than the average for 2010.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} The region should explore mechanisms to reduce up-front utility costs to pave the way for the creation and preservation of new dedicated affordable housing.
+
+### Broadband coverage
+
+**Issue:** The COVID-19 pandemic has demonstrated that high-speed internet is a vital tool in everyday life. Disparities in broadband access exacerbate existing inequity throughout Virginia, and access to broadband is a major component of where people wish to live.
+
+**Status:** Coverage is increasing in the region, and efforts are underway to expand access through the numerous statewide broadband funding resources that have become available since 2017, including DHCD's Virginia Telecommunication Initiative (VATI).
+
+**Successes:**
+
+-   In 2022, Bedford County received \$8,523,908.00 and Campbell County received \$6,442,563.00 from VATI to expand service.
+-   According to the Commonwealth Connection, half the counties and Lynchburg now serve broadband to the majority of their addresses: Amherst (78%), Appomattox (74%), Lynchburg (99%)
+
+**Challenges:**
+
+-   According to Commonwealth Connection, Bedford and Campbell continue to have low access rates, with a little over half of all addresses served.
+-   There is more money than service providers available to implement expansion plans in parts of the region.
+
+**Other factors:**
+
+-   Across the Commonwealth, more than one-in-three households earning less than \$20,000 do not have internet access, compared to fewer than one-in-twenty households earning \$75,000 or more.
+
+**Rating:**
+
+[**Continue**]{style="color: #259591;font-size: 150%"} Localities should continue to leverage current state broadband initiatives to expand access and affordability of high-speed internet for residents.
+
+## Miscellaneous
+
+Some programs and policies do not neatly fit into previous categories, but are worth mentioning as issues that could uniquely impact the region.
+
+### Short-term rental regulations (STRs)
+
+**Issue:** Property owners are listing their homes on AirBnB, VRBO, and other sites as short-term rentals. Stakeholders shared concerns about these STRs limiting housing supply in certain areas of the region, particularly around Smith Mountain Lake.
+
+**Status:** Localities have the authority to regulate STRs through the zoning codes. Across the CVPDC region, however, these restrictions are not consistent. For example, Bedford County saw more than 200 new STRs during the pandemic as the result of looser restrictions; however, Campbell County has many more requirements and approves only 10 per year on average.
+
+**Successes:**
+
+-   Some local governments have proactively addressed STRs for several years and are actively monitoring their status.
+-   Localities with STR regulations have a better sense of the total number, types, and locations of STRs in their community.
+
+**Challenges:**
+
+-   Regulatory inconsistencies across the region may create negative incentives for STR operators to concentrate properties in communities with fewer restrictions.
+-   The region-wide impact of STRs is difficult to assess due to lack of registration and tracking in some areas. (AirBnB and other listing services do not make their data publicly accessible.)
+
+**Other factors:**
+
+Several STR-related bills have been introduced in recent General Assembly sessions that may affect the enabling authorities localities have to regulate these properties.
+
+**Rating:**
+
+[**Reevaluate.**]{style="color: #E0592A;font-size: 150%"} There are opportunities to make STR regulations across the region more uniform and more responsive to increasing concerns about the potential negative impacts of STR on housing supply.
+
+### Housing collaborations
+
+**Issue:** There is a wide range of different practitioners and providers responsible for housing efforts in the region. These include local governments, housing agencies, nonprofits, and other community groups. Regular coordination between these entities can be a challenge, but promotes collaborative problem-solving and prioritization of challenges.
+
+**Status:** Two cross-sector coalitions are active in the region. The Lynchburg Housing Collaborative was created by council in 2012 and is supported by city and LRHA staff. The Bedford Housing Coalition is managed by the Bedford Area Resource Council.
+
+**Successes:**
+
+-   Both existing groups are active and have regular meetings.
+-   While existing groups are focused primarily on a single locality, representatives from regional organizations and providers participate in both.
+-   The Lynchburg Housing Collaborative has produced several studies and reports to help inform policymakers about housing needs. It also developed a housing vision and a series of specific recommendations to improve housing outcomes in the city.
+
+**Challenges:**
+
+-   Other localities in the region do not have comparable groups collaborating on housing issues.
+-   Limited staff/volunteer capacity for these coalitions limits their ability to thoroughly research challenges and develop solutions.
+
+**Rating:**
+
+[**Continue**]{style="color: #259591;font-size: 150%"} New collaborations can be pursued in other localities, as well as at the regional level.
+
+## Takeaways and next steps
+
+Current efforts in the CVPDC offer a solid base for future initiatives. Policy recommendations to be crafted in the next report will build off this research and analysis and focus on how more targeted solutions may help address the housing challenges in the region.

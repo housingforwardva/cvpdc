@@ -4,7 +4,6 @@
 
 # THINGS TO UPDATE ----------
 
-
 # ECONOMIC
 
 # Add LEHD data -- commute inflow/outflow by locality?
@@ -14,20 +13,12 @@
 
 # HOMEOWNERSHIP
 
-# Add specific home market data pending transaction-level MLS data
-# - New build vs resale prices (and by bedrooms, sqft)
-
-# Mortgage delinquency from CPFB (low priority, but in our proposal) - this isn't available for the region or localities in the region
-
 # Add HMDA data (low priority, but in our proposal)
 
 # RENTAL
 
 # Add single-family rent estimates from ACS for MSA - not sure what table this is? Would you take aggregate gross rents by units in structure and then divide by the total number of structures in those categories to get the average???
 
-# AFFORDABILITY
-
-# Assess errors for Fig 5.22 - remove all but Black and White households - MOE is high
 
 ```
 
@@ -45,6 +36,7 @@ library(ggtext)
 library(tidytext)
 library(janitor)
 library(sf)
+library(patchwork)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
 
@@ -270,7 +262,7 @@ publish_plot(local_tenure_plot)
 
 ```
 
-The loss of younger households is common among the counties. The percentage of both renter and homeowner householders 45 years old or less have been declining since 2010. But older renters (45 years old and older) have been coming into the counties. Appomattox, in particular, saw an 81 percent increase in renters aged 45 to 64 years old between 2010 and 2021, while Bedford experienced a 56 percent increase in renters 65 years old and over. The growth in homeowners was predominantly among householders aged 65 years and over, where all countied experienced an over 25 percent increase since 2010.
+The loss of younger households is common among the counties. The percentage of both renter and homeowner householders 45 years old or less have been declining since 2010. But older renters (45 years old and older) have been coming into the counties. Appomattox, in particular, saw an 81 percent increase in renters aged 45 to 64 years old between 2010 and 2021, while Bedford experienced a 56 percent increase in renters 65 years old and over. The growth in homeowners was predominantly among householders aged 65 years and over, where all counties experienced an over 25 percent increase since 2010.
 
 ```{r}
 #| label: fig-localage
@@ -332,7 +324,7 @@ b11001_data <- read_rds("data/b11001_data.rds") |>
 
 ```
 
-Although younger householders are declining in the counties, smaller households are increasing. One-person homeowners households are increasing in Amherst, Appomattox, and Bedford. Unlike its neighbors, Campbell is seeing an increase in *both* one-person renter and homeowner households. Two-person households are overwhelmingly increasing in Bedford.
+Although younger householders are declining in the counties, smaller households are increasing. One-person homeowner households are increasing in Amherst, Appomattox, and Bedford. Unlike its neighbors, Campbell is seeing an increase in *both* one-person renter and homeowner households. Two-person households are overwhelmingly increasing in Bedford.
 
 The counties that did see an increase in larger households were Amherst, Bedford, and Campbell. These increases were mainly among renter households, but Bedford saw an increase of four-person households for both homeowners and renters. 
 
@@ -638,7 +630,7 @@ publish_plot(local_dist_plot)
 
 ```
 
-Median household income shows that the typical renter income has continued to lag behind homeowners. The income gap between renters and homeowners has only widened in Amherst County and Bedford, while it has narrowed in Appomattox and Campbell. The latter has largely occurred due to the decrease in incomes for homeowners and rises in renter incomes, while the former is the result of diverging incomes. 
+Median household income shows that the typical renter income has continued to lag behind homeowners. The income gap between renters and homeowners has only widened in Amherst County and Bedford, while it has narrowed in Appomattox and Campbell. The latter has largely occurred due to the decrease in incomes for homeowners and rises in renter incomes, while the former is the result of diverging incomes in those respective communities. 
 
 ```{r}
 #| label: fig-med-inc
@@ -714,87 +706,46 @@ publish_plot(local_rinc_plot)
 
 ```
 
+:::{.caution-note}
+
+Insert ttext about avg wages in the county.
+
+:::
 ```{r}
-#| label: qcew-data
-
-years <- 2015:2021
-
-cnty <- c(51009, 51011, 51019, 51031, 51680)
-
-qcewGetAreaData <- function(year, qtr, area) {
-	url <- "http://data.bls.gov/cew/data/api/YEAR/QTR/area/AREA.csv"
-	url <- sub("YEAR", year, url, ignore.case=FALSE)
-	url <- sub("QTR", tolower(qtr), url, ignore.case=FALSE)
-	url <- sub("AREA", toupper(area), url, ignore.case=FALSE)
-	read.csv(url, header = TRUE, sep = ",", quote="\"", dec=".", na.strings=" ", skip=0)
-}
-
-qcew_data <- map_dfr(cnty, function(cnty){
-  yearly_data <- map_dfr(years, function(yr){
-    qcew_pull <- qcewGetAreaData(yr, "a", cnty) |> 
-  filter(own_code == 0) |> 
-  filter(industry_code == 10) |> 
-  select(area_fips, annual_avg_emplvl, annual_avg_wkly_wage,avg_annual_pay) |> 
-      mutate(year = yr)
-  })
-})
-
-# amherst <- qcewGetAreaData(2021, "a", 51009) |> 
-#   filter(own_code == 0) |> 
-#   filter(industry_code == 10) |> 
-#   select(area_fips, annual_avg_emplvl, annual_avg_wkly_wage,avg_annual_pay)
-
-
-write_rds(qcew_data, "data/qcew_data.rds")
-```
-
-```{r}
-#| label: qcew
+#| label: fig-qcew
+#| fig-cap: "Average annual wage"
 
 cv_qcew <- read_rds("data/qcew_data.rds") |> 
   filter(area_fips != 51680) |> 
   mutate(GEOID = as.character(area_fips)) |> 
   left_join(cv_names, by = "GEOID") |> 
-  select(county, year, emplvl = annual_avg_emplvl, wkwage = annual_avg_wkly_wage, salary = avg_annual_pay)
+  select(county, year, adj_pay)
 
-ggplot(cv_qcew,
+subtitle_text <- "In <span style = 'color:#011E41'><b>Amherst</b></span>, <span style = 'color:#40C0C0'><b>Appomattox</b></span>, <span style = 'color:#8B85CA'><b>Bedford</b></span>, and <span style = 'color:#259591'><b>Campbell</b></span>"
+
+qcew_plot <- ggplot(cv_qcew,
        aes(x = year,
-           y = emplvl,
+           y = adj_pay,
            color = county)) +
   geom_line() +
-  geom_point() +
+  geom_point_interactive(
+    aes(data_id = adj_pay,
+        tooltip = dollar_format()(adj_pay)),
+    size = 2) + 
   theme_hfv() +
   scale_color_hfv() +
-  facet_wrap(~county) +
-  labs(title = "Employment levels",
+  labs(title = "Average annual wage",
+       subtitle = subtitle_text,
        caption = "**Source:** U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages (QCEW).") +
-  scale_y_continuous(labels = number_format(big.mark = ","))
+  scale_y_continuous(labels = dollar_format()) +
+  plot_annotation(
+    theme = theme(
+    plot.title = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    ))) 
   
-
-
-
-```
-
-```{r}
-
-# Need to adjust to 2021 dollars.
-
-ggplot(cv_qcew,
-       aes(x = year,
-           y = wkwage,
-           color = county)) +
-  geom_line() +
-  geom_point() +
-  theme_hfv() +
-  scale_color_hfv() +
-  facet_wrap(~county) +
-  labs(title = "Annual average weekly wage levels",
-       caption = "**Source:** U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages (QCEW).") +
-  scale_y_continuous(labels = number_format(big.mark = ","))
-  
-
-
-
+publish_plot(qcew_plot)
 
 ```
 
@@ -858,18 +809,6 @@ Manufactured home communities are prevalent among the four counties. Campbell al
 Although many of these communities make up a bulk of rural communities' affordable housing stock, they are often plagued with housing quality issues. This is due to the prevalence of pre-HUD Code mobile homes located in parks. 
 
 ```{r}
-#| label: mhc
-#| eval: false
-
-mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
-  filter(STATE == "VA") |> 
-  filter(str_detect(COUNTY, "AMHERST|APPOMATTOX|BEDFORD|CAMPBELL"))
-
-write_rds(mhc, "data/mhc_cnty.rds")
-
-```
-
-```{r}
 #| label: fig-mhc-county
 #| fig-cap: "Manufactured home communities by size"
 
@@ -913,8 +852,7 @@ Regardless of these changes, there is a severe lack of diverse housing being bui
 #| fig-cap: "New residential building permits by type"
 
 cv_cbps <- read_rds("data/cv_cbps.rds") |> 
-  filter(NAMELSAD != "Lynchburg city") |> 
-  mutate(year = as.character(year))
+  filter(NAMELSAD != "Lynchburg city") 
 
 cv_cbps_plot <- ggplot(cv_cbps,
        aes(x = year,
@@ -931,8 +869,9 @@ cv_cbps_plot <- ggplot(cv_cbps,
   labs(title = "New residential building permits by type",
        subtitle = "Annual permits issued by locality from 2000 through April 2023",
        caption = "**Source:** U.S. Census Bureau, Building Permits Survey (BPS).") +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 90, vjust = 0.5))
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 90, vjust = 0.5))  +
+  scale_x_continuous(breaks = seq(from = 2000, to = 2023, by = 2.0))
 
 publish_plot(cv_cbps_plot)
 
@@ -940,6 +879,7 @@ publish_plot(cv_cbps_plot)
 
 ```{r}
 #| label: fig-salerent-vacancy
+#| eval: false
 
 # Vacancy rate for for sale and for rent housing = vacant/occupied by tenure - uses B25004 and B25003
 
@@ -992,6 +932,7 @@ ggplot(rs_vacancy,
 
 ```{r}
 #| label: fig-vstatus
+#| eval: false
 
 # Leaving out migrant workers because it is so minimal
 
@@ -1069,41 +1010,108 @@ publish_plot(local_ho_plot)
 
 ```
 
-:::{.callout-note}
-
-TO ADD LATER: sales prices, closings, and days on market by locality -- pending new data from LAR
-
-:::
-
+From Q2 2019 to Q2 2023, the median sales price in the counties has risen by at least \$50,000. The most substantial increases were in Bedford and Appomattox. 
 ```{r}
 #| label: fig-sales-price
+#| fig-cap: "Median quarterly sales price"
 
 # Need median sales price for each county. Will need to adjust for inflation utilizing the methods found in Lynchburg section.
 
+sales <- read_rds("data/cv_var.rds") |> 
+  filter(name != "Lynchburg City") |> 
+  select(geography, name, med_price, adj_price, period, year) |> 
+  mutate(period = as.character(period)) |> 
+  select(geography, name, adj_price, period) |> 
+  filter(period == "2023 Q2" | period == "2019 Q2") |> 
+  pivot_wider(names_from = period, 
+              values_from = adj_price) |> 
+  mutate(latest = `2023 Q2`) |> 
+  pivot_longer(3:4,
+               names_to = "period",
+               values_to = "med_price") 
+
+subtitle_text <- "In <span style = 'color:#011E41'><b>Q2 2019</b></span> and <span style = 'color:#40C0C0'><b>Q2 2023</span>"
+
+ggplot(sales, 
+       aes(x = reorder(name, latest),
+           y= med_price,
+           color = period)) +
+  geom_line(size = 1, color = "grey") +
+  geom_point_interactive(
+    aes(data_id = med_price,
+        tooltip = dollar_format()(med_price)),
+    size = 2) + 
+  geom_text(aes(label = dollar(med_price), hjust = ifelse(period == "2023 Q2", -0.25, 1.25))) +
+  coord_flip() +
+  theme_hfv() +
+  scale_y_continuous(labels = dollar_format(), limits = c(100000, 400000)) +
+  labs(title = "Median quarterly residential sales price",
+       subtitle = subtitle_text,
+       caption = "**Source:** Virginia REALTORS, adjusted to Q2 2023 dollars.") +
+  scale_color_hfv() +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    ))) + 
+  theme(panel.grid.major.y = element_line(color = "white"),
+        panel.grid.major.x = element_line(color = "#f5f5f5",size = 0.1),
+        axis.text.x = element_blank())
 
 
 ```
+Many counties saw a bump in homes sold during 2020, no doubt a result of the pandemic's impacts on interest rates coupled with an increasing number of millenials ready for homeownership. Bedford County has consistently exceeded its neighbors in the number of home sales, followed by Campbell County. More recently, home sales have been in decline in from 2021 to 2022. With rising interest rates that now sit around 7.0 percent, the hot market of the pandemic has started to cool. But prices continue to rise as supply wanes and demand maintains.
 
 ```{r}
 #| label: fig-closed-sales
+#| fig-cap: "Homes sold by county"
 
 # Need number of closed sales for each county. Make a bar chart for each. See Lynchburg section for stylization.
 
+units <- read_rds("data/cv_var.rds") |> 
+  select(geography, name, units, period, year) |> 
+  mutate(period = as.character(period)) |> 
+  mutate(year = as.character(year))
 
+ggplot(units, 
+       aes(x = year,
+           y = units,
+           fill = name)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~name) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Total homes sold by county",
+       caption = "**Source:** Virginia REALTORS, through Q2 2023.")
 
 
 ```
-
+As an additional indicator of demand, the median days on market shows how the pandemic shifted the market in the region. While 30 days on market is a typical measure in a balanced market, the median days on market has not been above 20 days since the end of 2020 in every county (except for a few instances in Appomattox County).
 ```{r}
 #| label: fig-dom
+#| fig-cap: "Median days on market by county"
 
 # Need average days on market for each county. Make a bar chart for each. See Lynchburg section for stylization.
 
+dom <- read_rds("data/cv_var.rds") |> 
+  select(geography, name, med_dom, period, year) |> 
+  filter(year >= 2018)
 
+ggplot(dom, 
+       aes(x = period,
+           y = med_dom,
+           fill = name)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~name) +
+  theme_hfv() +
+  scale_fill_hfv() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Median days on market by county",
+       caption = "**Source:** Virginia REALTORS, through Q2 2023.")
 
 ```
-
-
 
 ## Rental market
 
@@ -1114,8 +1122,6 @@ From 2016 to 2020, rental housing costs in the counties have remained relatively
 The CoStar data used for this section does not have complete coverage of smaller scale rental properties, such as single-family homes and duplexes. Average rents are primarily sourced from larger, professionally managed apartment communities.
 
 As a result, the sample sizes for Amherst and Appomattox counties---whose rental stock is more significantly comprised of small scale units---are small. Data for these localities should be viewed with caution.
-
-TO ADD LATER: Single-family rent estimates from ACS by county
 
 :::
 
@@ -1129,7 +1135,7 @@ TO ADD LATER: Single-family rent estimates from ACS by county
 
 # Merge all data into a single csv named - local_rent.csv
 
-# Note the download date of data here: 1/23/2023
+# Note the download date of data here: 9/21/23
 
 # lburg_rent <- read_csv("data/lburg_rent.csv") |> 
 #  mutate(county = "Lynchburg city")
@@ -1193,12 +1199,7 @@ local_rent_plot <- ggplot(local_rent,
 publish_plot(local_rent_plot)
 
 ```
-
-:::{.callout-note}
-
-TO ADD LATER: Rental vacancy rates by locality
-
-:::
+Rental vacancy rates among multifamily housing is lowest among Amherst and Appomattox properties. Bedford and Campbell properties have seen greater fluctuations in their
 
 
 ```{r}
@@ -1208,8 +1209,50 @@ TO ADD LATER: Rental vacancy rates by locality
 
 # Download data into csv - name [locality_abbv]_vacancy.csv --- for example amherst_vacancy.csv or lburg_vacancy.csv
 
-# Note the download date of data here: 
+# Note the download date of data here: 9/21/23
 
+
+amherst_v <- read_csv("data/amherst_vacancy.csv") |> 
+  mutate(county = "Amherst County")
+
+appomattox_v <- read_csv("data/appomattox_vacancy.csv") |> 
+  mutate(county = "Appomattox County")
+
+bedford_v <- read_csv("data/bedford_vacancy.csv") |> 
+  mutate(county = "Bedford County")
+
+campbell_v <- read_csv("data/campbell_vacancy.csv") |> 
+  mutate(county = "Campbell County")
+
+library(zoo)
+library(lubridate)
+
+local_vacancy <- rbind(amherst_v, appomattox_v, bedford_v, campbell_v) |> 
+  filter(!str_detect(period, "QTD")) |> 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
+  mutate(year = year(period)) |> 
+  filter(year >= 2016) |> 
+  mutate(vacancy_label = percent(vacancy)) |> 
+  mutate(tooltip = c(paste0("Date: ", period, "\n Vacancy rate: ", vacancy_label)))
+
+
+vacancy_plot <- ggplot(local_vacancy,
+       aes(x = period,
+           y = vacancy,
+           color = county)) +
+  geom_line(linewidth = 1) +
+  geom_point_interactive(
+    aes(data_id = tooltip,
+        tooltip = tooltip)) +
+  scale_y_continuous(labels = percent_format()) +
+  facet_wrap(~county) +
+  theme_hfv() +
+  scale_color_hfv() +
+  labs(title = "Rental vacancy rate by quarter",
+       subtitle = "All multifamily properties in CVPDC region",
+       caption = "**Source:** CoStar Group, Inc.")
+  
+publish_plot(vacancy_plot)
 
 
 
@@ -1356,60 +1399,11 @@ publish_plot(cv_cb_plot)
 
 ```
 
-```{r}
-#| label: fig-cb-tenure
-#| eval: false
-#| fig-cap: "Local cost burden by tenure"
-
-cb_tenure <- read_rds("data/cb_7.rds") |> 
-  subset(fips %in% cnty) |> 
-  filter(cb_group == "Cost-burdened") |> 
-  group_by(year, county, tenure, cb_group) |> 
-  summarise(estimate = sum(estimate)) |> 
-  group_by(county, tenure) |> 
-  mutate(change = estimate - lag(estimate)) |> 
-  drop_na() |> 
-  mutate(run_diff = cumsum(change))
-
-cb_diff <- ggplot(cb_tenure,
-       aes(x = year, 
-           y = run_diff, 
-           fill = tenure,
-           data_id = run_diff,
-           tooltip = run_diff)) +
-  geom_col(position = "dodge") +
-  geom_col_interactive(position = "dodge", size = 2) +
-  theme_hfv() +
-  scale_fill_hfv() +
-  facet_wrap(~county, nrow = 1) +
-  scale_y_continuous(labels = label_comma()) +
-  labs(title = "Cumulative change in cost-burdened households by tenure",
-       subtitle = "2012 to 2019",
-       fill = "Tenure",
-       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
-  theme(legend.position = "right") +
-  add_zero_line(axis = "y")
-
-
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cb_diff,
-         height_svg = 4) 
-  
-} else {
-  
-  cb_diff
-  
-  }
-  
-
-```
-
-Cost burden by race and ethnicity shows that white households across all four counties are less likely to be cost-burdened. This has been consistent since 2012. 
+Cost burden by race and ethnicity shows that white households across all four counties are less likely to be cost-burdened. This has been consistent since 2012. Bklack
 
 :::{.callout-caution}
 
-The margins of error for Asian and Hispanic households, as well as other minority groups in the region (multiracial households included), are significantly high. This is most often due to the small sample sizes.
+The margins of error for Asian and Hispanic households, as well as other minority groups in the region (multiracial households included), are significantly high. This is most often due to the small sample sizes. For this reason, we have excluded them from the data visualization.
 
 :::
 
@@ -1427,8 +1421,10 @@ cv_cb9 <- cb_9 |>
   group_by(year, county, race) |> 
   mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
-  filter(year == 2019) |> 
+  filter(year == 2020) |> 
   filter(race != "Hispanic or Latino" & race != "Another race, including multiracial" & race != "Asian")
+
+subtitle_text <- "Percent of <span style = 'color:#011E41'><b>Black</b></span> and <span style = 'color:#40C0C0'><b>white</b></span> cost-burdened households in 2020"
 
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = reorder_within(county, pct, race),  
@@ -1436,29 +1432,31 @@ cv_cb9_plot <- ggplot(cv_cb9,
            fill = str_wrap(race, width = 10),
            data_id = pct,
            tooltip = label_percent()(pct))) +
-  facet_wrap(~county, nrow = 1, scales = "free_x") +
+  facet_wrap(~county, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 10)) +
   geom_col() +
   geom_col_interactive(size = 1) +
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_blank(),
-        legend.position = "right",
-        #legend.text = element_text(lineheight = .8),
-        legend.key.height = unit(2, "lines")) +
+  theme(axis.text.x = element_blank()) +
   scale_x_reordered() +
   scale_y_continuous(labels = label_percent()) +
   labs(title = "Cost burden by race and ethnicity",
-       subtitle = "Percent of households with cost burden by race and ethnicity in 2019",
-       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")  +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(cv_cb9_plot)
 
 ```
-
+As at the regional-level, extremely low- (30 percent AMI or less) and very low-income (31 to 50% AMI) households face greater cost burden than their higher income counterparts. But in Amherst and Campbell, nearly one in five low-income household (51 to 80% AMI) are cost-burdened. One in four low-income (51 to 80% AMI)
 ```{r}
 #| label: fig-cb-total
-#| eval: false
 #| fig-cap: "Local housing cost burden by household area median income"
 
 cb_7 <- read_rds("data/cb_7.rds") |> 
@@ -1470,7 +1468,7 @@ cbhh_region <- cb_7 |>
   group_by(county, year, household_income) |> 
   mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
-  filter(year == 2019)
+  filter(year == 2020)
 
 cbhh_region$household_income <- factor(cbhh_region$household_income,
                                        levels = c("30% AMI or less", "31 to 50% AMI", "51 to 80% AMI", "81 to 100% AMI", "101% AMI or greater"))
@@ -1489,7 +1487,7 @@ cbhh_region_plot <- ggplot(cbhh_region,
   scale_y_continuous(labels = label_percent()) +
   scale_x_reordered() +
   labs(title = "Local cost burden by household area median income",
-       subtitle = "Percent of cost-burdened households by household income in 2019",
+       subtitle = "Percent of cost-burdened households by household income in 2020",
        caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   add_zero_line(axis = "y") +
   theme(axis.text.x = element_blank(),
@@ -1497,20 +1495,10 @@ cbhh_region_plot <- ggplot(cbhh_region,
         strip.text = element_text(size = 8))
 
 
-if (knitr::is_html_output()) {
-  
-  girafe(ggobj = cbhh_region_plot,
-         height_svg = 4) 
-  
-} else {
-  
-  cbhh_region_plot
-  
-  }
-
+publish_plot(cbhh_region_plot)
 ```
 
-In Amherst and Bedford, non-elderly, non-family households (i.e. individuals living alone or with unrelated persons) are more likely to be cost-burdened than any other household type, 44 and 30 percent cost-burdened, respectively. Meanwhile, in Appomattox and Campbell, 29 percent of elderly, non-family households (i.e. seniors living alone or with unrelated persons) were cost-burdened in 2019. These two household types face the most difficult challenges in affordability, most likely due to the challenges of affording housing alone. But interestingly, just over one in four (26 percent) large families in Appomattox are cost-burdened, a divergence from trends in the other three counties. 
+In Amherst and Bedford, non-elderly, non-family households (i.e. individuals living alone or with unrelated persons) were more likely to be cost-burdened than any other household type, 37 and 30 percent cost-burdened, respectively. Meanwhile, in Campbell, 31 percent of elderly, non-family households (i.e. seniors living alone or with unrelated persons) were cost-burdened in 2020. These two household types face the most difficult challenges in affordability, most likely due to the challenges of affording housing alone. But interestingly, just over four in ten (40 percent) large families in Appomattox are cost-burdened, a divergence from trends in the other three counties. 
 
 ```{r}
 #| label: fig-hh-cb
@@ -1525,7 +1513,7 @@ cbhh_region <- cb_7 |>
   group_by(county, year, household_type) |> 
   mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
-  filter(year == 2019)
+  filter(year == 2020)
 
 cb_hh_plot <- ggplot(cbhh_region,
        aes(x = reorder(household_type, pct),
@@ -1544,24 +1532,26 @@ cb_hh_plot <- ggplot(cbhh_region,
     facet_wrap(~county, nrow = 1, labeller = label_wrap_gen(10)) +
   scale_y_continuous(labels = label_percent()) +
   labs(title = "Cost burden by household type",
-       subtitle = "Percent of households with cost burden by household type in 2019",
+       subtitle = "Percent of households with cost burden by household type in 2020",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.")
 
 publish_plot(cb_hh_plot)
 
 ```
 
-The chart below shows whether renter households are currently living in affordable or unaffordable apartments, broken down by Area Median Income by to 80 percent AMI. For example, among all renters at or below 30 percent AMI in Amherst County, 365 are able to afford their current home, while another 410 cannot.
+The chart below shows whether renter households are currently living in affordable or unaffordable apartments, broken down by Area Median Income (AMI) up to 80 percent AMI. For example, among all renters at or below 30 percent AMI in Amherst County, 355 are able to afford their current home, while another 320 cannot.
 
-This represents a rental housing "gap" of more than 400 homes that must be created or made affordable to alleviate cost burden among those renters. Across the region, this gap is most severe for renters below 50 percent AMI. Very few renters between 50 and 80 percent AMI currently struggle to afford their home.
+This represents a rental housing "gap" of more than 300 homes that must be created or made affordable to alleviate cost burden among those renters. Across the region, this gap is most severe for renters below 50 percent AMI. Very few renters between 50 and 80 percent AMI currently struggle to afford their home.
 
 :::{.callout-caution}
 
-As of spring 2023, the latest available CHAS estimates published by HUD are based on the 2015-2019 American Community Survey 5-year estimates. Therefore, these estimates **do not** reflect changes that have occurred since the beginning of the COVID-19 pandemic.
+As of September 2023, the latest available CHAS estimates published by HUD are based on the 2016-2020 American Community Survey 5-year estimates. Therefore, these estimates **do not** reflect changes that have occurred since the beginning of the COVID-19 pandemic.
+
+There are undoubtedly other factors that impact housing affordability that CHAS data does not take into account. The following estimates should serve as a baseline estimate of need.
 
 :::
 
-Across all four counties, the rental housing gap below 30 percent AMI is 2070 units, 913 units between 30 and 50 percent AMI, and 135 units between 50 and 80 percent AMI. The total rental housing gap is 3,118.
+Across all four counties, the rental housing gap below 30 percent AMI is 1,809 units, 949 units between 30 and 50 percent AMI, and 105 units between 50 and 80 percent AMI. The total rental housing gap is 2,863.
 
 ```{r}
 #| label: fig-gap
@@ -1582,7 +1572,7 @@ gap <- tb_18_match |>
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
   )) |> 
-  filter(year == 2019)
+  filter(year == 2020)
 
 gap_plot <- ggplot(gap,
        aes(x = household_income, 
@@ -1599,7 +1589,7 @@ gap_plot <- ggplot(gap,
   add_zero_line("y") +
   scale_fill_hfv() +
   labs(title = "Rental housing gap by household income",
-       subtitle = "Affordability of existing rental homes by AMI of current occupants (2019)",
+       subtitle = "Affordability of existing rental homes by AMI of current occupants (2020)",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy, Table 18B") +
   theme(
     legend.position = "bottom",

@@ -1,1 +1,800 @@
-# Local Solutions
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Local Partnerships
+
+These solutions involve the coordination of two or more jurisdictions to
+solve issues that impact specific areas of the region not contained
+within a single locality. While some of these may address issues that
+impact the region at large, the implementation of these solutions might
+best suit partnerships between two or more local governments.
+
+## Primary Solutions
+
+### Invest in homebuyer readiness programs
+
+*Amherst, Appomattox, and Campbell counties*
+
+**Issue:** *Increasing operations and capacity for first time homebuyer
+readiness*
+
+Homeownership rates have been declining in recent years in all counties
+but Bedford, and the loss of younger households is common among all
+counties. Many young families currently leave the county because they
+are unable to find or afford a starter home in their community. Many
+young residents face real or perceived barriers to homeownership,
+including the inability to qualify for mortgage financing because of
+credit challenges, insufficient savings, or job
+instability/irregularity.
+
+**Solution:** *Expand the network of homebuyer assistance in counties
+with lowest homeownership rates*
+
+Localities have an interest in providing opportunities for its own
+residents (especially young workers and young families) to buy a home
+and stay in the counties.[^part-5-2-1] Using local money to specifically
+enhance operations and capacity and extend these services beyond one
+organization would bolster current efforts and increase accessibility
+for residents served both within the city and in the adjacent
+localities. By working together, these counties can pool resources and
+potentially achieve more efficient outcomes.
+
+[^part-5-2-1]: <https://housingforwardva.github.io/cvpdc/part-3-2.html>.
+    Figures 5.5 and 5.6
+
+**FRAMEWORK**
+
+Over the past few decades, homebuyer education programs and counseling
+have gained prominence in the United States, particularly following the
+2009-2012 Great Recession. This period witnessed a significant shift in
+lenders' requirements for mortgage credit, introducing stricter criteria
+like higher credit ratings, lower loan-to-value ratios, increased down
+payments, and mandatory private mortgage insurance.
+
+Homebuyer readiness programs provide a diverse array of services
+including individual counseling, group sessions, credit repair,
+homebuyer savings clubs, down payment match programs, financial
+management, budgeting, homeownership responsibilities, home maintenance,
+legal considerations, and foreclosure counseling.
+
+In Virginia, most lenders necessitate homebuyers to partake in a
+homebuyer education class approved by Virginia Housing (previously
+VHDA). These classes can be in-person or online, and while Virginia
+Housing provides a majority of them, private lenders and nonprofit
+organizations like Community Housing Partners also offer similar
+programs. While online or group counseling may suffice for some
+homebuyers, others may require extensive assistance incorporating credit
+repair, individual counseling, and down payment savings plans.
+
+**IMPLEMENTATION PLAN**
+
+*Immediate (0-6 months):*
+
+-   **Stakeholder Identification and Engagement:** Identify and engage
+    with key stakeholders and partners, including mortgage lenders,
+    realtors, and nonprofits that already serve the counties. Key
+    stakeholders also can include renters in the area that are
+    interested in homeownership to pilot these new education programs.
+    This stage should involve setting up meetings to discuss roles,
+    responsibilities, and potential contributions.
+
+-   **Needs Assessment:** Conduct a comprehensive assessment of existing
+    homebuyer education programs to identify gaps and areas for
+    improvement. This would include a survey of potential homebuyers and
+    existing homeowners
+
+-   **Project Planning:** Develop a comprehensive project plan that
+    outlines the objectives, deliverables, timeline, and resources
+    required for the initiative.
+
+*Short-term (6-12 months):*
+
+-   **Curriculum Development:** Collaborate with housing and financial
+    experts to design an improved homebuyer education curriculum. This
+    should include topics like financial management, understanding
+    mortgage terms, and homeownership responsibilities, and should draw
+    from established agencies and approaches like those from Virginia
+    Housing or the Homeownership Center in Elkins, WV.
+
+-   **Staff Training and Capacity Building:** Organize training sessions
+    for counselors and other key personnel who will deliver the program.
+    Training should cover the curriculum, teaching methods, and
+    strategies for engaging with diverse groups of homebuyers.
+
+*Long-term (12- 24 months):*
+
+-   **Marketing and Promotion:** Develop and launch a marketing campaign
+    to raise awareness about the program. This can involve social media
+    promotion, community events, and partnerships with local media
+    outlets.
+
+-   **Program Monitoring and Evaluation:** Establish a system for
+    continuous monitoring and evaluation of the program. This can
+    involve tracking key performance indicators, collecting participant
+    feedback, and conducting regular program reviews.
+
+-   **Program Scaling**: Based on the evaluation results, make necessary
+    adjustments and scale up the program to serve more homebuyers. This
+    might involve expanding to new locations, offering additional
+    services, or partnering with more organizations.
+
+**RESPONSIBLE ACTORS AND ROLES**
+
+-   Public entities like Virginia Housing may lead the initiative,
+    providing approval for the program, facilitating partnerships, and
+    ensuring compliance with regulatory requirements.
+
+-   Private entities such as mortgage lenders and real estate companies
+    can offer support through funding, collaboration, and implementation
+    of the programs.
+
+-   Nonprofit organizations like Community Housing Partners can
+    contribute through program delivery, community outreach, and
+    offering resources such as counseling and training.
+
+**LEGAL, FINANCIAL, ORGANIZATIONAL CAPACITY**
+
+-   Housing counseling and homeownership education programs require
+    funding. Virginia Housing and the US Department of Housing and Urban
+    Development provide some funding for these activities. Most
+    counseling agencies will have already determined which of these
+    funds they are able to access and under what circumstances. The
+    funding source may not always cover the entire cost of the
+    counseling activity, especially when that activity must be conducted
+    at a significant distance from the home office.
+
+-   Some banks as well as larger realty organizations may be willing to
+    participate in providing support for housing counseling. Such
+    contributions provide Community Reinvestment Act credits to the
+    banking institution, which are important to the bank when it goes
+    through its periodic review by its regulatory agency.
+
+**FUNDING SCOPE REQUIREMENTS**
+
+Start-up costs would include program design and development, training
+for personnel, and initial marketing efforts. Long-term operational
+costs would cover ongoing program delivery, personnel costs, monitoring
+and evaluation, and continual program improvements
+
+**POTENTIAL FUNDING SOURCES**
+
+-   **Government grants and funding:**
+
+    -   **Federal:** The U.S. Department of Housing and Urban
+        Development (HUD) provides grants for housing counseling
+        agencies. These agencies can use the funding to offer a variety
+        of services, including homebuyer education courses.
+
+    -   **State and Local:** In Virginia, the Virginia Housing
+        Development Authority (VHDA) offers resources for first-time
+        homebuyer classes.
+
+-   **Banks and credit unions:** These groups have programs dedicated to
+    community development and reinvestment, which can include funding
+    for homebuyer education. These institutions may be particularly
+    interested in supporting these programs, as educated homebuyers can
+    become more reliable borrowers.
+
+-   **Private partnerships:** Companies outside of the housing sector
+    may also be interested in sponsoring these types of programs as part
+    of their corporate social responsibility (CSR) initiatives. This
+    could be particularly true for companies looking to invest in the
+    communities where they operate.
+
+**METRICS TO EVALUATE SUCCESS**
+
+-   Number of individuals and families served
+
+-   Improvement in participants' financial literacy
+
+-   Number of first-time homebuyers
+
+-   Reductions in foreclosures
+
+-   Participant feedback and satisfaction
+
+**PROJECTED IMPACT**
+
+Increasing homebuyer readiness programs in a region is projected to have
+a significant positive impact on both individuals and the broader
+community. These programs, which provide prospective buyers with
+financial literacy education, knowledge about the home buying process,
+and potentially access to down-payment assistance, can increase the
+homeownership rate, particularly among first-time and low-income
+homebuyers.
+
+This leads to greater housing stability for individuals and families,
+who gain an important asset and a sense of belonging in their community.
+Additionally, higher rates of homeownership can enhance local economies,
+as homeowners are more likely to invest in their properties and local
+businesses, leading to neighborhood revitalization.
+
+**BEST PRACTICES AND EXAMPLES**
+
+[***HOME of Virginia's Homeownership Education
+Program***](https://homeofva.org/get-help/homeownership/) ***Richmond,
+Virginia***
+
+**Approach:** Housing Opportunities Made Equal of Virginia, Inc. (HOME
+of Virginia) offers pre-purchase homeownership education courses. The
+curriculum includes understanding credit, managing money, obtaining a
+mortgage loan, shopping for a home, and maintaining a home and finances.
+
+**Outcomes:** Since 1991, over 2,000 families have received downpayment
+assistance for a total local economic impact over \$95,000,000 in the
+Richmond area. In 2022, over 400 financial literacy courses were
+conducted.
+
+[***HomeOwnership Center,
+Inc.***](https://hocwv.org/advising-education-services/)***: Elkin, West
+Virginia***
+
+**Approach:** The non-profit led center serves multiple counties to
+provide community based lending, advising, and educational resource for
+individuals and families of any income level.
+
+**Outcomes:** Over the last five years, over 234 new homeownership
+opportunities have been created and preserved and over 1,200 customers
+have received education and counseling services.
+
+### Identify sustainable approaches for manufactured homes
+
+*Amherst and Appomattox counties*
+
+**Issue:** *Increased placements of new manufactured homes (and poor
+quality of existing, older ones) may run counter to counties' growth
+goals*
+
+The rising cost of homeownership is leading many buyers to manufactured
+homes as an affordable solution, particularly in Amherst and Appomattox
+counties. Because state law requires localities to permit manufactured
+homes as a by-right use on land zoned for agricultural use, many of
+these new homes are now located away from public utilities and other
+services. Furthermore, the existing supply of older manufactured homes
+(especially those built prior to the 1976 HUD code) is an undesirable
+component of the counties' housing stock. These units are beyond their
+functional lifespan and present significant health and safety issues.
+
+**Solution:** *Explore land use, fiscal, and other mechanisms to ensure
+manufactured homes benefit both homeowners and the community in the long
+term*
+
+This recommendation investigates and proposes specific actions these
+counties could take to address these issues. Options include evaluating
+zoning ordinance changes to influence the placement of new manufactured
+homes, identifying incentive opportunities within real estate assessment
+and related tax schemes, and leveraging grant funds to support the
+disposal of dangerous pre-1976 mobile homes.
+
+**FRAMEWORK**
+
+This solution includes three primary tasks, along with recommendations
+for prerequisite data analysis to better inform potential decisions.
+While these tasks are not dependent on one another, success is more
+likely if the localities simultaneously pursue at least two options
+together.
+
+[**DATA ANALYSIS:***Determine scope and scale of manufactured home
+placements*]{.underline}
+
+Amherst and Appomattox should combine their residential permit and
+assessment data to further investigate the deliveries of factory-built
+housing in more isolated sections of their counties. Data should be
+inclusive of multiple years (at least three, ideally five or more) to
+increase sample size and reveal any important trends.
+
+Data should be analyzed to answer the following questions, which will
+provide staff and leadership with important context:
+
+-   How many manufactured and site-built homes were permitted within
+    each zoning district? (i.e. A-1 versus R-1, R-2, etc.)
+
+-   How many manufactured and site-built homes were permitted in areas
+    served and not served by public utilities?
+
+-   What were the original assessed values (improvements only) and
+    purchase prices of newly placed manufactured homes?
+
+-   What specific areas, neighborhoods, or corridors (in A-1 districts
+    and elsewhere), if any, were new manufactured homes highly
+    concentrated?
+
+Once completed, staff should prepare a joint memo to share findings with
+planning commissioners (and supervisors, if desired) of both counties.
+This memo could also outline some of the potential solution steps
+described below.
+
+[**TASK 1:***Evaluate and amend zoning ordinances*]{.underline}
+
+All new homes---whether built on site or in a factory---must conform to
+local zoning codes. While local governments in Virginia generally have
+broad powers to regulate residential uses in their zoning ordinances,
+state code ([§
+15.2-2290](https://law.lis.virginia.gov/vacode/title15.2/chapter22/section15.2-2290/))
+requires localities to permit manufactured homes:
+
+> *". . . in [all agricultural zoning districts]{.underline} or
+> districts having similar classifications regardless of name or
+> designation. . ."*
+
+Still, manufactured homes must be on an individual lot (with no other
+residential units) and secured to a permanent foundation. The code does
+give localities the authority to apply general development standards in
+these districts, but those must apply to both site-built and
+manufactured homes.
+
+Both Amherst's A-1 Agricultural Residential District and Appomattox's
+A-1 Agricultural District comply with these requirements. Together,
+these districts comprise the vast majority of land across both counties.
+
+Described below are several options the counties could pursue to address
+this challenge via zoning code reform. These are workable approaches
+that comply with state code and do not attempt to define manufactured
+homes differently than the state's definition, which is also not
+permitted. However, each option has notable downsides that may easily
+outweigh potential benefits.
+
+-   **Option 1:** Rezone certain A-1 areas to existing residential
+    districts that do not allow manufactured homes by-right.
+
+    -   Does not require amending existing or creating new zoning
+        districts
+
+    -   Loss of parcels dedicated to agriculture
+
+    -   Could promote additional sprawl
+
+-   **Option 2:** Increase general residential development standards in
+    A-1 districts to disincentivize new manufactured homes.
+
+    -   No rezonings required
+
+    -   Cannot differentiate requirements between site-built or
+        manufactured home
+
+    -   Site-built homes affected as regulatory "collateral damage"
+
+-   **Option 3:** Update existing residential districts in preferred
+    growth areas to incentivize manufactured home placements.
+
+    -   No rezonings required
+
+    -   Does not prevent additional manufactured home placements in A-1
+        zones
+
+    -   Higher land costs in these areas may cancel out any incentives
+
+-   **Option 4:** Propose a new non-agricultural zoning district that
+    limits manufactured home placements while retaining open space and
+    land conservation elements
+
+    -   Does not change existing districts, but requires rezonings
+
+    -   Could be difficult to design effectively
+
+    -   Loss of parcels dedicated to agriculture
+
+Staff from both counties should collaboratively evaluate the pros and
+cons of these options for their respective communities. If no workable
+solution via zoning is possible, then staff should focus attention on
+the remaining task options.
+
+[**TASK 2:***Identify possible tax and financial
+incentives*]{.underline}
+
+Consult with county attorneys to determine fiscal incentives localities
+can implement under existing state code. Establish certain manufactured
+home quality criteria that new placements should meet to receive
+incentives, such as energy efficiency performance and roof type.
+
+Consider reduced or waived hookup fees, along with real estate tax
+rebates or abatements, for:
+
+-   Manufactured homes in areas served by utilities,
+
+-   Manufactured homes that meet certain quality criteria, and/or
+
+-   Low-cost modular and site-built homes as alternatives to
+    manufactured homes.
+
+Consider increased hookup fees for:
+
+-   Manufactured homes in areas not served by utilities, and/or
+
+-   Manufactured homes that do not meet certain quality criteria.
+
+[***TASK 3:** Secure new funding and create incentives to eradicate old
+mobile homes*]{.underline}
+
+Work with CVPDC, Virginia Housing, and DHCD to identify and jointly
+apply for funding that:
+
+-   Covers some or all expenses associated with demolition and disposal
+    of pre-1976 mobile homes, and
+
+-   Provides extremely low-income residents (in those homes) with
+    relocation assistance to find new permanent housing.
+
+Conduct proactive outreach to residents in poorest-quality homes and
+connect with service providers to begin evaluating alternative housing
+arrangements.
+
+Criteria to prioritize mobile home replacements will help triage
+properties/residents with greatest needs. Should consider:
+
+-   Number of and severity of housing problems (e.g. no heat, water
+    leaks, missing windows, etc.),
+
+-   Resident income and assets,
+
+-   Resident physical and/or mental disabilities,
+
+-   Presence of seniors and/or children,
+
+-   Other attributes as needed
+
+Develop streamlined process for demolition/disposal pre-approval.
+Consider reducing, waiving, or refunding permit fees. Identify qualified
+contractors to complete work.
+
+**IMPLEMENTATION PLAN**
+
+*Immediate:*
+
+-   Begin data collection and analysis.
+
+-   Seek county attorney opinions on zoning options and potential
+    financial incentives (via hookup fee changes and real estate tax
+    rebates/abatements).
+
+-   Start preliminary conversations with partners and stakeholders
+    regarding:
+
+    -   Possible zoning ordinance changes,
+
+    -   Possible fee and real estate tax changes,
+
+    -   Funding sources for removal of substandard mobile homes, and
+
+    -   Strategies to successfully relocate residents in those homes.
+
+*Short-term:*
+
+-   Finish data analysis, prepare memo with major findings, and share
+    results with county leadership.
+
+-   Draft any and all zoning amendments determined as potentially
+    effective solutions.
+
+-   Draft any and all ordinances related to tax and fee policies.
+
+-   Prepare explanatory info sheets and presentations for any proposed
+    changes; use to proactively educate public, planning commissioners,
+    and supervisors.
+
+-   Prepare and submit applications for funding that supports
+    substandard mobile home decommissioning.
+
+-   Establish criteria to prioritize mobile home replacements.
+
+*Long-term:*
+
+-   Initiate formal public hearing process for any amendments to the
+    zoning ordinance and/or county fiscal policy.
+
+-   Roll out a coordinated system to incentivize removal and replacement
+    of old mobile homes.
+
+**RESPONSIBLE ACTORS AND THEIR ROLES**
+
+**County staff:** Undertake data analysis, hire consultants and engage
+experts as necessary, submit applications for new funding sources,
+evaluate and recommend changes to county policies.
+
+**Planning commissioners and supervisors:** Provide direction and
+feedback on staff reports and proposals, facilitate community input at
+public hearings, approve or amend (or reject) proposed reforms.
+
+**CVPDC:** As needed, support staff from both counties with technical
+assistance and facilitate meetings with state agencies and other
+potential funders.
+
+**Housing service providers:** Coordinate with counties on outreach to
+mobile home residents, implement new/expanded programs with new funding
+secured by counties.
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+-   The range of possible zoning changes include options that should be
+    vetted by county attorneys to assess whether legitimate takings
+    claims (or other challenges) could be presented. Changes to county
+    fee regimens should also be evaluated to ensure compliance with any
+    relevant state code requirements. Limited to no legal issues should
+    be expected for a replacement program.
+
+-   Identifying, decommissioning, and disposing of old mobile homes are
+    the costliest activities described in this solution. The total cost
+    per unit can easily exceed several thousand dollars. Additionally,
+    further significant costs could be incurred if resident relocation
+    funds were also included at meaningful amounts.
+
+-   All together, these tasks would require significant levels of
+    dedicated staff time and coordination. Should the counties work
+    together, they are best served by developing a joint action plan
+    that taps into specific staff skills and capabilities while also
+    respecting their capacity.
+
+**FUNDING SCOPE REQUIREMENTS**
+
+-   Investigating and possibly implementing zoning changes could be work
+    that is incorporated into the normal workload and budget cycles for
+    planning departments. However, should staff elect to hire
+    consultants to assist with this work, contract prices might range
+    from \$5,000 to \$25,000 depending on scope and other elements.
+
+-   Disposal costs for substandard mobile homes could reach \$10,000 per
+    unit. At that price, successful remediation of just 25 homes would
+    total \$250,000.
+
+-   Effective residential relocation assistance could reach several
+    thousand dollars per household.
+
+**POTENTIAL FUNDING SOURCES**
+
+Funding options to support the removal (and potential replacement) of
+substandard manufactured homes:
+
+-   **Federal** (via DHCD): CDBG, HOME, Weatherization Assistance
+    Program (WAP)
+
+-   **Local:** Dedicated general fund revenue, special fees or
+    assessments
+
+-   **Private:** Local philanthropic foundations and other donors
+
+**METRICS TO EVALUATE SUCCESS**
+
+-   Number of new manufactured home placements relative to site-built
+    production
+
+-   Number of new manufactured home placements in areas served by, and
+    not served by, public utilities
+
+-   Number of substandard mobile homes removed from housing stock
+
+-   Number of households previously in substandard mobile homes now in
+    safe housing
+
+**PROJECTED IMPACT**
+
+There are approximately 1,700 manufactured homes in Amherst County, and
+another 1,200 in Appomattox County. With a conservative estimate that
+one in ten of these homes are obsolete, nearly 300 homes could be
+targeted for replacement. Strategically prioritizing certain properties
+could help revitalize certain streets or neighborhoods, and provide
+their previous occupants (if any) with a better quality of life in new
+housing.
+
+### Address common challenges in manufactured home communities
+
+*Bedford and Campbell counties*
+
+**Issue:** *Manufactured housing offers affordable housing but is often
+plagued with housing quality issues, especially in mobile home parks*
+
+Although manufactured homes provide a much-needed source of low-cost
+housing, particularly in rural areas, they have challenges. Older mobile
+homes often present serious health, safety, and energy efficiency
+hazards; dealer financing for manufactured homes may be predatory; and
+homes in parks, although typically owned by their occupants, are not
+titled as real estate---leading to depreciation and an absence of
+opportunities for wealth-building. Additionally, rising costs in the
+region and rental instability have forced families to double up with
+others or live in informal homelessness situations that can be hard to
+track in mobile home communities.
+
+**Solution:** *Survey and assess existing mobile home parks to inform
+resource allocations and policy decisions that address rehabilitation
+and overcrowding*
+
+**FRAMEWORK**
+
+While present in all counties, Bedford and Campbell hold the lion's
+share of the region's manufactured home communities, including smaller
+communities of two to four mobile homes. Undertaking a comprehensive
+inventory of these communities, most of which have less than 50 homes,
+will produce important data on existing structural conditions and
+capture additional demographic information related to Continuum of Care
+goals. Furthermore, analysis of local land use and assessment guidelines
+can help determine how local governments might be placing unnecessary
+barriers on these communities.
+
+This investigatory work would provide policymakers and practitioners
+with a clearer picture of current needs, setting up a stronger
+foundation for subsequent policy and programmatic solutions. These might
+include pursuing replacement/infill homes in parks, targeted outreach of
+social assistance programs, and supporting the acquisition of at-risk
+communities by nonprofits. Study elements should include, at a minimum:
+
+-   **Profile of households living in manufactured homes** using Census
+    data and American Community Survey estimates. Detailed
+    cross-tabulations may also be possible through the use of the Public
+    Use Microdata Sample.
+
+-   Profile of manufactured home communities, completed via windshield
+    surveys and other direct forms of data collection. The survey should
+    collect and verify information such as:
+
+    -   Number of units
+
+    -   Design features (signage, curb and gutter, lighting, parking,
+        etc.)
+
+    -   Housing conditions (age, foundations, presence of accessory
+        structures, façade conditions, etc.)
+
+    -   On-site services (office/management building, trash and
+        recycling, playgrounds, etc.)
+
+    -   Connectivity relative to transportation and amenities
+
+-   **Park typologies**, categorizing communities and their needs to
+    better tailor policies and interventions.
+
+-   **Affordability analysis** based on available income estimates from
+    Census/ACS data and published lot rents and fees for parks.
+
+-   **Analysis of local land use and assessment guidelines** for
+    manufactured homes and mobile home parks. Does local zoning permit
+    new parks? How do local governments permit replacement/infill homes
+    in parks, if at all?
+
+If determined to be a necessary component of the study's scope, these
+findings may also be followed by specific policy recommendations for
+local governments in the Lynchburg region.
+
+HousingForward Virginia recommends that the study's findings be released
+publicly to ensure policymakers, elected officials, planners, and others
+understand the nuances of manufactured housing and think beyond common
+stereotypes. Press releases, media outreach, and a "rollout"
+presentation/event are possible options.
+
+**IMPLEMENTATION PLAN**
+
+*Immediate:*
+
+-   Determine if research will be conducted "internally" by CVPDC and
+    local government staff, or if project will be contracted out to a
+    third-party firm.
+
+-   Gather a list of persons and organizations in the region (and
+    potentially across the state) who might serve as project advisors
+    due to their knowledge and background.
+
+-   Contact local planning and zoning officials to determine if they
+    have reliable lists of manufactured home communities in their
+    jurisdictions.
+
+-   Develop list of potential funding entities; submit proposals to
+    interested parties.
+
+*Short-term (next 12 months):*
+
+-   Create a standardized database for known manufactured home
+    communities in the region. At the very least, this database should
+    include: park name, address, owner/manager, number of occupied
+    homes, number of pads, number of homes owned versus leased, utility
+    statuses, lot rents and fees, and records of recent sales.
+
+-   Develop park survey criteria and methodology. If possible, outreach
+    to park owners to collect information about lot rents and other
+    community data.
+
+-   Begin Census data collection and analysis.
+
+*Mid-term (12-24 months):*
+
+-   Conduct in-person park survey to gather on-the-ground information
+    about community and housing conditions.
+
+-   Draft and finalize report, including analysis of findings and key
+    takeaways for policymakers.
+
+-   Determine and implement process for public dissemination of the
+    study. Identify and pursue any key next steps identified in the
+    report.
+
+*Long-term (24+ months):*
+
+-   Conduct a scaled-down "check-in" survey to parks in the region to
+    determine if the number of units or vacancy rates have changed.
+
+-   Make note of any significant changes in park ownership; take
+    advantage of new owners looking to make good impressions in the
+    community.
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+-   There are few legal barriers for completing this work. However,
+    in-person surveys of parks may require entering private property not
+    within the public right-of-way and, if necessary, should be done
+    with the owner's permission.
+
+-   A comprehensive survey is not a likely task to be completed within
+    the normal scope of work and budgets for CVPDC and other local
+    government departments. Therefore, it is recommended that new
+    discrete funding be pursued to complete this work.
+
+-   CVPDC and local government staff possess the technical expertise to
+    conduct a study of this type. However, they may not have the time or
+    capacity to complete it. It is recommended that a consultant or
+    dedicated research unit be considered for this project.
+
+**FUNDING SCOPE REQUIREMENTS AND PROJECTED IMPACT**
+
+-   Some aspects of this solution may be completed without major funding
+    required, including the creation of a region-wide database for
+    manufactured home communities. The Department of Homeland Security
+    already has a list of manufactured homes for the nation with limited
+    information. Cost estimates for a full study will vary depending on
+    the number of parks that require physical visits, along with the
+    amount of complementary analysis/research determined to be useful.
+    Expect a range of \$25,000 to \$75,000.
+
+**POTENTIAL FUNDING SOURCES**
+
+Public funds may come from collective funding from local governments,
+and/or from Virginia Housing. Private funds may be available from
+philanthropic organizations interested in housing, health, poverty, and
+legal aid.
+
+**METRICS TO EVALUATE SUCCESS**
+
+-   Major knowledge gaps should be filled when this study is completed,
+    including:
+
+    -   Exactly how many mobile home parks are in Bedford and Campbell
+        Counties?
+
+    -   How many households live in these communities?
+
+    -   What are the major strengths, weaknesses, opportunities, and
+        threats for parks?
+
+    -   What are the demographics and socioeconomic situations of park
+        residents?
+
+-   Success may also be measured by shifts in funding/service priorities
+    for local governments and community development organizations, to
+    focus on manufactured home communities.
+
+**RESPONSIBLE ACTORS AND THEIR ROLES**
+
+-   CVPDC and local governments will initiate this solution, develop
+    scope of work, and determine who and how will conduct the research.
+
+-   Research team, which may be a third-party consultant, will develop
+    survey criteria, complete Census data analysis, and conduct
+    on-the-ground assessments of mobile home parks.
+
+-   Virginia Legal Aid Society, Bedford Housing Coalition, and other
+    direct service organizations who might already serve park residents
+    can act as liaisons for researchers, and provide valuable insights
+    into household needs.
+
+**RELEVANT EXAMPLES:**
+
+The Manufactured Home Community Coalition of Virginia (MHCCV) completed
+a comprehensive study of manufactured home communities in the Richmond
+region in 2016. This study was commissioned by an affordable housing
+nonprofit called project:HOMES, who later acquired a 50-unit trailer
+park along Route 1 in Chesterfield County.
+
+Project:HOMES has a long-term plan to revitalize the park by replacing
+each unit with high-quality, energy efficient manufactured homes. In
+addition, they have invested significant resources to improve
+infrastructure, create a community center, and hire bilingual staff to
+support and engage with residents.
