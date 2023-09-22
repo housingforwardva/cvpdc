@@ -262,6 +262,7 @@ local_tenure <- b25003_data %>%
   mutate(year = as.character(year))
 
 # Create bar chart visualization that shows the cumulative change from 2010 to 2021.
+subtitle_text <- "<span style = 'color:#011E41'><b>Homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021"
 
 local_tenure_plot <- ggplot(local_tenure,
        aes(x = year,
@@ -275,11 +276,16 @@ local_tenure_plot <- ggplot(local_tenure,
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8),
-        legend.position = "bottom") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
   labs(title = "Cumulative change in households by tenure in Lynchburg",
-       subtitle = "From 2010 to 2021",
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.")
+       subtitle = subtitle_text,
+       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_tenure_plot)
   
@@ -322,12 +328,13 @@ local_age_plot <- ggplot(local_age,
            data_id = run_diff,
            tooltip = run_diff))  +
   geom_col(position = "dodge") +
-  facet_grid(~tenure) +
+  facet_wrap(~tenure) +
   geom_col_interactive(position = "dodge", size = 2) +
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = number_format(big.mark = ",", style_positive = "plus")) +
-  theme(legend.position = "right") +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle = 90, hjust = 0.5)) +
   labs(title = "Cumulative change in households by age and tenure in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
 
