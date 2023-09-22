@@ -37,6 +37,7 @@ library(tidytext)
 library(janitor)
 library(sf)
 library(patchwork)
+library(zoo)
 
 cnty <- c("51009", "51011", "51019", "51031", "51515") # County FIPS codes
 
@@ -125,7 +126,7 @@ local_growth_plot <- ggplot(local_pop,
   scale_fill_hfv() +
   scale_y_continuous(labels = label_percent(), limits = c(-.05, .2)) +
   labs(title = "Population growth by county",
-       subtitle = "Percent change in population from 2010",
+       subtitle = "Percent change in population from 2010 to 2022",
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
 
 publish_plot(local_growth_plot)
@@ -145,6 +146,8 @@ Campbell County's population changes have been driven by international migration
 local_change <- read_rds("data/comp_data.rds") |> 
   filter(NAMELSAD != "Lynchburg city")
 
+subtitle_text <- "Net <span style = 'color:#011E41'><b>domestic migration,</b></span> <span style = 'color:#40C0C0'><b>international migration,</b></span> and <span style = 'color:#8B85CA'><b>natural increase (or decrease)</b></span>"
+
 # Create group bar chart showing population change by locality.
 
 local_change_plot <- ggplot(local_change,
@@ -160,11 +163,16 @@ local_change_plot <- ggplot(local_change,
   add_zero_line("y") +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
-  theme(axis.text.x = element_text(size = 6, angle = 90),
-        legend.position = "bottom") +
+  theme(axis.text.x = element_text(size = 6, angle = 90)) +
   labs(title = "Components of population change by county",
-       subtitle = "Net domestic migration, international migration, and natural increase (or decrease)",
-       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.<br>**Note:** Natural increase (or decrease) defined as births minus deaths.")
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Census Bureau, Population Estimates Program.<br>**Note:** Natural increase (or decrease) defined as births minus deaths.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_change_plot)
 
@@ -290,6 +298,8 @@ local_age <- b25007_data |>
   # filter(year == 2021) |> 
   # mutate(year = as.character(year))
 
+subtitle_text <- "Among <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021"
+
 local_age_plot <- ggplot(local_age,
        aes(x = county, 
            y = pchg,
@@ -304,12 +314,17 @@ local_age_plot <- ggplot(local_age,
   scale_fill_hfv() +
   scale_y_continuous(labels = label_percent()) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, size = 8),
-        legend.position = "bottom",
         legend.text = element_text(size = 8)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  labs(title = "Percent change in households by age and tenure",
-       subtitle = "From 2010 to 2021",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25007.")
+  labs(title = "Percent change in households by age",
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25007.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_age_plot)
 
@@ -348,6 +363,8 @@ local_size <- b25009_data |>
   filter(year == "2021") |> 
   mutate(county = str_remove_all(county, " County"))
 
+subtitle_text <- "Among <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021"
+
 local_size_plot <- ggplot(local_size,
        aes(x = county,
            y = run_diff,
@@ -360,12 +377,17 @@ local_size_plot <- ggplot(local_size,
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.2, size = 8),
-        legend.position = "bottom") +
-  labs(title = "Change in households by size and tenure",
-       subtitle = "From 2010 to 2021",
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.2, size = 8)) +
+  labs(title = "Change in households by size",
+       subtitle = subtitle_text,
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25009.") + 
-  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus"))
+  scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus"))  +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_size_plot)
 
@@ -426,6 +448,8 @@ cv_ad <- b18105_data |>
   filter(ad == "With an ambulatory difficulty") |> 
   mutate(year = as.character(year))
 
+subtitle_text <- "Adults <span style = 'color:#011E41'><b>65 years and over</b></span> and <span style = 'color:#40C0C0'><b>under 65 years old</b></span>"
+
 cvad_plot <- ggplot(cv_ad,
                     aes(x = year,
                         y = estimate,
@@ -438,11 +462,18 @@ cvad_plot <- ggplot(cv_ad,
   theme_hfv() +
   scale_fill_hfv() +
   guides(fill = guide_legend(reverse = TRUE)) +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_y_continuous(labels = number_format(big.mark = ",")) + 
   labs(title = "Adults with an ambulatory difficulty",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
+
   
 
 publish_plot(cvad_plot)
@@ -464,6 +495,8 @@ cv_id <- b18107_data |>
   filter(id == "With an independent living difficulty") |> 
   mutate(year = as.character(year))
 
+subtitle_text <- "Adults <span style = 'color:#011E41'><b>65 years and over</b></span> and <span style = 'color:#40C0C0'><b>under 65 years old</b></span>"
+
 cvid_plot <- ggplot(cv_id,
                     aes(x = year,
                         y = estimate,
@@ -480,15 +513,23 @@ cvid_plot <- ggplot(cv_id,
         axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_y_continuous(labels = number_format(big.mark = ",")) + 
   labs(title = "Adults with an independent living difficulty",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    ))) +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
   
 
 publish_plot(cvid_plot)
-
-girafe(ggobj = cvid_plot,
-       height_svg = 4)
-
-
 
 ```
 
@@ -607,6 +648,8 @@ local_dist <- b25118_data |>
 
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
 
+subtitle_text <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2021"
+
 local_dist_plot <- ggplot(local_dist,
        aes(x = factor(income, level = level_order),
            y = estimate,
@@ -619,12 +662,17 @@ local_dist_plot <- ggplot(local_dist,
   scale_fill_hfv() +
   theme_hfv() +
   add_zero_line("y") +
-  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8),
-        legend.position = "bottom") +
+  theme(axis.text.x = element_text(angle = 90, vjust = .2, size = 8)) +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Households by income and tenure",
-       subtitle = "Number of homeowner and renter households",
-       caption = "**Source:** U.S. Census Bureau, American Community Survey, 2017-2021 5-year estimates, Table B25118.")
+  labs(title = "Households by income",
+       subtitle = subtitle_text,
+       caption = "**Source:** U.S. Census Bureau, American Community Survey, 2017-2021 5-year estimates, Table B25118.") +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_dist_plot)
 
@@ -644,6 +692,8 @@ local_inc <- b25119_data |>
   mutate(county = str_remove_all(county, ", Virginia")) |> 
   filter(county != "Bedford city")
 
+subtitle_text <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2021 dollars"
+
 local_inc_plot <- ggplot(local_inc,
                          aes(x = year,
                              y = dollars21,
@@ -657,11 +707,16 @@ local_inc_plot <- ggplot(local_inc,
   theme_hfv() +
   scale_color_hfv() +
   scale_y_continuous(labels = label_dollar()) +
-  labs(title = "Median household income by tenure",
-       subtitle = "From 2010 to 2021 in 2021 adjusted dollars",
+  labs(title = "Median household income",
+       subtitle = subtitle_text,
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
-  theme(legend.position = "bottom",
-        axis.text.x = element_text(angle = 90, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  plot_annotation(
+    theme = theme(
+    plot.subtitle = element_markdown(
+       margin = margin(b = 0.4, unit = 'cm'),
+        size = 11.5
+    )))
 
 publish_plot(local_inc_plot)
 
@@ -1021,8 +1076,8 @@ sales <- read_rds("data/cv_var.rds") |>
   filter(name != "Lynchburg City") |> 
   select(geography, name, med_price, adj_price, period, quarter, year) |> 
   mutate(period = as.character(period)) |> 
-  select(geography, name, adj_price, period) |> 
-  filter(period == "2023 Q2" | period == "2019 Q2") 
+  select(geography, name, adj_price, quarter) |> 
+  filter(quarter == "2023 Q2" | quarter == "2019 Q2") 
 
 # pivot_wider(names_from = period, 
 #               values_from = adj_price) |> 
@@ -1035,13 +1090,13 @@ subtitle_text <- "In <span style = 'color:#011E41'><b>Q2 2019</b></span> and <sp
 ggplot(sales, 
        aes(x = reorder(name, adj_price),
            y= adj_price,
-           color = period)) +
+           color = quarter)) +
   geom_line(linewidth = 1, color = "grey") +
   geom_point_interactive(
     aes(data_id = adj_price,
         tooltip = dollar_format()(adj_price)),
     size = 2) + 
-  geom_text(aes(label = dollar(adj_price), hjust = ifelse(period == "2023 Q2", -0.25, 1.25))) +
+  geom_text(aes(label = dollar(adj_price), hjust = ifelse(quarter == "2023 Q2", -0.25, 1.25))) +
   coord_flip() +
   theme_hfv() +
   scale_y_continuous(labels = dollar_format(), limits = c(100000, 450000)) +
@@ -1071,6 +1126,7 @@ Many counties saw a bump in homes sold during 2020, no doubt a result of the pan
 
 units <- read_rds("data/cv_var.rds") |> 
   select(geography, name, units, period, year) |> 
+  filter(name != "Lynchburg City") |> 
   mutate(period = as.character(period)) |> 
   mutate(year = as.character(year))
 
@@ -1096,8 +1152,9 @@ As an additional indicator of demand, the median days on market shows how the pa
 # Need average days on market for each county. Make a bar chart for each. See Lynchburg section for stylization.
 
 dom <- read_rds("data/cv_var.rds") |> 
-  select(geography, name, med_dom, period, year) |> 
-  filter(year >= 2018)
+  select(geography, name, med_dom, period, year) |>
+    filter(name != "Lynchburg City") |> 
+  filter(year >= 2018) 
 
 ggplot(dom, 
        aes(x = period,
@@ -1109,7 +1166,7 @@ ggplot(dom,
   scale_fill_hfv() +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(title = "Median days on market by county",
-       caption = "**Source:** Virginia REALTORS, through Q2 2023.")
+       caption = "**Source:** Virginia REALTORS, through Q2 2023.") 
 
 ```
 
