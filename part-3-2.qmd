@@ -1019,32 +1019,32 @@ From Q2 2019 to Q2 2023, the median sales price in the counties has risen by at 
 
 sales <- read_rds("data/cv_var.rds") |> 
   filter(name != "Lynchburg City") |> 
-  select(geography, name, med_price, adj_price, period, year) |> 
+  select(geography, name, med_price, adj_price, period, quarter, year) |> 
   mutate(period = as.character(period)) |> 
   select(geography, name, adj_price, period) |> 
-  filter(period == "2023 Q2" | period == "2019 Q2") |> 
-  pivot_wider(names_from = period, 
-              values_from = adj_price) |> 
-  mutate(latest = `2023 Q2`) |> 
-  pivot_longer(3:4,
-               names_to = "period",
-               values_to = "med_price") 
+  filter(period == "2023 Q2" | period == "2019 Q2") 
+
+# pivot_wider(names_from = period, 
+#               values_from = adj_price) |> 
+#   pivot_longer(3:4,
+#                names_to = "period",
+#                values_to = "med_price") 
 
 subtitle_text <- "In <span style = 'color:#011E41'><b>Q2 2019</b></span> and <span style = 'color:#40C0C0'><b>Q2 2023</span>"
 
 ggplot(sales, 
-       aes(x = reorder(name, latest),
-           y= med_price,
+       aes(x = reorder(name, adj_price),
+           y= adj_price,
            color = period)) +
-  geom_line(size = 1, color = "grey") +
+  geom_line(linewidth = 1, color = "grey") +
   geom_point_interactive(
-    aes(data_id = med_price,
-        tooltip = dollar_format()(med_price)),
+    aes(data_id = adj_price,
+        tooltip = dollar_format()(adj_price)),
     size = 2) + 
-  geom_text(aes(label = dollar(med_price), hjust = ifelse(period == "2023 Q2", -0.25, 1.25))) +
+  geom_text(aes(label = dollar(adj_price), hjust = ifelse(period == "2023 Q2", -0.25, 1.25))) +
   coord_flip() +
   theme_hfv() +
-  scale_y_continuous(labels = dollar_format(), limits = c(100000, 400000)) +
+  scale_y_continuous(labels = dollar_format(), limits = c(100000, 450000)) +
   labs(title = "Median quarterly residential sales price",
        subtitle = subtitle_text,
        caption = "**Source:** Virginia REALTORS, adjusted to Q2 2023 dollars.") +
@@ -1249,7 +1249,7 @@ vacancy_plot <- ggplot(local_vacancy,
   theme_hfv() +
   scale_color_hfv() +
   labs(title = "Rental vacancy rate by quarter",
-       subtitle = "All multifamily properties in CVPDC region",
+       subtitle = "All multifamily properties in CoStar",
        caption = "**Source:** CoStar Group, Inc.")
   
 publish_plot(vacancy_plot)

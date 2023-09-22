@@ -1,10 +1,10 @@
 library(sf)
 library(tidyverse)
 
-parcels <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPDynamic/MapServer/41/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) %>% 
-  st_point_on_surface()
-
-write_rds(parcels, "data/parcels.rds")
+# parcels <- st_read("https://mapviewer.lynchburgva.gov/ArcGIS/rest/services/OpenData/ODPDynamic/MapServer/41/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) %>% 
+#   st_point_on_surface()
+# 
+# write_rds(parcels, "data/parcels.rds")
 
 # The following investigates the number of single-family detached homes that are being utilized as rentals. There is a growing concern over homeownership rates in the city. The current market incentivizes the rental of single-family homes over the sale.
 
@@ -62,3 +62,5 @@ hex_count <- filter(hex_grid_sf, n_pts > 4)
 
 
 write_rds(hex_count, "data/hex_count.rds")
+
+write_rds(sfr, "data/sfr.rds")

@@ -70,7 +70,6 @@ The following provides an analysis of major trends impacting housing within the 
 #| label: setup
 
 library(tidyverse)
-library(tidyverse)
 library(janitor)
 library(ggplot2)
 library(leaflet)
@@ -85,6 +84,7 @@ library(tidytext)
 library(lubridate)
 library(zoo)
 library(patchwork)
+
 
 lburg <- "51680"
 
@@ -1101,19 +1101,51 @@ publish_plot(local_rent_plot)
 
 ```
 
+Rental vacancy rates in the city hit a high during the early parts of the pandemic. This could have been the result of the student population leaving due to pandemic protections and other workers now being able to work from elsewhere. However, vacancy rates reached a low in the latter half of 2021 and then began to climb back up in 2022 onward. More recently, rental vacancy has sat around a more balanced 6 percent.
 ```{r}
-#| label: vacancy
+#| label: fig-vacancy
+#| fig-caption: "Rental vacancy in Lynchburg"
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
 
 # Download data into csv - name [locality_abbv]_vacancy.csv --- for example amherst_vacancy.csv or lburg_vacancy.csv
 
-# Note the download date of data here: 
+# Note the download date of data here: 9/22/23
+
+lburg_v <- read_csv("data/lburg_vacancy.csv")
 
 
+local_vacancy <- lburg_v |> 
+  filter(!str_detect(period, "QTD")) |> 
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
+  mutate(year = year(period)) |> 
+  filter(year >= 2016) |> 
+  mutate(vacancy_label = percent(vacancy)) |> 
+  mutate(tooltip = c(paste0("Date: ", period, "\n Vacancy rate: ", vacancy_label))) |> 
+  mutate(vacancy = as.numeric(vacancy))
 
+
+vacancy_plot <- ggplot(local_vacancy,
+       aes(x = period,
+           y = vacancy,
+           color = vacancy)) +
+  geom_line(linewidth = 1) +
+  geom_point_interactive(
+    aes(data_id = tooltip,
+        tooltip = tooltip)) +
+  theme_hfv() +
+  scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = "Rental vacancy rate by quarter",
+       subtitle = "All multifamily properties in Lynchburg",
+       caption = "**Source:** CoStar Group, Inc.")
+  
+
+publish_plot(vacancy_plot)
 
 ```
+### Single-Family Rentals
+
 It is important to note that CoStar data excludes a significant amount of single-family detached rentals, which has been growing in demand across the nation. In the city, there is an estimated 4,922 single-family homes that are being used as rentals. A majority of the detached SFR is located in Ward II, where the College Hill and Diamond Hill neighborhoods are located.
 
 Rental prices for these are not easily discerned, as this type of housing is sometimes marketed on non-traditional channels, like Facebook groups or simply with a yard sign.
@@ -1136,6 +1168,8 @@ mapview(hex_count,
 #| label: fig-sfr-ward
 #| fig-cap: "Single-family detached rentals by Lynchburg ward"
 
+sfr <- read_rds("data/sfr.rds")
+
 sfr_ward <- sfr %>% 
   group_by(Designation) %>% 
   summarise(count = n_distinct(parcel_id)) %>% 
@@ -1157,6 +1191,9 @@ sfr_ward_plot <- ggplot(sfr_ward,
 publish_plot(sfr_ward_plot)
 
 ```
+
+### Assisted Rentals
+
 As of early 2023, there were a total of 3,651 assisted rental units in the city. While assisted units can be supported by multiples types of federal subsidy, the bulk of these units (35 percent) are supported by the Low-Income Housing Tax Credit (LIHTC) program. They are followed by project-based Section 8 at 1,201 units. 
 
 :::{.callout-note}

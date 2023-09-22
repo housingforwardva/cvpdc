@@ -1,4 +1,8 @@
 library(tidyverse)
+library(fredr)
+library(lubridate)
+library(zoo)
+
 
 
 cv_var <- read_csv("data/home-sales.csv") |> 
@@ -7,9 +11,6 @@ cv_var <- read_csv("data/home-sales.csv") |>
   mutate(year = substr(period, 1, 4)) |> 
   mutate(year = as.numeric(year))
 
-library(fredr)
-library(lubridate)
-library(zoo)
 
 cpi_ls <- fredr(
   series_id = "CUUR0000SA0L2"
@@ -24,6 +25,7 @@ cpi_ls <- fredr(
 
 cv_var <- cv_var |> 
   left_join(cpi_ls, by = "period") |> 
-  transform(adj_price = (278.47967/cpi)*med_price)
+  transform(adj_price = (278.47967/cpi)*med_price) 
+  
 
 write_rds(cv_var, "data/cv_var.rds")
