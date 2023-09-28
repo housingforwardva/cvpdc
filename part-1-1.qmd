@@ -1,26 +1,132 @@
-# Introduction {#part-1-1}
+# Background research {#part-1-1}
 
-## About HousingForward Virginia
+This section reviews comprehensive plans, strategic plans, and other housing analysis documents created by localities within the CVPDC, listed below. The two major goals of this review are:
 
-This report was written by HousingForward Virginia, the Commonwealth's trusted resource for affordable housing data and actionable insights. Advocates, planners, developers, and mission aligned organizations rely on us to help them build connections and advance their work. With our support, they're able to better identify needs, influence decision makers, and ultimately increase access to affordable housing for all. HousingForward Virginia is a 501(c)3 nonprofit organization based in Richmond, Virginia.
+1. To understand historic strategies addressing housing needs in the region, including relevant programs and policies identified by regional leadership, and
+2. To identify and organize existing and future housing trends across the region.
 
-For more information, visit: <https://www.housingforwardva.org>
+Content analysis was performed to determine the presence of repeated words, themes, or concepts across documents, synthesized below in three subsections:
 
-## About Central Virginia Planning District Commission
+1. Consistent themes across the region,
+2. Unique submarket and locality issues, and
+3. Contradictions or conflicting priorities in the region.
 
-The Central Virginia Planning District Commission (CVPDC), formally known as Region 2000 District Commission, is the regional planning entity for Planning District 11. The region includes the City of Lynchburg, Amherst County, Appomattox County, Bedford County, Campbell County, and the Towns of Altavista, Amherst, Appomattox, Bedford, and Brookneal. The CVPDC works to provide services for member localities and identify and develop opportunities for coordination among the region's local governments. Additionally, the CVPDC encourages and facilitates collaboration among local governments in addressing challenges and opportunities of greater-than-local significance.
+## Key highlights
 
-For more information, visit: <https://www.cvpdc.org/about/about-cvpdc.html>
+The region has a blend of urban and rural housing needs combined with concentrated suburban growth and changing household demographics. While none of these trends are wholly unique to the area (compared to other peer regions in Virginia), they still interact in a specific and unique way.
 
-## About this study
+Lynchburg, as the region’s core city, has its own long-standing and emerging challenges that are less relevant in the surrounding counties. However, its local approaches towards transportation and housing could stand as a regional model for other localities considering how to address affordability and to connect aging residents to homes and services.
 
-The Central Virginia Planning District Commission's 2023 Housing Market Analysis Study was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region and ways to address the issues identified. The study was completed thanks to funding from the Virginia Housing Community Impact Grant.
+Additional takeaways include:
 
-## The importance of a regional housing study
-*Housing challenges span local boundaries*
+* Every community in the region has a desire to sustainably guide and shape new development in ways that **prevent strains on resources** and **preserve the character of existing communities**, particularly in rural areas.
+* All localities recognize the need to **proactively address their land use regulations and infrastructure investments** to promote new development in the places they want to see.
+* A greater diversity of housing types and improved social/medical infrastructure will be necessary to **meet the needs of changing demographics in the region**, especially aging seniors.
+* The need for **small-scale mixed use** and infill developments in towns, and a growing prevalence of **short-term rentals**, are examples of specific challenges faced in certain parts of the region.
+* The **uneven distribution of new growth** across the region will further stress the housing market without proactive efforts to manage and capitalize on these trends.
 
-Communities throughout the Central Virginia region face different housing challenges, but the need for more affordable housing is a common thread in rural, suburban, and urban areas. A diverse and accessible housing supply is critical for promoting equitable and sustainable communities, and housing affordability is a basic need for individuals and families at all income levels. A regional housing study acknowledges that housing markets extend beyond individual communities and that decisions made in one area can have far-reaching consequences in neighboring communities.
+These findings contribute to early analysis of existing conditions and compliment local listening sessions held with regional leadership in December 2022.
 
-The Central Virginia Planning District is composed of four primarily rural counties and the city of Lynchburg and its growing suburbs as the central urban core. The region has seen moderate population growth in recent years primarily as a result of domestic migration due to the COVID-19 pandemic and the rise of remote work options. This has led to increases in home prices and rental vacancy declines as higher income workers relocated out of D.C. and larger east coast metros to benefit from the relative affordability of the region. More and more, smaller and older households are being seen in the region, and affordability challenges are continuing to hit people of color, renters, and those living alone the most.
+## Documents included in this analysis
 
-With a wide range of housing for people of all incomes, the region can continue to be a place to call home for both new and existing residents. By adopting a regional perspective, local policymakers can develop more holistic and effective strategies to address housing affordability, equity, transportation, and sustainability, resulting in a more resilient and inclusive regional housing market that aligns with the vision of a thriving region.
+**Regional**
+
+-   Amherst County Comprehensive Plan (2027)
+-   Forward Amherst: Office of Economic Development Strategic Plan (2022)
+-   Appomattox County Comprehensive Plan
+-   Bedford County Comprehensive Plan (updated 2015)
+-   CVPDC Annual Report (2021)
+-   Campbell County Comprehensive Plan (2034)
+-   Central Virginia Continuum of Care Strategic Plan (2020-2023)
+
+**Cities and towns**
+
+-   Town of Alta Visa Comprehensive Plans (2016, 2045)
+-   Town of Amherst Comprehensive Plan (2017)
+-   Town of Appomattox Comprehensive Plan (2035)
+-   Town of Bedford Comprehensive Plan (2017)
+-   Lynchburg CHNA (2018-2021)
+-   Lynchburg Analysis of Impediments to Fair Housing (2020)
+-   Lynchburg Master Plan (2040)
+
+## Consistent themes
+
+A number of repeated ideas were found across all documents. These shared themes are useful in capturing attitudes and challenges that characterize the CVPDC, and can be a meaningful starting point for determining shared priorities for regional leadership.
+
+**Concentrate housing, commerce, and public facilities in a mixed-use pattern within designated urban development areas (UDAs) or planned urban development (PUDs).**
+
+The region desires a balance between growth and the preservation of its rural character. UDAs, PUDs, village-center developments and other related tools are mentioned as ways counties can target growth and density over the next 10-20 years, allowing for minimal disruption to the lower density rural and agricultural lands throughout the area. 
+
+Considerations of how to use incentives to attract and encourage focused development are also found across housing plans, including fast track permitting and plan review, reduced application fees, and new density bonuses. 
+
+**Study the impact of local zoning and subdivision ordinances as they relate to housing, and develop strategies to revise them in support of this goal.**
+
+As in other parts of the Commonwealth, zoning evaluations are becoming a priority for regional leadership as they move towards controlled density. Re-examining how current ordinances can be amended to reduce barriers to housing development is a priority common across many plans.
+
+**Improve the regional infrastructure necessary to expand residential development.**
+
+Infrastructure gaps pose a barrier to development in more rural parts of the region and particularly in the counties surrounding Lynchburg that are seeing increasing growth. These gaps include missing utility connections required for new residential subdivisions, as well as services needed for new businesses to enter the region.
+
+Priorities and policies across the region look to address this barrier in order to better attract future employers and residents, including how to pair this priority with UDA development incentives (i.e. financing new water and sewer extensions).
+
+**Stitch housing with services to address the growing needs of the elderly and population.**
+
+One demographic trend that can be seen across the region is an increasingly aging population. This is prompting planners to look for strategies to encourage universally designed housing that is connected to the medical and social facilities needed by older adults.
+
+**Pursue greater diversity and higher standard of quality for the regional housing inventory.**
+
+This priority summarizes a group of related strategies, including addressing blight and rehabilitating the existing housing inventory, offering a variety of housing options to a shrinking household size, and creating design standards to create aesthetically pleasing and safe housing. 
+
+## Unique issues
+
+A number of locality-specific issues were also visible in analysis, particularly in the towns and within Lynchburg where the urban form and housing inventory vary from the surrounding counties. These submarket issues help bring detailed priorities into focus from a larger regional perspective. 
+
+**Generate the mixed-use development of historic town main streets.** 
+
+Many towns like Altavista,  Bedford, and Appomattox  are pursuing mainstreet revitalization, with the goal of creating ground-level opportunities for business with upper-story housing to attract new residents and activity.
+
+**Use infill development to add to housing inventory in older existing neighborhoods and new growth areas.**
+
+Amherst and Bedford county include infill development strategies in their housing plans in order to minimize impact to the environment and re-purpose vacant or underutilized land.
+
+**Pursue more multifamily options as an alternative to single-family and manufactured housing.**
+
+Manufactured housing exists as a naturally occurring form of affordable housing for many parts of the region, but certain localities, including Campbell County, are seeing multifamily units outstrip these as the affordable housing development of choice.
+
+**Assess short-term and seasonal rentals.**
+
+The counties are distinct from each in regards to their demand for short-term rentals and attempts to regulate these units. For example, Bedford County has a strong tourism industry that has resulted in more short-term and seasonal rentals than other parts of the region. Lynchburg, in contrast, has a high number of student-occupied rentals. Approaches to these different non-permanent housing options differ.
+
+::: callout-info
+
+## Lynchburg analysis 
+
+Lynchburg is distinct enough from the rest of the region in its challenges, needs, and demand that its housing analysis has been separated out from other submarket issues. 
+
+The city has already performed a number of housing assessments to identify existing challenges and priorities to pursue, including three unique goals pulled here: 
+
+1. Combine transportation and housing goals by placing housing near mobility hubs, park and ride, and other transit stops.
+2. Create a racial equity framework for addressing housing issues in the city.
+3. Create an affordable housing trust fund and adopt inclusionary zoning policies. 
+
+The Lynchburg Analysis of Impediments to Fair Housing revealed a number of key points about equality of housing opportunities in Lynchburg, including the way that rental assistance further isolates poor and minority populations. The location of residents receiving tenant-based federal rent assistance (Housing Choice Vouchers) is inversely related to those areas offering the greatest opportunity.
+
+Racial equity goals also tie into transportation and inclusionary zoning priorities as ways to holistically connect lower-income populations to jobs and services across the city and deconcentrate poverty. The high number of students and young people (22% of the population) is also impacting the need for affordable and accessible rental housing to a greater extent than in much of the rest of the region.
+
+:::
+
+## Conflicts and challenges
+
+Reviewing and analyzing plans from a regional perspective not only allows for the identification of consistent and discrete themes, but also potential conflicts in housing priorities. These challenges can help regional leadership consider how approaches in some localities may compete with or impact others and contribute to a balanced outlook on the area’s future goals. 
+
+**While the counties surrounding Lynchburg are experiencing growing wealth and housing development, historic downtowns and urban centers in the region continue to experience concentrated poverty and subsidized housing that is disconnected from nearby opportunity.**
+
+Although housing affordability does not appear to be a major concern in places like Bedford County, there is a concentration of federally-assisted affordable housing within the Bedford Town limits (the largest in the region, outside of Lynchburg).
+
+Similarly, while Timberlake, Forest, and Madison Heights areas continue to see some of the fastest growth in the region, the adjacent Lynchburg still experiences economic and housing segregation.
+
+**Fast growth in some areas, combined with slow growth and population stagnation elsewhere, places a conflicting strain on the housing inventory.**
+
+Bedford County experienced the highest growth in the region (16% since 2010) thanks to many new residents moving in from elsewhere in Virginia. Meanwhile, Cambell and Amherst counties saw very low or negative population growth. This demographic imbalance places a strain on the region’s housing market.
+
+While high-growth areas of Bedford require unique solutions (such as proactive zoning changes and infrastructure planning), so too do the shrinking or stagnating areas elsewhere in the region. Maintaining the quality of existing housing—and ensuring aging residents in older homes have necessary resources—should be a priority.

@@ -1,4 +1,4 @@
-# City of Lynchburg Housing Market Analysis
+# Lynchburg market analysis {#part-2-3}
 
 The following provides an analysis of major trends impacting housing within the City of Lynchburg. 
 

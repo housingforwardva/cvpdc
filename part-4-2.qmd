@@ -4,7 +4,7 @@ editor:
     wrap: 72
 ---
 
-# Local Partnerships
+# Local partnerships {#part-4-2}
 
 These solutions involve the coordination of two or more jurisdictions to
 solve issues that impact specific areas of the region not contained

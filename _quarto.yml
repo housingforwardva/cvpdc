@@ -35,31 +35,28 @@ book:
   date: today
   chapters:
     - index.qmd 
-    - part: "PART 1: Introduction and background"
+    - part: "PART 1: Research and engagement"
       chapters:
-        - part-1-1.qmd # Introduction
-        - part-1-2.qmd # Background research
-    - part: "PART 2: Engagement summary"
-      chapters:
-        - part-2-1.qmd # Methods and themes
-    - part: "PART 3: Findings"
+        - part-1-1.qmd # Background research
+        - part-1-2.qmd # Engagement and outreach
+    - part: "PART 2: Findings"
       chapters: 
-        - part-3-1.qmd # CVPDC Housing Market Assessment
-        - part-3-2.qmd # County Housing Market Assessment
-        - part-3-3.qmd # City of Lynchburg Housing Market Analysis
-    - part: "PART 4: Policy evaluation"
+        - part-2-1.qmd # CVPDC Housing Market Assessment
+        - part-2-2.qmd # County Housing Market Assessment
+        - part-2-3.qmd # City of Lynchburg Housing Market Analysis
+    - part: "PART 3: Policy evaluation"
       chapters:
-        - part-4-1.qmd # Regional and local policy evaluation
-    - part: "PART 5: Policy recommendations"
+        - part-3-1.qmd # Regional and local policy evaluation
+    - part: "PART 4: Policy recommendations"
       chapters: 
-        - part-5-1.qmd # Regional solutions
-        - part-5-2.qmd # Local partnerships
-        - part-5-3.qmd # Amherst
-        - part-5-4.qmd # Appomattox
-        - part-5-5.qmd # Bedford
-        - part-5-6.qmd # Campbell
-        - part-5-7.qmd # Lynchburg
-        - part-5-8.qmd # Towns
+        - part-4-1.qmd # Regional solutions
+        - part-4-2.qmd # Local partnerships
+        - part-4-3.qmd # Amherst
+        - part-4-4.qmd # Appomattox
+        - part-4-5.qmd # Bedford
+        - part-4-6.qmd # Campbell
+        - part-4-7.qmd # Lynchburg
+        - part-4-8.qmd # Towns
    # - part: "Appendix"
 
 knitr:

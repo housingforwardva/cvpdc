@@ -1,11 +1,13 @@
 # About {.unnumbered}
 
-This website is the online version of an assessment of housing market trends and needs in the Central Virginia Planning District Commission geographic area. It is currently in development and not meant to be publicly circulated.
+This website is the online version of the Central Virginia Planning District Commission's 2023 Housing Market Analysis Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region and ways to address the issues identified. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
 
-Invited stakeholders can provide feedback on the draft content on these pages using the instructions below.
+It is currently a draft and not meant to be publicly circulated at this time.
 
 ::: callout-tip
 ## How to give interactive feedback
+
+Invited stakeholders can provide feedback on the draft content on these pages.
 
 You can highlight and add comments to this website using [hypothesis.is](https://web.hypothes.is/).
 
@@ -16,6 +18,31 @@ You can highlight and add comments to this website using [hypothesis.is](https:/
 5.  Clicking on any yellow-highlighted text will reveal comments made by others. You can reply to these annotations.
 
 For more information, see the [Annotation Basics](https://web.hypothes.is/help/annotation-basics/) help page.
-:::
 
 If you have any questions or problems with this website, please email [jonathan\@housingforwardva.org](mailto:jonathan@housingforwardva.org).
+:::
+
+## About HousingForward Virginia {.unnumbered}
+
+This report was written by HousingForward Virginia, the Commonwealth's trusted resource for affordable housing data and actionable insights. Advocates, planners, developers, and mission aligned organizations rely on us to help them build connections and advance their work. With our support, they're able to better identify needs, influence decision makers, and ultimately increase access to affordable housing for all. HousingForward Virginia is a 501(c)3 nonprofit organization based in Richmond, Virginia.
+
+For more information, visit: <https://www.housingforwardva.org>
+
+## About Central Virginia Planning District Commission {.unnumbered}
+
+The Central Virginia Planning District Commission (CVPDC), formally known as Region 2000 District Commission, is the regional planning entity for Planning District 11. The region includes the City of Lynchburg, Amherst County, Appomattox County, Bedford County, Campbell County, and the Towns of Altavista, Amherst, Appomattox, Bedford, and Brookneal. The CVPDC works to provide services for member localities and identify and develop opportunities for coordination among the region's local governments. Additionally, the CVPDC encourages and facilitates collaboration among local governments in addressing challenges and opportunities of greater-than-local significance.
+
+For more information, visit: <https://www.cvpdc.org/about/about-cvpdc.html>
+
+## Importance of a regional housing study {.unnumbered}
+*Housing challenges span local boundaries.*
+
+Communities throughout the Central Virginia region face different housing challenges, but the need for more affordable housing is a common thread in rural, suburban, and urban areas. A diverse and accessible housing supply is critical for promoting equitable and sustainable communities, and housing affordability is a basic need for individuals and families at all income levels. A regional housing study acknowledges that housing markets extend beyond individual communities and that decisions made in one area can have far-reaching consequences in neighboring communities.
+
+The Central Virginia Planning District is composed of four primarily rural counties and the City of Lynchburg. Over the last few decades, steady suburban development expanding away from the central city has connected these urban and rural areas via sprawl.
+
+In recent years, the region has seen moderate population growth primarily driven by domestic migration. These new residents are likely choosing the region for its lower cost of living and good economy, especially due to the rise of remote work options following the COVID-19 pandemic. This trend mimics similar changes across other regions in the Commonwealth, and throughout the nation.
+
+However, the rising demand for housing has led to higher home prices and lower vacancy rates. New residents, particularly those from Northern Virginia and other high-cost areas, may have the resources to successfully compete in the current market, while current residents do not. Local homebuyers find themselves with few options, and housing affordability continues to be a major challenge for people of color, renters, and those living alone.
+
+By pursuing a wide range of housing for people of all incomes, the region can be a place to call home for both new and current residents. By embracing a regional perspective, local policymakers can develop more holistic and effective strategies to address housing affordability, equity, transportation, and sustainability, resulting in a more resilient and inclusive regional housing market that aligns with the vision of a thriving region.
