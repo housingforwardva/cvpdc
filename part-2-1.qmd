@@ -85,6 +85,7 @@ library(zoo)
 library(patchwork)
 library(ggtext)
 library(ragg)
+library(ggspatial)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
@@ -1774,6 +1775,8 @@ publish_plot(hcv_grp_plot)
 #| fig-cap: "Percent of renters with Housing Choice Vouchers by tract"
 
 library(mapview)
+
+cv_basemap <- read_rds("data/cv_basemap.rds")
 
 hcv <- read_rds("data/hcv.rds") |> 
   clean_names() |> 
