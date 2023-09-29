@@ -12,7 +12,7 @@ within a single locality. While some of these may address issues that
 impact the region at large, the implementation of these solutions might
 best suit partnerships between two or more local governments.
 
-## Primary Solutions
+## Primary solutions
 
 ### Invest in homebuyer readiness programs
 
@@ -212,33 +212,51 @@ Additionally, higher rates of homeownership can enhance local economies,
 as homeowners are more likely to invest in their properties and local
 businesses, leading to neighborhood revitalization.
 
-**BEST PRACTICES AND EXAMPLES**
+::: callout-note
 
-[***HOME of Virginia's Homeownership Education
-Program***](https://homeofva.org/get-help/homeownership/) ***Richmond,
-Virginia***
+### HOME of Virginia's Homeownership Education Program
 
-**Approach:** Housing Opportunities Made Equal of Virginia, Inc. (HOME
+*Richmond, Virginia*
+
+**Approach:**
+
+Housing Opportunities Made Equal of Virginia, Inc. (HOME
 of Virginia) offers pre-purchase homeownership education courses. The
 curriculum includes understanding credit, managing money, obtaining a
 mortgage loan, shopping for a home, and maintaining a home and finances.
 
-**Outcomes:** Since 1991, over 2,000 families have received downpayment
+**Outcomes:**
+
+Since 1991, over 2,000 families have received downpayment
 assistance for a total local economic impact over \$95,000,000 in the
 Richmond area. In 2022, over 400 financial literacy courses were
 conducted.
 
-[***HomeOwnership Center,
-Inc.***](https://hocwv.org/advising-education-services/)***: Elkin, West
-Virginia***
+[HOME of Virginia - Homeownership](https://homeofva.org/get-help/homeownership/)
 
-**Approach:** The non-profit led center serves multiple counties to
+:::
+
+::: callout-note
+
+### HomeOwnership Center, Inc.
+
+*Elkin, West Virginia*
+
+**Approach:**
+
+The non-profit led center serves multiple counties to
 provide community based lending, advising, and educational resource for
 individuals and families of any income level.
 
-**Outcomes:** Over the last five years, over 234 new homeownership
+**Outcomes:**
+
+Over the last five years, over 234 new homeownership
 opportunities have been created and preserved and over 1,200 customers
 have received education and counseling services.
+
+[HomeOwnership Center, Inc. - Advising and Education](https://hocwv.org/advising-education-services/)
+
+:::
 
 ### Identify sustainable approaches for manufactured homes
 
@@ -277,8 +295,8 @@ While these tasks are not dependent on one another, success is more
 likely if the localities simultaneously pursue at least two options
 together.
 
-[**DATA ANALYSIS:***Determine scope and scale of manufactured home
-placements*]{.underline}
+**Data analysis:** *Determine scope and scale of manufactured home
+placements*
 
 Amherst and Appomattox should combine their residential permit and
 assessment data to further investigate the deliveries of factory-built
@@ -307,7 +325,7 @@ planning commissioners (and supervisors, if desired) of both counties.
 This memo could also outline some of the potential solution steps
 described below.
 
-[**TASK 1:***Evaluate and amend zoning ordinances*]{.underline}
+**TASK 1:** *Evaluate and amend zoning ordinances*
 
 All new homes---whether built on site or in a factory---must conform to
 local zoning codes. While local governments in Virginia generally have
@@ -382,8 +400,7 @@ cons of these options for their respective communities. If no workable
 solution via zoning is possible, then staff should focus attention on
 the remaining task options.
 
-[**TASK 2:***Identify possible tax and financial
-incentives*]{.underline}
+**TASK 2:** *Identify possible tax and financial incentives*
 
 Consult with county attorneys to determine fiscal incentives localities
 can implement under existing state code. Establish certain manufactured
@@ -406,8 +423,7 @@ Consider increased hookup fees for:
 
 -   Manufactured homes that do not meet certain quality criteria.
 
-[***TASK 3:** Secure new funding and create incentives to eradicate old
-mobile homes*]{.underline}
+**TASK 3:** *Secure new funding and create incentives to eradicate old mobile homes*
 
 Work with CVPDC, Virginia Housing, and DHCD to identify and jointly
 apply for funding that:
@@ -624,7 +640,7 @@ communities by nonprofits. Study elements should include, at a minimum:
     cross-tabulations may also be possible through the use of the Public
     Use Microdata Sample.
 
--   Profile of manufactured home communities, completed via windshield
+-   **Profile of manufactured home communities**, completed via windshield
     surveys and other direct forms of data collection. The survey should
     collect and verify information such as:
 
@@ -739,7 +755,8 @@ presentation/event are possible options.
     required, including the creation of a region-wide database for
     manufactured home communities. The Department of Homeland Security
     already has a list of manufactured homes for the nation with limited
-    information. Cost estimates for a full study will vary depending on
+    information.
+-   Cost estimates for a full study will vary depending on
     the number of parks that require physical visits, along with the
     amount of complementary analysis/research determined to be useful.
     Expect a range of \$25,000 to \$75,000.
@@ -785,7 +802,9 @@ legal aid.
     can act as liaisons for researchers, and provide valuable insights
     into household needs.
 
-**RELEVANT EXAMPLES:**
+::: callout-note
+
+### MHCCV Central Virginia manufactured home community study
 
 The Manufactured Home Community Coalition of Virginia (MHCCV) completed
 a comprehensive study of manufactured home communities in the Richmond
@@ -798,3 +817,9 @@ each unit with high-quality, energy efficient manufactured homes. In
 addition, they have invested significant resources to improve
 infrastructure, create a community center, and hire bilingual staff to
 support and engage with residents.
+
+[MHCCV - Central Virginia Study](https://mhccv.org/advocacy-resources/)
+
+[project:HOMES - Bermuda Estates](https://www.projecthomes.org/bermuda-estates)
+
+:::

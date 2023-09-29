@@ -122,9 +122,9 @@ This proposed campaign will use a range of methods to educate the public and oth
 
 -   Measuring the impact of education campaigns is not as simple as quantifying housing production or service delivery. Broad public support for housing is a necessary prerequisite for advancing policy solutions---and can only be achieved with higher levels of knowledge and saliency about the issue. If successful, such efforts will allow local policymakers, developers, and providers to more quickly, efficiently, and effectively expand housing opportunities.
 
-**RELEVANT EXAMPLES**
+::: callout-note
 
-***Richmond Region (Chesterfield, Henrico, Richmond, Hanover) - [Richmond Regional Housing Framework](https://pharva.com/framework/)***
+### Richmond Regional Housing Framework
 
 **Approach:**
 
@@ -133,6 +133,10 @@ The Richmond Regional Housing Framework is a comprehensive strategy developed by
 **Outcomes:**
 
 In 2019, community engagement efforts, including survey responses, reached over **1,900 people** in the region. Priority housing challenges and common values were identified, and solutions are in progress (with some already completed). The framework's solution will serve as a roadmap to guide the region's housing efforts.
+
+[Richmond Regional Housing Framework](https://pharva.com/framework/)
+
+:::
 
 ### Maintain the PDC's role in regional housing goals
 
@@ -156,7 +160,7 @@ Expanded coordination and funding among local governments, fostered in large par
 
 **FRAMEWORK**
 
-[**STEP 1:***Keep the conversations going.*]{.underline}
+**STEP 1:** *Keep the conversations going.*
 
 Establish a regional housing task force made up of local officials, practitioners, and advocates who will continue regular conversations about housing needs and solutions. The PDC should be the preliminary convener and provide logistical support, such as arranging for virtual and in-person meeting venues.
 
@@ -172,7 +176,7 @@ Example of agenda for regional housing task force meeting:
 
 -   Next steps and task assignments
 
-[**STEP 2:***Find the best use(s) for PDC time and capacity.*]{.underline}
+**STEP 2:** *Find the best use(s) for PDC time and capacity.*
 
 CVPDC leadership and staff should identify specific needs, opportunities, and priorities for PDC-led assistance across the region, especially those that cross local boundaries and cannot be easily addressed by existing staff among local governments.
 
@@ -184,7 +188,7 @@ Using this study as a guiding document, the most likely options for PDC-led coor
 
 Other major opportunities include, but are not limited to, the local partnership solutions also included in this report. CVPDC should propose its priorities to the newly-formed regional task force (described above) to solicit feedback and buy-in from partners.
 
-[**STEP 3:***Expand PDC staff and/or staff capacity to support goals.*]{.underline}
+**STEP 3:** *Expand PDC staff and/or staff capacity to support goals.*
 
 Any substantial progress on regional housing solutions will require dedicated staffing from the PDC. This dedicated staff can be through formation of a new standalone position or through capacity and program training of existing PDC staff. Regardless of the staffing approach, this position should be dedicated to housing and community development programs.
 
@@ -208,7 +212,7 @@ CVPDC has three options for funding the housing and community development dedica
 
     -   CONS: Likely requires significant outreach and education, may not be sustainable beyond initial grant terms
 
-[**STEP 4:***Explore regional revolving loan fund for housing.*]{.underline}
+**STEP 4:** *Explore regional revolving loan fund for housing.*
 
 Nearly all new affordable housing projects in the CVPDC region---and elsewhere---face a funding shortfall even after the major sources of revenue (e.g., LIHTC) are secured. This "gap" must be filled with other grants or loans that are often smaller, but just as competitive and difficult to obtain.
 
@@ -310,11 +314,13 @@ Securing dedicated funds to support a housing position at CVPDC would dramatical
 
 This position would also lead to a much faster exploration (and potential implementation) of a new regional housing fund. Depending on eventual funding levels, that fund could help hundreds of families obtain affordable housing each year.
 
-**RELEVANT EXAMPLES**
+::: callout-note
 
-***West Piedmont Planning District Commission***
+### West Piedmont Planning District Commission
 
-**Approach:** WPPDC currently has both a housing program director, a housing program specialist, and a housing rehab specialist on staff. These three positions are funded, respectively, by the Virginia Housing PDC Development Grant, a pair of grants from local philanthropic foundations, and PDC training dollars.
+**Approach:**
+
+WPPDC currently has both a housing program director, a housing program specialist, and a housing rehab specialist on staff. These three positions are funded, respectively, by the Virginia Housing PDC Development Grant, a pair of grants from local philanthropic foundations, and PDC training dollars.
 
 Of the full \$2 million PDC Development Grant, WPPDC set aside \$400,000 for future operational and administrative expenses, which includes salaries. The local private grants include \$75,000 each from The Harvest Foundation and the Danville Regional Foundation.
 
@@ -326,19 +332,25 @@ WPPDC is planning the following steps to sustain its housing efforts:
 
 -   Administer state- and federal-funded programs previously not deployed in the region, such as the Indoor Plumbing Rehabilitation program and lead inspection services.
 
-**Outcomes:** Supporting dedicated housing staff helped WPPDC efficiently deploy \$1.6 million of the PDC Development Grant to support 115 new affordable homes in the region. These investments leveraged another \$22.1 million in public and private funds. Today, WPPDC housing positions are funded through at least 2023 by their original sources. If the above strategies are successful, these positions will have sustainable funding sources.
+**Outcomes:**
 
-**Links:**
+Supporting dedicated housing staff helped WPPDC efficiently deploy \$1.6 million of the PDC Development Grant to support 115 new affordable homes in the region. These investments leveraged another \$22.1 million in public and private funds. Today, WPPDC housing positions are funded through at least 2023 by their original sources. If the above strategies are successful, these positions will have sustainable funding sources.
 
 [WPPDC Housing Initiative](https://westpiedmontpdc.org/housing/)
 
 [WPPDC Awards Over \$1.3 Million in Affordable Housing Grants](https://westpiedmontpdc.org/2022/03/30/wppdc-awards-over-1-3-million-in-affordable-housing-grants/) (March 30, 2022)
 
-[Local commission creates new housing position in partnership with The Harvest Foundation](https://theharvestfoundation.org/2021/11/23/local-commission-creates-new-housing-position-in-partnership-with-the-harvest-foundation-2/)(November 23, 2021)
+[Local commission creates new housing position in partnership with The Harvest Foundation](https://theharvestfoundation.org/2021/11/23/local-commission-creates-new-housing-position-in-partnership-with-the-harvest-foundation-2/) (November 23, 2021)
 
-***New River Valley Regional Commission***
+:::
 
-**Approach:** NRVRC currently has a director of housing to manage the PDC's housing programs. These include:
+::: callout-note
+
+### New River Valley Regional Commission
+
+**Approach:**
+
+NRVRC currently has a director of housing to manage the PDC's housing programs. These include:
 
 -   The New River Valley HOME Consortium, which helps member localities access federal HOME dollars from HUD that would otherwise be much more difficult to obtain on their own. The consortium began in 2007.
 
@@ -346,17 +358,19 @@ WPPDC is planning the following steps to sustain its housing efforts:
 
 -   Comprehensive planning and educational initiatives, such as a Housing Resource Guide and the Regional + Local NRV Housing Study, to support greater regional knowledge and collaboration on housing.
 
-**Outcomes:** Since 2007, the HOME Consortium has allowed projects in the region to leverage more than \$38 million additional dollars and create more than 350 new affordable homes. The NRV Housing Trust Fund represents the successful development and implementation of a flagship recommendation in the regional housing study from 2021.
+**Outcomes:**
+
+Since 2007, the HOME Consortium has allowed projects in the region to leverage more than \$38 million additional dollars and create more than 350 new affordable homes. The NRV Housing Trust Fund represents the successful development and implementation of a flagship recommendation in the regional housing study from 2021.
 
 The fund will make its first awards in late 2023.
-
-**Links:**
 
 [NRVRC Housing](https://nrvrc.org/housing)
 
 [New River Valley Housing Trust Fund](https://nrvrc.org/nrv-housing-trust-fund)
 
-## Secondary Solutions
+:::
+
+## Secondary solutions
 
 ### Evaluate opportunities for regional consistency for short-term rental regulations
 
