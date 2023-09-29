@@ -43,7 +43,7 @@ book:
       chapters: 
         - part-2-1.qmd # CVPDC Housing Market Assessment
         - part-2-2.qmd # County Housing Market Assessment
-        - part-2-3.qmd # City of Lynchburg Housing Market Analysis
+        #- part-2-3.qmd # City of Lynchburg Housing Market Analysis
     - part: "PART 3: Policy evaluation"
       chapters:
         - part-3-1.qmd # Regional and local policy evaluation
