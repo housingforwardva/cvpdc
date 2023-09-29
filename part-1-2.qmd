@@ -22,9 +22,9 @@ Housing agencies and nonprofit providers are doing good work, but their current 
 
 Participants' ideas for improving housing opportunities included (but were not limited to) new messaging strategies, expanding cross-sector collaborations, reducing zoning barriers, and generating new locally-funded housing assistance programs.
 
-# Engagement completed
+## Engagement completed
 
-## Locality kick-off meetings
+### Locality kick-off meetings
 
 In December 2022, HousingForward Virginia and CVPDC staff met with representatives from local governments across the region. These kick-off meetings were an opportunity for HFV to learn about housing-related issues and questions that localities would like to see addressed in the study. The following local governments and organizations were represented at these meetings:
 
@@ -41,7 +41,7 @@ In December 2022, HousingForward Virginia and CVPDC staff met with representativ
 -   Campbell County
 -   City of Lynchburg
 
-## Focus groups
+### Focus groups
 
 Following HousingForward Virginia's visit to the region to attend kick-off meetings with local government, a series of virtual focus group sessions were held to hear from other organizations, businesses, and professions connected to housing in the CVPDC.
 

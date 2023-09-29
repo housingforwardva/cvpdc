@@ -89,6 +89,8 @@ library(ggspatial)
 
 cv <- c("51009", "51011", "51019", "51031", "51680", "51515") # CVPDC FIPS codes
 
+cv_basemap <- read_rds("data/cv_basemap.rds")
+
 ```
 
 ## Takeaways
@@ -527,6 +529,7 @@ publish_plot(cvad_plot)
 ```
 
 The number of adults with an independent living difficulty has also seen little change over the past 10 years. Although there was a decline from 2020 to 2021, there are still over 13,000 adults in the region who have difficulty living by themselves.
+
 ```{r}
 #| label: fig-id
 #| fig-cap: "Adults with independent difficulty"
@@ -549,20 +552,17 @@ cvid_plot <- ggplot(cv_id,
   geom_col_interactive(position = "stack") +
   theme_hfv() +
   scale_fill_hfv() +
-  guides(fill = guide_legend(reverse = TRUE)) +
+  #guides(fill = guide_legend(reverse = TRUE)) +
   theme(legend.position = "right",
         axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_y_continuous(labels = number_format(big.mark = ",")) + 
   labs(title = "Adults with an independent living difficulty",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09020.")
   
-
 publish_plot(cvid_plot)
 
-girafe(ggobj = cvid_plot,
-       height_svg = 4)
-
 ```
+
 ### Subfamilies and multigenerational households
 
 With housing affordability becoming more and more of a challenge for families, some families are forced to live with others. This creates *subfamilies*, which the Census Bureau [defines](https://www.census.gov/glossary/?term=Subfamily) as:
@@ -619,7 +619,7 @@ While more and more families are living with other families, the number of multi
 
 ```{r}
 #| label: fig-multigen
-#| fig-cap: "Percent of population living in multiple generation households"
+#| fig-cap: "Percent of population in multigenerational households"
 
 multigen_data <- read_rds("data/multigen_data.rds")
 
@@ -637,7 +637,7 @@ multigen_plot <- ggplot(multigen_data,
   scale_y_continuous(labels = label_percent(),
                      breaks = c((1:9)/100),
                      limits = c(0,0.09)) +
-  labs(title = "Percent of population living in multiple generation households",
+  labs(title = "Percent of population in multigenerational households",
        subtitle = "2016 to 2020",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, Public Use Microdata Sample.") +
   scale_color_hfv() +
@@ -735,6 +735,7 @@ inc_dist_plot <- ggplot(inc_dist,
 publish_plot(inc_dist_plot)
 
 ```
+
 :::{.callout-note}
 
 Comparing constant dollars versus current dollars can be explained in simple terms as follows:
@@ -750,6 +751,7 @@ Let's say you earned \$5,000 in 1990, and you earned \$10,000 in 2020. In curren
 So, comparing constant dollars helps us see the "real" change in value over time, considering the impact of inflation, while current dollars are just the actual amounts you earned or spent without adjusting for inflation.
 
 :::
+
 Between homeowner and renter households there is a \$35,236 gap in median household income. Adjusting for inflation shows that median household income has been relatively flat for homeowners in the last decade (7 percent increase), while the typical income for renters saw modest gains (18 percent increase).
 
 ```{r}
@@ -875,7 +877,6 @@ wage_pct_plot <- ggplot(oews_pct,
   add_zero_line(axis = "x") +
   flip_gridlines()
 
-
 publish_plot(wage_pct_plot)
 
 ```
@@ -909,6 +910,7 @@ wage_occ_plot <- ggplot(oews_occ,
   flip_gridlines()
 
 publish_plot(wage_occ_plot)
+
 ```
 
 ### Unemployment
@@ -988,7 +990,7 @@ cv_structure_plot <- ggplot(cv_structure,
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv(-1) +
-  guides(fill = guide_legend(reverse = TRUE)) +
+  #guides(fill = guide_legend(reverse = TRUE)) +
   labs(title = "Housing stock by structure type and tenure",
        subtitle = "Percent of total occupied housing from 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25127.") +
@@ -1101,7 +1103,7 @@ Manufactured housing is a valuable source of housing that should not be ignored.
 
 ```{r}
 #| label: fig-mhc-map
-#| fig-cap: "Map of manufactured home communities"
+#| fig-cap: "Manufactured home communities in Lynchburg region"
 
 # mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
 #   filter(STATE == "VA") |> 
@@ -1118,7 +1120,7 @@ library(mapview)
 mhc <- read_rds("data/cv_mhc.rds") |> 
   mutate(SIZE = str_to_sentence(SIZE))
 
-# if (knitr::is_html_output()) {
+if (knitr::is_html_output()) {
   
   mapview(
     mhc,
@@ -1129,32 +1131,31 @@ mhc <- read_rds("data/cv_mhc.rds") |>
     layer.name = "Units in park"
   )
 
-# Not sure what the extents need to be in order to get this right.
+  } else {
   
-  # } else {
-  # 
-  # ggplot() +
-  #   cv_basemap +
-  #   geom_sf(mhc, mapping = aes(color = SIZE), show.legend = "point") +
-  #   scale_color_hfv() +
-  #   scale_x_continuous(expand = expansion(mult = 0),
-  #                      limits = c(-8660000, -8585000)) +
-  #   scale_y_continuous(expand = expansion(mult = 0),
-  #                      limits = c(4466959, 4548000)) +
-  #   labs(title = "Manufactured housing communities in Lynchburg region",
-  #        color = "Units in park",
-  #        caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).") +
-  #   theme_pha() +
-  #   theme(plot.title = element_markdown(margin = margin(b = 10, unit = "pt")),
-  #         panel.grid = element_blank(),
-  #         axis.title = element_blank(),
-  #         axis.text = element_blank(),
-  #         legend.position = "right",
-  #         legend.title = element_text(),
-  #         legend.key = element_blank())
-  #   
-  # }
-
+  ggplot() +
+    cv_basemap +
+    geom_sf(mhc, mapping = aes(color = SIZE), show.legend = "point") +
+    scale_color_hfv() +
+    # scale_x_continuous(expand = expansion(mult = 0),
+    #                    limits = c(-8660000, -8585000)) +
+    # scale_y_continuous(expand = expansion(mult = 0),
+    #                    limits = c(4466959, 4548000)) +
+    labs(title = "Manufactured home communities in Lynchburg region",
+         color = "Units in park",
+         caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).") +
+    theme_hfv() +
+    theme(
+      #plot.title = element_markdown(margin = margin(b = 10, unit = "pt")),
+      panel.grid = element_blank(),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      legend.position = "right",
+      legend.title = element_text(),
+      legend.key = element_blank()
+      )
+     
+  }
 
 ```
 
@@ -1284,8 +1285,6 @@ ggplot(ostatus,
   labs(title = "Vacant housing status (not for sale or rent)",
        caption = "**Source:** U.S. Census Bureau. American Community Survey, 2010 to 2021, 5-year estimates, Table B25004.")
 
-
-
 ```
 
 ### Building trends
@@ -1336,7 +1335,7 @@ The regional homeownership rate has been on a slow decline in the last decade, f
 
 ```{r}
 #| label: fig-ho-rate
-#| fig-cap: "Homeownership rate"
+#| fig-cap: "Regional homeownership rate"
 
 # Read in tenure data via Table B25003.
 
@@ -1368,7 +1367,7 @@ cv_ho_plot <- ggplot(cv_ho,
   scale_color_hfv() +
   scale_y_continuous(labels = label_percent(), limits = c(.65,.75)) +
   scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1)) +
-  labs(title = "Homeownership rate",
+  labs(title = "Regional homeownership rate",
        subtitle = "From 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B25003.")
 
@@ -1433,9 +1432,9 @@ cv_price_plot <- ggplot(cv_price_adj,
 
 publish_plot(cv_price_plot)
 
-pdf(file = "cv_price_plot.pdf", height = 3, width = 5)
-print(cv_price_plot)
-dev.off()
+# pdf(file = "cv_price_plot.pdf", height = 3, width = 5)
+# print(cv_price_plot)
+# dev.off()
 
 ```
 
@@ -1539,8 +1538,11 @@ ggplot(cv_mort,
   scale_fill_hfv() +
   theme(legend.position = "right") +
   scale_y_continuous(labels = number_format(big.mark = ",")) +
-  labs(title = "Loans by occupancy type")
-
+  labs(
+    title = "Loans by occupancy type",
+    subtitle = "Single-family home loans originated in the region",
+    caption = "**Source:** Consumer Protection Financial Bureau, Home Mortgage Disclosure Act (HMDA) Snapshot National Loan Level Dataset."
+    )
 
 ```
 
@@ -1686,8 +1688,10 @@ cv_nhpd_plot <- ggplot(cv_nhpd,
 # sum(cv_nhpd$units)
 
 publish_plot(cv_nhpd_plot)
+
 ```
-Throughout the region, there are 4,505 federally-assisted rental units located across 52 properties. The bulk of assisted rental units (1,569) are supported by Low-Income Housing Tax Credits (LIHTC), while 1,507 receive Section 8 project-based rental assistance. It is important to note that multiple subsidy sources are often layered to provide greater funding leverage to support low-income households. A LIHTC projects often take advantage of 
+
+Throughout the region, there are 4,505 federally-assisted rental units located across 52 properties. The bulk of assisted rental units (1,569) are supported by Low-Income Housing Tax Credits (LIHTC), while 1,507 receive Section 8 project-based rental assistance. It is important to note that multiple subsidy sources are often layered to provide greater funding leverage to support low-income households.
 
 ```{r}
 #| label: fig-nhpd
@@ -1733,6 +1737,7 @@ publish_plot(cv_nhpd_plot)
 
 ```{r}
 #| label: fig-hcv-bar
+#| fig-cap: "Households with Housing Choice Vouchers"
 
 cnty_code <- c("009", "011", "019", "031", "515", "680")
 
@@ -1776,13 +1781,11 @@ publish_plot(hcv_grp_plot)
 
 library(mapview)
 
-cv_basemap <- read_rds("data/cv_basemap.rds")
-
 hcv <- read_rds("data/hcv.rds") |> 
   clean_names() |> 
-  subset(county %in% cnty_code)
+  filter(county %in% cnty_code) |> 
+  filter(!is.na(hcv_public_pct))
   
-
 if (knitr::is_html_output()) {
   
   mapview(hcv,
@@ -1794,25 +1797,29 @@ if (knitr::is_html_output()) {
     
   ggplot() +
     cv_basemap +
-    layer_spatial(hcv, aes(fill = hcv_public_pct)) +
+    layer_spatial(hcv, aes(fill = hcv_public_pct), alpha = 0.8) +
     scale_fill_gradient2(low = "#edf8b1", high = "#253494", mid = "#41b6c4",
+                         na.value = "grey90",
                          midpoint = 10,
                          labels = label_percent(scale = 1)) +
-    labs(title = "Percent of renters\nwith Housing Choice Vouchers by tract",
+    theme_hfv() +
+    labs(title = "Percent of renters with Housing Choice Vouchers by tract",
          fill = "Percent",
-         caption = "Source: U.S. Department of Housing and Urban Development.") +
+         caption = "**Source:** U.S. Department of Housing and Urban Development.") +
     #fixed_plot_aspect(ratio = 0.8) +
-    theme(panel.background = element_blank(),
-          axis.title = element_blank(),
-          axis.ticks = element_blank(),
-          axis.text = element_blank(),
-          legend.key.height = unit(0.1, "npc"),
-          plot.caption = element_text(hjust = 0))
+    theme(
+      panel.background = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      legend.position = "right",
+      legend.key.height = unit(0.1, "npc"),
+      plot.caption = element_textbox(hjust = 0)
+      )
     
   }
 
 ```
-
 
 ## Affordability
 
@@ -1937,7 +1944,7 @@ cbhh_region_plot <- ggplot(cbhh_region,
   facet_wrap(~household_income, nrow = 1) +
   scale_y_continuous(labels = label_percent()) +
   labs(title = "Cost burden by household income",
-       subtitle = "Percent of households with cost burden by Area Median Income from 2012 to 2020",
+       subtitle = "Percent of households with cost burden by AMI from 2012 to 2020",
        caption = "**Source:** U.S Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   add_zero_line("y") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
@@ -2017,7 +2024,7 @@ cv_cb9_plot <- ggplot(cv_cb9,
            tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "dodge") +
   geom_col_interactive() +
-  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen()) +
+  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen(width = 18)) +
   scale_y_continuous(labels = label_percent()) +
   scale_fill_hfv() +
   theme_hfv() +

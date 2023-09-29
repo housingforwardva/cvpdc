@@ -508,9 +508,8 @@ cvid_plot <- ggplot(cv_id,
   theme_hfv() +
   scale_fill_hfv() +
   facet_wrap(~NAME, nrow = 1) +
-  guides(fill = guide_legend(reverse = TRUE)) +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  #guides(fill = guide_legend(reverse = TRUE)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_y_continuous(labels = number_format(big.mark = ",")) + 
   labs(title = "Adults with an independent living difficulty",
        subtitle = subtitle_text,
@@ -528,7 +527,6 @@ cvid_plot <- ggplot(cv_id,
         size = 11.5
     )))
   
-
 publish_plot(cvid_plot)
 
 ```
@@ -543,7 +541,7 @@ Single parents with children are the most common subfamily type that is experien
 
 ```{r}
 #| label: fig-localsubfam
-#| fig-cap: "Change in sufamilies living with others"
+#| fig-cap: "Change in subfamilies living with others"
 
 b11013_data <- read_rds("data/b11013_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -591,7 +589,7 @@ Adult children living parents can also be an indicator of affordability challeng
 
 ```{r}
 #| label: fig-localachild
-#| fig-cap: "Local cumulative change in adult children living with parents"
+#| fig-cap: "Cumulative change in young adults living with parents"
 
 b09021_data <- read_rds("data/b09021_data.rds") |> 
   filter(NAME != "Lynchburg city")
@@ -620,7 +618,7 @@ local_achild_plot <- ggplot(local_achild,
   add_zero_line("y") +
   scale_fill_hfv() +
   facet_wrap(~county, nrow = 1) +
-  labs(title = "Cumulative change in young adult children living with parents",
+  labs(title = "Cumulative change in young adults living with parents",
        subtitle = "All adults aged 18-34 from 2015 to 2021",
        caption = "**Source:** U.S. Census Bureau, American Community Survey, 5-year estimates, Table B09021.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
@@ -761,11 +759,8 @@ publish_plot(local_rinc_plot)
 
 ```
 
-:::{.caution-note}
+The average annual wage for all workers within each county ranges from around \$35,000 in Appomattox to around \$50,000 in Campbell. Wages for Amherst and Bedford are very similar, coming in just above \$40,000 per year.
 
-Insert ttext about avg wages in the county.
-
-:::
 ```{r}
 #| label: fig-qcew
 #| fig-cap: "Average annual wage"
@@ -838,7 +833,7 @@ local_str_plot <- ggplot(local_str,
            tooltip = label_percent(accuracy = 0.1)(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive() +
-  facet_grid(tenure ~ county, switch = "y") +
+  facet_grid(tenure ~ county, switch = "y", labeller = label_wrap_gen(width = 12)) +
   theme_hfv() +
   add_zero_line("y") +
   scale_fill_hfv() + 
@@ -1066,6 +1061,7 @@ publish_plot(local_ho_plot)
 ```
 
 From Q2 2019 to Q2 2023, the median sales price in the counties has risen by at least \$50,000. The most substantial increases were in Bedford and Appomattox. 
+
 ```{r}
 #| label: fig-sales-price
 #| fig-cap: "Median quarterly sales price"
@@ -1116,6 +1112,7 @@ ggplot(sales,
 
 
 ```
+
 Many counties saw a bump in homes sold during 2020, no doubt a result of the pandemic's impacts on interest rates coupled with an increasing number of millenials ready for homeownership. Bedford County has consistently exceeded its neighbors in the number of home sales, followed by Campbell County. More recently, home sales have been in decline in from 2021 to 2022. With rising interest rates that now sit around 7.0 percent, the hot market of the pandemic has started to cool. But prices continue to rise as supply wanes and demand maintains.
 
 ```{r}
@@ -1144,7 +1141,9 @@ ggplot(units,
 
 
 ```
+
 As an additional indicator of demand, the median days on market shows how the pandemic shifted the market in the region. While 30 days on market is a typical measure in a balanced market, the median days on market has not been above 20 days since the end of 2020 in every county (except for a few instances in Appomattox County).
+
 ```{r}
 #| label: fig-dom
 #| fig-cap: "Median days on market by county"
@@ -1256,7 +1255,10 @@ local_rent_plot <- ggplot(local_rent,
 publish_plot(local_rent_plot)
 
 ```
-Rental vacancy rates among multifamily housing is lowest among Amherst and Appomattox properties. Bedford and Campbell properties have seen greater fluctuations in their
+
+Rental vacancy rates among multifamily housing in Amherst and Appomattox have remained steady just below, and above, 5 percent, respectively. In Bedford, vacancy rates have also ranged around 5 percent, with a slight increase in the last year.
+
+Baseline vacancy in Campbell is very low, with the exception of several temporary sharp increases. These likely reflect a significant number of new units coming online at once, followed by lease-up over the following months.
 
 
 ```{r}
@@ -1310,8 +1312,6 @@ vacancy_plot <- ggplot(local_vacancy,
        caption = "**Source:** CoStar Group, Inc.")
   
 publish_plot(vacancy_plot)
-
-
 
 ```
 
@@ -1456,7 +1456,7 @@ publish_plot(cv_cb_plot)
 
 ```
 
-Cost burden by race and ethnicity shows that white households across all four counties are less likely to be cost-burdened. This has been consistent since 2012. Bklack
+Cost burden by race and ethnicity shows that white households across all four counties are less likely to be cost-burdened. This has been consistent since 2012. 
 
 :::{.callout-caution}
 

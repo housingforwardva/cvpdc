@@ -101,33 +101,33 @@ lburg <- "51680"
 - Large amount of detached single-family rentals, especially in College Hill and Diamond Hill areas.
 - Rental prices have remained generally flat among multifamily properties, but cost burden among renters has continued to rise.
 
-
 ## Population trends
 
-From 2010 to 2020, Lynchburg has only grown by four percent to reach a population of 79,009. Despite this growth, the current population is an estimated decline from a 2019 estimated population of 82,168. 
+From 2010 to 2020, Lynchburg has only grown by four percent to reach a population of 79,009. Despite this growth, the current population is an estimated decline from a 2019 estimated population of 82,168.
+
 ```{r}
 #| label: fig-pop-2020
 #| fig-cap: "Total population in Lynchburg"
 
 # Read in population data and filter for Lynchburg.
 
-pop_data <- read_rds("data/pop_data.rds") %>% 
+pop_data <- read_rds("data/pop_data.rds") |> 
   subset(GEOID %in% lburg)
 
 # Join to names data frame (just in case) then select only the fields needed.
 
-local_pop <- pop_data %>% 
+local_pop <- pop_data |> 
   select(year, counttype, value) 
 
 # Read in projections data to include in visualization and clean the data.
 
-projections <- read_csv("data/uva_proj.csv") %>% 
-  subset(FIPS %in% lburg) %>% 
-  select(`2030`, `2040`, `2050`) %>% 
+projections <- read_csv("data/uva_proj.csv") |> 
+  subset(FIPS %in% lburg) |> 
+  select(`2030`, `2040`, `2050`) |> 
   pivot_longer(1:3,
                names_to = "year",
-               values_to = "value") %>% 
-  mutate(counttype = "Projection") %>% 
+               values_to = "value") |> 
+  mutate(counttype = "Projection") |> 
   select(year, counttype, value)
 
 # Combine population estimates and projections into single data frame.
@@ -139,9 +139,8 @@ lburg_pop <- rbind(local_pop, projections)
 lburg_po <- lburg_pop |> 
   filter(counttype != "Projection")
 
-subtitle_text <- "<span style = 'color:#011E41'><b>Census counts</b></span> and <span style = 'color:#40C0C0'><b>population estimates</b></span>"
+subtitle_1 <- "<span style = 'color:#011E41'><b>Census counts</b></span> and <span style = 'color:#40C0C0'><b>population estimates</b></span>"
 
-  
 local_pop_plot <- ggplot(lburg_po,
        aes(x = year,
            y = value,
@@ -153,7 +152,7 @@ local_pop_plot <- ggplot(lburg_po,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Total population in Lynchburg",
-       subtitle = subtitle_text,
+       subtitle = subtitle_1,
        caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))  +
@@ -166,18 +165,17 @@ local_pop_plot <- ggplot(lburg_po,
 
 publish_plot(local_pop_plot)
 
-
 ```
+
 The growth in population over the last decade in Lynchburg has been a result of international migration and natural increases. This is in contrast to the rest of the region where growth has been driven by domestic migration. The natural increases are notable for the region, indicating a larger number of households having children in the city.
 
 ```{r}
 #| label: fig-local-chg
 #| fig-cap: "Components of population change in Lynchburg"
 
-
 # Read in components of population change data and filter for Lynchburg.
 
-local_change <- read_rds("data/comp_data.rds") %>% 
+local_change <- read_rds("data/comp_data.rds") |> 
   filter(NAMELSAD == "Lynchburg city")
 
 # Create group bar chart showing population change by locality.
@@ -195,7 +193,9 @@ local_change_plot <- ggplot(local_change,
        caption = "**Source:** U.S. Census Bureau, Population Estimates Program.")
 
 publish_plot(local_change_plot)
+
 ```
+
 Despite the decrease in population from 2019 to 2020, the city is expected to see continued growth over the next few decades. By 2050, the city is projected to have a population of 93,708, a 19 percent increase over 30 years.
 
 ```{r}
@@ -206,8 +206,7 @@ lburg_p <- lburg_pop |>
   filter(counttype == "Projection" | counttype == "Census population") |> 
   mutate(year == as.character(year))
 
-subtitle_text <- "<span style = 'color:#011E41'><b>Census counts</b></span> and <span style = 'color:#40C0C0'><b>population projections</b></span>"
-
+subtitle_2 <- "<span style = 'color:#011E41'><b>Census counts</b></span> and <span style = 'color:#40C0C0'><b>population projections</b></span>"
 
 local_pop_plot <- ggplot(lburg_p,
        aes(x = year,
@@ -220,7 +219,7 @@ local_pop_plot <- ggplot(lburg_p,
   theme_hfv() +
   scale_fill_hfv() +
   labs(title = "Projected population in Lynchburg",
-       subtitle = subtitle_text,
+       subtitle = subtitle_2,
        caption = "**Source:** U.S. Census Bureau, Decennial Census and Population Estimates Program and UVA, Weldon Cooper Center.") +
   scale_y_continuous(labels = label_comma(), limits = c(0, 100000)) +
   plot_annotation(
@@ -231,7 +230,6 @@ local_pop_plot <- ggplot(lburg_p,
     )))
 
 publish_plot(local_pop_plot)
-
 
 ```
 
@@ -245,24 +243,25 @@ Lynchburg has steadily lost homeowners, while gaining renters. By 2021, the city
 
 # Read in household tenure data and filter for Lynchburg.
 
-b25003_data <- read_rds("data/b25003_data.rds") %>% 
+b25003_data <- read_rds("data/b25003_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
 # Clean data and calculate cumulative change in households by tenure.
 
-local_tenure <- b25003_data %>%
-  select(county = NAME, year, tenure, estimate) %>% 
-  group_by(county, year, tenure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(county, tenure) %>% 
+local_tenure <- b25003_data |>
+  select(county = NAME, year, tenure, estimate) |> 
+  group_by(county, year, tenure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(county, tenure) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
 
 # Create bar chart visualization that shows the cumulative change from 2010 to 2021.
-subtitle_text <- "<span style = 'color:#011E41'><b>Homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021"
+
+subtitle_3 <- "<span style = 'color:#011E41'><b>Homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021"
 
 local_tenure_plot <- ggplot(local_tenure,
        aes(x = year,
@@ -278,8 +277,8 @@ local_tenure_plot <- ggplot(local_tenure,
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
   labs(title = "Cumulative change in households by tenure in Lynchburg",
-       subtitle = subtitle_text,
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.") +
+       subtitle = subtitle_3,
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25003.") +
   plot_annotation(
     theme = theme(
     plot.subtitle = element_markdown(
@@ -288,10 +287,10 @@ local_tenure_plot <- ggplot(local_tenure,
     )))
 
 publish_plot(local_tenure_plot)
-  
 
 ```
-Breaking down the changes in tenure by age shows that more and more households of all ages are now renting in the city. The largest increases were among renter households under 45 years old, an obvious result of the many higher education institutions in the city.
+
+Breaking down the changes in tenure by age shows that more households of all ages are now renting in the city. The largest increases were among renter households under 45 years old, an obvious result of the many higher education institutions in the city.
 
 Losses were mainly among 25 to 64 year old homeowners. By 2021, the city had lost 603 25 to 44 year old homeowner households and 909 45 to 64 year old homeowner households. 
 
@@ -299,7 +298,7 @@ Losses were mainly among 25 to 64 year old homeowners. By 2021, the city had los
 #| label: fig-age
 #| fig-cap: "Cumulative change in households by tenure and age in Lynchburg"
 
-b25007_data <- read_rds("data/b25007_data.rds") %>% 
+b25007_data <- read_rds("data/b25007_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
 local_age <- b25007_data |> 
@@ -312,13 +311,12 @@ local_age <- b25007_data |>
   filter(run_diff != 0) |> 
   mutate(year = as.character(year))
 
-
-# local_age <- b25007_data %>% 
-#   group_by(county = NAME, year, tenure, age) %>% 
-#   summarise(estimate = sum(estimate)) %>% 
-#   filter(year == 2010 | year == 2021) %>% 
-#   group_by(county, year, tenure) %>% 
-#   mutate(pct = estimate/sum(estimate)) %>% 
+# local_age <- b25007_data |> 
+#   group_by(county = NAME, year, tenure, age) |> 
+#   summarise(estimate = sum(estimate)) |> 
+#   filter(year == 2010 | year == 2021) |> 
+#   group_by(county, year, tenure) |> 
+#   mutate(pct = estimate/sum(estimate)) |> 
 #   mutate(year = as.character(year))
 
 local_age_plot <- ggplot(local_age,
@@ -345,23 +343,22 @@ publish_plot(local_age_plot)
 Among those growing number of renters, most of those households have been two-person households, an addition of 2,011 from 2010 to 2021. Households of three people or less have been declining among homeowners, but four or more person homeowner households surprisingly grew by 409 during this time.
 
 ```{r}
-#| label: figsize
+#| label: fig-size
 #| fig-cap: "Change in households by size and tenure in Lynchburg"
 
-b25009_data <- read_rds("data/b25009_data.rds") %>% 
+b25009_data <- read_rds("data/b25009_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_size <- b25009_data %>% 
-  select(county = NAME, year, tenure, size, estimate) %>% 
-  group_by(county, year, tenure, size) %>% 
-  summarise(estimate = sum(estimate))  %>%
-  group_by(county, tenure, size) %>% 
+local_size <- b25009_data |> 
+  select(county = NAME, year, tenure, size, estimate) |> 
+  group_by(county, year, tenure, size) |> 
+  summarise(estimate = sum(estimate))  |>
+  group_by(county, tenure, size) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
-
 
 local_size_plot <- ggplot(local_size,
        aes(x = year,
@@ -377,32 +374,31 @@ local_size_plot <- ggplot(local_size,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.2, size = 8)) +
   labs(title = "Cumulative change in households by size and tenure in Lynchburg",
        subtitle = "From 2010 to 2021",
-       caption = "U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.")
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25009.")
 
 publish_plot(local_size_plot)
 
-
 ```
+
 The city has experienced a decreasing number of seniors living alone or with nonrelatives in recent years (-575). This is another contrast to the surrounding counties, where more and more seniors are living alone. Whether this is the result of Lynchburg seniors moving to the counties is not easily discerned, but regardless seniors in the city may find it more difficult to find housing that meets their needs for aging-in-place. Seniors in the city are rather increasingly the head of household (+604) or living with a spouse (+473).
 
 ```{r}
 #| label: fig-senior
 #| fig-cap: "Change in senior population in Lynchburg"
 
-b09020_data <- read_rds("data/b09020_data.rds") %>% 
+b09020_data <- read_rds("data/b09020_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_senior <- b09020_data %>% 
-  select(county = NAME, year, family, relationship, estimate) %>% 
-  group_by(county, year, family, relationship) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+local_senior <- b09020_data |> 
+  select(county = NAME, year, family, relationship, estimate) |> 
+  group_by(county, year, family, relationship) |> 
+  summarise(estimate = sum(estimate)) |> 
   pivot_wider(names_from = year,
-              values_from = estimate) %>% 
-  transform(change = `2021` - `2012`) %>% 
-  select(county, family, relationship, change) %>% 
+              values_from = estimate) |> 
+  transform(change = `2021` - `2012`) |> 
+  select(county, family, relationship, change) |> 
   mutate(family = str_replace(family, "Group quarters", " "),
          family = fct_relevel(family, "Family", "Nonfamily", " "))
-
 
 local_senior_plot <- ggplot(local_senior,
        aes(y = reorder_within(relationship, change, family),
@@ -428,37 +424,36 @@ local_senior_plot <- ggplot(local_senior,
                                           size = 0.05)) +
   add_zero_line(axis = "x")
                               
-
 publish_plot(local_senior_plot)
-  
 
 ```
+
 The number of single parents living with other families is increasing in the city. From 2010 to 2021, there has been an increase of 330 single parents having to live with others.
+
 ```{r}
 #| label: fig-subfam
 #| fig-cap: "Cumulative change in families living with others in Lynchburg"
 
-b11013_data <- read_rds("data/b11013_data.rds") %>% 
+b11013_data <- read_rds("data/b11013_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_sub <- b11013_data %>% 
-  select(county = NAME, year, subfamily, children, estimate) %>% 
+local_sub <- b11013_data |> 
+  select(county = NAME, year, subfamily, children, estimate) |> 
   mutate(subfamily = case_when(
     subfamily == "Single father" ~ "Single parent",
     subfamily == "Single mother" ~ "Single parent",
     TRUE ~ subfamily
-  )) %>% 
-  group_by(county, year, subfamily, children) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(county, subfamily, children) %>% 
+  )) |> 
+  group_by(county, year, subfamily, children) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(county, subfamily, children) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
   filter(run_diff != 0) |> 
   mutate(year = as.character(year))
 
-subtitle_text <- "Change among <span style = 'color:#011E41'><b>married couples</b></span> and <span style = 'color:#40C0C0'><b>single parents</b></span> from 2010 to 2021."
-
+subtitle_4 <- "Change among <span style = 'color:#011E41'><b>married couples</b></span> and <span style = 'color:#40C0C0'><b>single parents</b></span> from 2010 to 2021."
 
 local_sub_plot <- ggplot(local_sub,
                          aes(x = year,
@@ -474,7 +469,7 @@ local_sub_plot <- ggplot(local_sub,
   scale_y_continuous(labels = label_number(big.mark = ",", style_positive = "plus", style_negative = "minus")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   labs(title = "Cumulative change in families living with others in Lynchburg",
-       subtitle = subtitle_text,
+       subtitle = subtitle_4,
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.") +
   plot_annotation(
     theme = theme(
@@ -485,27 +480,26 @@ local_sub_plot <- ggplot(local_sub,
 
 publish_plot(local_sub_plot)
 
-
 ```
+
 Although the city was seeing a significant increase in adult (18 to 34 years old) children living with parents between 2016 and 2020, the overall increase was only 558 by 2021, when there were 4,730. These living arrangements, as well as families living with others, are often an indicator of affordability challenges in communities. The increase in 2020 may have likely been a result of pandemic impacts, and the subsequent decrease by 2021 could have been the result of loosening pandemic restrictions, as well as many millenials entering homeownership.
 
 ```{r}
 #| label: fig-achild
 #| fig-cap: "Cumulative change in adult children living with parents in Lynchburg"
 
-b09021_data <- read_rds("data/b09021_data.rds") %>% 
+b09021_data <- read_rds("data/b09021_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_achild <- b09021_data %>% 
-  select(county = NAME, year, arrangement, estimate) %>% 
-  filter(arrangement == "Child of householder") %>% 
-  group_by(county, arrangement) %>% 
+local_achild <- b09021_data |> 
+  select(county = NAME, year, arrangement, estimate) |> 
+  filter(arrangement == "Child of householder") |> 
+  group_by(county, arrangement) |> 
   mutate(diff = estimate - lag(estimate),
-         diff = replace_na(diff, 0)) %>% 
-  mutate(run_diff = cumsum(diff)) %>%  
-  filter(run_diff != 0) %>% 
+         diff = replace_na(diff, 0)) |> 
+  mutate(run_diff = cumsum(diff)) |>  
+  filter(run_diff != 0) |> 
   mutate(year = as.character(year))
-
 
 local_achild_plot <- ggplot(local_achild,
                             aes(x = year,
@@ -534,20 +528,19 @@ Income distribution in the city has shifted from 2010 to 2021. Lower income home
 #| label: fig-inc-dist
 #| fig-cap: "Income distribution by tenure in Lynchburg"
 
-b25118_data <- read_rds("data/b25118_data.rds") %>% 
+b25118_data <- read_rds("data/b25118_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_dist <- b25118_data %>% 
-  select(county = NAME, year, tenure, income, estimate) %>% 
-  group_by(county, year, tenure, income) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
+local_dist <- b25118_data |> 
+  select(county = NAME, year, tenure, income, estimate) |> 
+  group_by(county, year, tenure, income) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year == 2010 | year == 2021) |> 
   mutate(year = as.character(year))
-
 
 level_order <- c("Less than $15,000", "$15,000 to $24,999", "$25,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
 
-subtitle_text <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2010 and 2021"
+subtitle_5 <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2010 and 2021"
 
 local_dist_plot <- ggplot(local_dist,
        aes(x = factor(income, level = level_order),
@@ -566,7 +559,7 @@ local_dist_plot <- ggplot(local_dist,
         panel.grid.major.x = element_line(color = "#dadada", size = 0.1)) +
   scale_y_continuous(labels = label_comma()) +
   labs(title = "Income distribution in Lynchburg",
-       subtitle = subtitle_text,
+       subtitle = subtitle_5,
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25118.") +
   plot_annotation(
     theme = theme(
@@ -578,19 +571,21 @@ local_dist_plot <- ggplot(local_dist,
 publish_plot(local_dist_plot)
 
 ```
+
 Median household income emphasizes these shifts. Homeowner median household income has increased by 15 percent from 2010 to 2021, while renter income increased by 25 percent. The growth in the median renter income was the result of higher income renters coming into the city, but still the typical renter in the city only makes about half (\$38,229) of what a homeowner makes (\$75,093).
+
 ```{r}
 #| label: fig-med-inc
 #| fig-cap: "Median household income by tenure in Lynchburg"
 
-b25119_data <- read_rds("data/b25119_cpi.rds") %>% 
-  mutate(NAME = str_remove_all(NAME, ", Virginia")) %>% 
+b25119_data <- read_rds("data/b25119_cpi.rds") |> 
+  mutate(NAME = str_remove_all(NAME, ", Virginia")) |> 
   filter(NAME == "Lynchburg city")
 
-local_inc <- b25119_data %>% 
+local_inc <- b25119_data |> 
   select(county = NAME, year, tenure, dollars21, cdollars)
 
-subtitle_text <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2021 dollars"
+subtitle_6 <- "For <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> in 2021 dollars"
 
 
 local_inc_plot <- ggplot(local_inc,
@@ -606,7 +601,7 @@ local_inc_plot <- ggplot(local_inc,
   scale_color_hfv() +
   scale_y_continuous(labels = dollar_format()) +
   labs(title = "Median household income by tenure in Lynchburg",
-       subtitle = subtitle_text,
+       subtitle = subtitle_6,
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25119 and Bureau of Labor Statistics, Consumer Price Index Retroactive Series.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   plot_annotation(
@@ -619,6 +614,7 @@ local_inc_plot <- ggplot(local_inc,
 publish_plot(local_inc_plot)
 
 ```
+
 In the city, Hispanic households have seen major increases in median household income since 2010. As of 2021, Hispanic households have the highest median income at \$72,680. White, non-Hispanic households follow at $62,857, a slight increase of about \$9,000 from 2010. 
 
 Black households in the city, however, had consistently low median household incomes. From 2010 to 2021, the Black median household income had only increased by 14 percent, while their white counterparts saw an 18 percent increase, furthering the Black-white income gap.
@@ -628,16 +624,17 @@ Black households in the city, however, had consistently low median household inc
 It is important to consider that the estimated median household income for Hispanics in the City of Lynchburg had a high margin of error in 2021 (+/- \$23,689). Asian and multiracial households had high margins of error as well, although not as high as Hispanic households. The information provided here should be viewed with caution.
 
 :::
+
 ```{r}
 #| label: fig-race-inc
 #| fig-cap: "Median household income by race and ethnicity in Lynchburg"
 
-b19013_data <- read_rds("data/b19013_data.rds") %>% 
+b19013_data <- read_rds("data/b19013_data.rds") |> 
   filter(NAME == "Lynchburg city")
 
-local_rinc <- b19013_data %>% 
-  select(county = NAME, year, race, cdollars = estimate, dollars21) %>% 
-  filter(year == 2021 | year == 2010) %>% 
+local_rinc <- b19013_data |> 
+  select(county = NAME, year, race, cdollars = estimate, dollars21) |> 
+  filter(year == 2021 | year == 2010) |> 
   drop_na()
   
 local_rinc_plot <- ggplot(local_rinc,
@@ -661,7 +658,6 @@ local_rinc_plot <- ggplot(local_rinc,
 
 publish_plot(local_rinc_plot)
   
-
 ```
 
 ## Housing stock
@@ -676,15 +672,15 @@ Rather, diverse housing is largely used for rental housing. Most of the rental h
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
-local_str <- b25127_data %>% 
-  select(county = NAME, year, tenure, structure, estimate) %>% 
-  group_by(year, county, tenure, structure) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  filter(year == 2010 | year == 2021) %>% 
-  group_by(year) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
-  mutate(county = fct_reorder(county, pct, .desc = TRUE)) %>% 
-  filter(year == 2021) %>% 
+local_str <- b25127_data |> 
+  select(county = NAME, year, tenure, structure, estimate) |> 
+  group_by(year, county, tenure, structure) |> 
+  summarise(estimate = sum(estimate)) |> 
+  filter(year == 2010 | year == 2021) |> 
+  group_by(year) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
+  mutate(county = fct_reorder(county, pct, .desc = TRUE)) |> 
+  filter(year == 2021) |> 
   filter(county == "Lynchburg city")
 
 level_order <- c("Single-family", "2 to 4 units", "5 to 19 units", "20 or more units", "Other")
@@ -710,22 +706,21 @@ local_str_plot <- ggplot(local_str,
 
 publish_plot(local_str_plot)
 
-
 ```
+
 Manufactured home communities exist within the city limits, mainly on the outskirts along major thoroughfares. Six of the eleven communities are located along or in proximity to Lakeside Drive in the western end of the city. The majority of communities are small, consisting of fewer than 50 homes. Although not as prevalent as in the counties, manufactured home communities also provide an affordable housing option within the city.
+
 ```{r}
 #| label: fig-mhc
 #| fig-cap: "Map of manufactured home communities in Lynchburg"
 
-
 mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
-  filter(STATE == "VA") %>% 
+  filter(STATE == "VA") |> 
   filter(str_detect(COUNTY, "LYNCHBURG"))
 
-leaflet(mhc) %>% 
-  addTiles() %>% 
+leaflet(mhc) |> 
+  addTiles() |> 
   addCircleMarkers()
-
 
 ```
 
@@ -734,9 +729,9 @@ leaflet(mhc) %>%
 #| fig-cap: "Manufactured home communities by size in Lynchburg"
 
 
-lburg_mhc <- mhc%>% 
-  group_by(SIZE) %>% 
-  summarise(count = n_distinct(OBJECTID)) %>% 
+lburg_mhc <- mhc|> 
+  group_by(SIZE) |> 
+  summarise(count = n_distinct(OBJECTID)) |> 
   st_drop_geometry()
 
 lburg_mhc_plot <- ggplot(lburg_mhc,
@@ -752,7 +747,6 @@ lburg_mhc_plot <- ggplot(lburg_mhc,
   scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,15)) +
   labs(title = "Manufactured home communities by size in Lynchburg")
 
-
 publish_plot(lburg_mhc_plot)
 
 ```
@@ -763,7 +757,7 @@ Residential building permits display the dominance of single-family construction
 #| label: fig-bps
 #| fig-cap: "Residential building permits by unit type in Lynchburg"
 
-lburg_cbps <- read_rds("data/cv_cbps.rds") %>% 
+lburg_cbps <- read_rds("data/cv_cbps.rds") |> 
   filter(NAMELSAD == "Lynchburg city") 
 
 lburg_cbps_plot <- ggplot(lburg_cbps,
@@ -792,7 +786,6 @@ publish_plot(lburg_cbps_plot)
 
 As the number of renters has been increasing in the city, the homeownership rate has continued to drop. From 56 percent in 2010 to 49 percent in 2021, the city is now majority-renter.
 
-
 ```{r}
 #| label: fig-ho
 #| fig-cap: "Homeownership rate in Lynchburg"
@@ -803,11 +796,11 @@ b25003_data <- read_rds("data/b25003_data.rds")
 
 # Clean the data and calculate homeownership rate.
 
-ho_rate <- b25003_data %>%
-  select(county = NAME, year, tenure, estimate) %>% # Change "NAME" field to "county".
-  filter(county == "Lynchburg city") %>% # Filter for Lynchburg only.
-  group_by(year) %>% # Calculate percent of total by year to get homeownership rate.
-  mutate(pct = estimate/sum(estimate)) %>%  
+ho_rate <- b25003_data |>
+  select(county = NAME, year, tenure, estimate) |> # Change "NAME" field to "county".
+  filter(county == "Lynchburg city") |> # Filter for Lynchburg only.
+  group_by(year) |> # Calculate percent of total by year to get homeownership rate.
+  mutate(pct = estimate/sum(estimate)) |>  
   filter(tenure == "Homeowner") # Retain only homeowners to get the homeownership rate.
 
 cv_ho_plot <- ggplot(ho_rate,
@@ -841,9 +834,9 @@ As the homeownership rate has declined, home prices have been on the rise. The p
 
 # Need to replace this with VAR data and maybe change the plot.
 
-# lburg_price <- read_excel("data/lburg_mls_data.xlsx", sheet = "Median Sales Price 2008 - 2022") %>% 
-#   clean_names() %>% 
-#   filter(property_type == "RESI") %>% 
+# lburg_price <- read_excel("data/lburg_mls_data.xlsx", sheet = "Median Sales Price 2008 - 2022") |> 
+#   clean_names() |> 
+#   filter(property_type == "RESI") |> 
 #   select(year = year_sd, medprice = median_selling_price)
 # 
 # 
@@ -852,19 +845,19 @@ As the homeownership rate has declined, home prices have been on the rise. The p
 # 
 # cpi_ls <- fredr(
 #   series_id = "CUUR0000SA0L2"
-# ) %>% 
-#   select(date, value) %>% 
-#   mutate(date = as.Date(date)) %>% 
-#   mutate(value = as.numeric(value)) %>% 
-#   mutate(year = year(date)) %>% 
-#   group_by(year) %>% 
+# ) |> 
+#   select(date, value) |> 
+#   mutate(date = as.Date(date)) |> 
+#   mutate(value = as.numeric(value)) |> 
+#   mutate(year = year(date)) |> 
+#   group_by(year) |> 
 #   summarise(cpi = mean(value))
 # 
-# price_adj <- lburg_price %>% 
-#   left_join(cpi_ls, by = "year") %>% 
-#   mutate(price_adj = (271.6895/cpi)*medprice) %>% 
-#   select(year, price_adj) %>% 
-#   mutate(price_adj = round(as.numeric(price_adj))) %>% 
+# price_adj <- lburg_price |> 
+#   left_join(cpi_ls, by = "year") |> 
+#   mutate(price_adj = (271.6895/cpi)*medprice) |> 
+#   select(year, price_adj) |> 
+#   mutate(price_adj = round(as.numeric(price_adj))) |> 
 #   mutate(tooltip = c(paste0("Year: ", year, "\n Median sales price: $", price_adj)))
 # 
 # price_adj_plot <- ggplot(price_adj,
@@ -889,7 +882,7 @@ sales <- read_rds("data/cv_var.rds") |>
   mutate(change = adj_price - lag(adj_price),
          pchg = change/lag(adj_price))
 
-ggplot(sales,
+lburg_sales_plot <- ggplot(sales,
        aes(x = period,
            y = adj_price,
            color = adj_price,
@@ -908,6 +901,7 @@ ggplot(sales,
   labs(title = "Median sales price in Lynchburg",
        caption = "**Source:** Virginia REALTORS, adjusted to Q2 2023 dollars.")
 
+publish_plot(lburg_sales_plot)
 
 ```
 
@@ -917,21 +911,19 @@ Closed home sales increased slightly during the pandemic reaching a high of 191 
 #| label: fig-lburg-sold
 #| fig-cap: "Lynchburg closed home sales"
 
-# lburg_sold <- read_excel("data/lburg_mls_data.xlsx", sheet = "Num Sold Listings Per Month") %>% 
-#   clean_names() %>% 
-#   filter(property_type == "RESI") %>% 
-#   select(year = year_sd, month = month_sd, sold = number_sold_listings) %>% 
-#   mutate(date = as.yearmon(paste(year, month), "%Y %m")) %>% 
-#   mutate(date = as.Date(date)) %>% 
-#   select(date, sold) %>% 
+# lburg_sold <- read_excel("data/lburg_mls_data.xlsx", sheet = "Num Sold Listings Per Month") |> 
+#   clean_names() |> 
+#   filter(property_type == "RESI") |> 
+#   select(year = year_sd, month = month_sd, sold = number_sold_listings) |> 
+#   mutate(date = as.yearmon(paste(year, month), "%Y %m")) |> 
+#   mutate(date = as.Date(date)) |> 
+#   select(date, sold) |> 
 #   mutate(tooltip = c(paste0("Date: ", date, "\n Homes sold: ", sold)))
 
 units_sold <- read_rds("data/cv_var.rds") |> 
   filter(name == "Lynchburg City") |> 
-  select(geography, name, units, period, year) %>% 
+  select(geography, name, units, period, year) |> 
   mutate(tooltip = c(paste0("Quarter: ", period, "\n Homes sold: ", units)))
-
-
 
 lburg_sold_plot <- ggplot(units_sold,
        aes(x = period,
@@ -950,9 +942,7 @@ lburg_sold_plot <- ggplot(units_sold,
   theme(axis.ticks.x = element_line(color = "grey", size = 0.5),
         axis.ticks.length = unit(0.2, "cm"))
 
-
 publish_plot(lburg_sold_plot)
-
 
 ```
 
@@ -962,20 +952,18 @@ The demand in the city is exemplified by the average days on market, which was a
 #| label: fig-dom
 #| fig-cap: "Lynchburg median days on market"
 
-
-# lburg_dom <- read_excel("data/lburg_mls_data.xlsx", sheet = "Average DOM") %>% 
-#   clean_names() %>% 
-#   filter(property_type == "RESI")%>% 
-#   select(year = year_sd, month = month_sd, dom = average_dom) %>% 
-#   mutate(date = as.yearmon(paste(year, month), "%Y %m")) %>% 
-#   mutate(date = as.Date(date)) %>% 
+# lburg_dom <- read_excel("data/lburg_mls_data.xlsx", sheet = "Average DOM") |> 
+#   clean_names() |> 
+#   filter(property_type == "RESI")|> 
+#   select(year = year_sd, month = month_sd, dom = average_dom) |> 
+#   mutate(date = as.yearmon(paste(year, month), "%Y %m")) |> 
+#   mutate(date = as.Date(date)) |> 
 #   select(date, dom)
 
 lburg_dom <- read_rds("data/cv_var.rds") |> 
   filter(name == "Lynchburg City") |> 
-  select(geography, name, med_dom, period, year) %>% 
+  select(geography, name, med_dom, period, year) |> 
   mutate(tooltip = c(paste0("Quarter: ", period, "\n Median DOM: ", med_dom)))
-
 
 lburg_dom_plot <- ggplot(lburg_dom,
        aes(x = period,
@@ -997,16 +985,17 @@ lburg_dom_plot <- ggplot(lburg_dom,
 publish_plot(lburg_dom_plot)
 
 ```
+
 From 2016 through 2022, homes sales in the city have been concentrated in the Perrymont and Fort Hill neighborhoods. There have also been a large number of home sales at the southern edge of the city along Timberlake Road.
 
 ```{r}
-#| label: fig-lburg_sales
+#| label: fig-lburg-sales-map
 #| fig-cap: "Map of home sales in Lynchburg from 2016 through 2022"
 
-library(tidygeocoder)
-
-# lburg_props <- read_excel("data/lburg_sold.xlsx", sheet = "Residential") %>% 
-#   clean_names() %>% 
+# library(tidygeocoder)
+#
+# lburg_props <- read_excel("data/lburg_sold.xlsx", sheet = "Residential") |> 
+#   clean_names() |> 
 #   geocode(address = street_full_address,
 #           method = 'geocodio',
 #           lat = latitude,
@@ -1018,13 +1007,13 @@ library(zoo)
 
 # Hex map has some of these properties that may be outside of city limits. Might need to explore this and filter those out. 
 
-lburg_props <- read_rds("data/lburg_props.rds") %>% 
-  mutate(date = as.yearmon(selling_date, "%Y %m")) %>% 
-  mutate(date = as.Date(date)) %>% 
-  mutate(year = year(date)) %>% 
+lburg_props <- read_rds("data/lburg_props.rds") |> 
+  mutate(date = as.yearmon(selling_date, "%Y %m")) |> 
+  mutate(date = as.Date(date)) |> 
+  mutate(year = year(date)) |> 
   drop_na(latitude) 
 
-lburg_props_pcovid <- lburg_props %>% 
+lburg_props_pcovid <- lburg_props |> 
   st_as_sf(coords = c("longitude", "latitude"),
            crs = 4326)
 
@@ -1033,7 +1022,7 @@ library(mapview)
 hex_grid <- st_make_grid(lburg_props_pcovid, n = c(25,25),
                          what = "polygons", square = FALSE)
 
-hex_grid_sold <- st_sf(hex_grid) %>% 
+hex_grid_sold <- st_sf(hex_grid) |> 
   mutate(grid_id = 1:length(lengths(hex_grid)))
 
 hex_grid_sold$n_pts <- lengths(st_intersects(hex_grid_sold, lburg_props_pcovid))
@@ -1041,7 +1030,6 @@ hex_grid_sold$n_pts <- lengths(st_intersects(hex_grid_sold, lburg_props_pcovid))
 hex_count <- filter(hex_grid_sold, n_pts > 5)
 
 mapview(hex_count, zcol = "n_pts")
-
 
 ```
 
@@ -1063,29 +1051,27 @@ Like the counties, rents in the city have been relatively flat from 2015 to 2020
 
 # Read in downloaded data for Lynchburg rent.
 
- lburg_rent <- read_csv("data/lburg_rent.csv") %>% 
+lburg_rent <- read_csv("data/lburg_rent.csv") |> 
   mutate(county = "Lynchburg city") # Create a field for the locality name.
-
 
 library(zoo)
 library(lubridate)
 
-local_rent <- lburg_rent %>% 
-  filter(!str_detect(period, "QTD")) %>% # Remove QTD values.
-  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) %>%  # Convert quarter dates to readable dates.
-  select(county, period, current, inf) %>% 
+local_rent <- lburg_rent |> 
+  filter(!str_detect(period, "QTD")) |> # Remove QTD values.
+  mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |>  # Convert quarter dates to readable dates.
+  select(county, period, current, inf) |> 
   pivot_longer(3:4, # Pivot data to create tabular data.
                names_to = "value",
-               values_to = "rent") %>% 
+               values_to = "rent") |> 
   mutate(value = case_when(
     value == "current" ~ "Current dollars",
-    value == "inf" ~ "Inflation-adjusted dollars")) %>% 
-  mutate(year = year(period)) %>% 
+    value == "inf" ~ "Inflation-adjusted dollars")) |> 
+  mutate(year = year(period)) |> 
   filter(year >= 2015) |> 
   mutate(rent_label = dollar(rent)) |> 
   mutate(tooltip = c(paste0("Date: ", period, "\n Rent: ", rent_label)))
   
-
 local_rent_plot <- ggplot(local_rent,
        aes(x = period,
            y = rent,
@@ -1109,6 +1095,7 @@ publish_plot(local_rent_plot)
 ```
 
 Rental vacancy rates in the city hit a high during the early parts of the pandemic. This could have been the result of the student population leaving due to pandemic protections and other workers now being able to work from elsewhere. However, vacancy rates reached a low in the latter half of 2021 and then began to climb back up in 2022 onward. More recently, rental vacancy has sat around a more balanced 6 percent.
+
 ```{r}
 #| label: fig-vacancy
 #| fig-caption: "Rental vacancy in Lynchburg"
@@ -1121,7 +1108,6 @@ Rental vacancy rates in the city hit a high during the early parts of the pandem
 
 lburg_v <- read_csv("data/lburg_vacancy.csv")
 
-
 local_vacancy <- lburg_v |> 
   filter(!str_detect(period, "QTD")) |> 
   mutate(period = as.Date(as.yearqtr(period, format = "%Y Q%q"), frac = 1)) |> 
@@ -1130,7 +1116,6 @@ local_vacancy <- lburg_v |>
   mutate(vacancy_label = percent(vacancy)) |> 
   mutate(tooltip = c(paste0("Date: ", period, "\n Vacancy rate: ", vacancy_label))) |> 
   mutate(vacancy = as.numeric(vacancy))
-
 
 vacancy_plot <- ggplot(local_vacancy,
        aes(x = period,
@@ -1147,10 +1132,10 @@ vacancy_plot <- ggplot(local_vacancy,
        subtitle = "All multifamily properties in Lynchburg",
        caption = "**Source:** CoStar Group, Inc.")
   
-
 publish_plot(vacancy_plot)
 
 ```
+
 ### Single-Family Rentals
 
 It is important to note that CoStar data excludes a significant amount of single-family detached rentals, which has been growing in demand across the nation. In the city, there is an estimated 4,922 single-family homes that are being used as rentals. A majority of the detached SFR is located in Ward II, where the College Hill and Diamond Hill neighborhoods are located.
@@ -1177,9 +1162,9 @@ mapview(hex_count,
 
 sfr <- read_rds("data/sfr.rds")
 
-sfr_ward <- sfr %>% 
-  group_by(Designation) %>% 
-  summarise(count = n_distinct(parcel_id)) %>% 
+sfr_ward <- sfr |> 
+  group_by(Designation) |> 
+  summarise(count = n_distinct(parcel_id)) |> 
   st_drop_geometry()
 
 sfr_ward_plot <- ggplot(sfr_ward,
@@ -1215,18 +1200,17 @@ At the end of 2022, city council designated the Dearington Hills Apartments as a
 #| label: fig-subsidy
 #| fig-cap: "Federally-assisted rental homes in Lynchburg by subsidy"
 
-nhpd_prop <- read_csv("data/nhpd_properties.csv") %>% 
-  clean_names() %>% 
-  filter(property_status != "Inactive") %>% 
+nhpd_prop <- read_csv("data/nhpd_properties.csv") |> 
+  clean_names() |> 
+  filter(property_status != "Inactive") |> 
   filter(grepl("lynchburg", city, ignore.case = TRUE))
 
-nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") %>% 
-  clean_names() %>% 
-  filter(subsidy_status != "Inactive") %>% 
-  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
-  group_by(subsidy_name) %>% 
+nhpd_subsidies <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(subsidy_status != "Inactive") |> 
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  group_by(subsidy_name) |> 
   summarise(units = sum(assisted_units))
-
 
 subsidy_plot <- ggplot(nhpd_subsidies,
        aes(x = reorder(subsidy_name, -units),
@@ -1242,25 +1226,26 @@ subsidy_plot <- ggplot(nhpd_subsidies,
   labs(title = "Federally-assisted rental homes in Lynchburg by subsidy",
        caption = "**Source:** National Housing Preservation Database (NHPD).")
 
-
 publish_plot(subsidy_plot)
 
 ```
+
 As a major portion of Lynchburg's affordable housing stock, LIHTC is potentially at-risk due to expiring affordability commitments. By 2035, over 40 percent of active LIHTC units are set to exit their affordability commitment period. These properties would need to obtain an additional allocation of tax credits to maintain affordability. While nonprofit owner/operators will seek to maintain affordability, for-profit owners are more likely to convert their properties to market rate.
+
 ```{r}
 #| label: fig-lihtc-exp
 #| fig-cap: "LIHTC units by affordability commitment expiration in Lynchburg"
 
 
-lihtc <- read_csv("data/nhpd_subsidies.csv") %>% 
-  clean_names() %>% 
-  filter(subsidy_status != "Inactive") %>% 
-  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
-  filter(subsidy_name == "LIHTC") %>% 
-  mutate(end_date = mdy(end_date)) %>% 
-  mutate(year = year(end_date)) %>% 
-  group_by(year) %>% 
-  summarise(units = sum(assisted_units)) %>% 
+lihtc <- read_csv("data/nhpd_subsidies.csv") |> 
+  clean_names() |> 
+  filter(subsidy_status != "Inactive") |> 
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  filter(subsidy_name == "LIHTC") |> 
+  mutate(end_date = mdy(end_date)) |> 
+  mutate(year = year(end_date)) |> 
+  group_by(year) |> 
+  summarise(units = sum(assisted_units)) |> 
   mutate(pct = (units/sum(units))) |> 
   mutate(yr_group = case_when(
     year <= 2030 ~ 2030,
@@ -1316,12 +1301,12 @@ lihtc_map <- read_csv("data/nhpd_subsidies.csv") |>
   clean_names() |> 
   filter(city == "LYNCHBURG",
          subsidy_status != "Inactive",
-         subsidy_name == "LIHTC")  %>% 
-  clean_names() %>% 
-  filter(subsidy_status != "Inactive") %>% 
-  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
-  filter(subsidy_name == "LIHTC") %>% 
-  mutate(end_date = mdy(end_date)) %>% 
+         subsidy_name == "LIHTC")  |> 
+  clean_names() |> 
+  filter(subsidy_status != "Inactive") |> 
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  filter(subsidy_name == "LIHTC") |> 
+  mutate(end_date = mdy(end_date)) |> 
   mutate(year = year(end_date)) |> 
   mutate(yr_group = case_when(
     year <= 2030 ~ 2030,
@@ -1345,8 +1330,8 @@ leaflet(lihtc_map) |>
   addLegend("topright", pal = pal, values = c(2030, 2035, 2040, 2045, 2050),
             title = "Expired by <br>or before")
 
-
 ```
+
 Section 8 properties are those that utilize project-based rental assistance. This is different from Housing Choice Vouchers, which are tenant-based and allow a recipient to choose a rental in the private market. With project-based Section 8, HUD contracts directly with private owners of multifamily housing to make units affordable. The rental assistance is tied directly to a property and cannot be transferred.
 
 Section 8 project-based makes up a significant portion of affordable rental units in the city and also face expiring affordability periods.By 2035, roughly 47 percent of existing Section 8 project-based will exit their affordability period.
@@ -1359,9 +1344,9 @@ Section 8 project-based makes up a significant portion of affordable rental unit
 
 s8_map <- read_csv("data/nhpd_subsidies.csv") |> 
   clean_names() |> 
-  filter(grepl("lynchburg", city, ignore.case = TRUE)) %>% 
-  filter(subsidy_name == "Section 8") %>% 
-  mutate(end_date = mdy(end_date)) %>% 
+  filter(grepl("lynchburg", city, ignore.case = TRUE)) |> 
+  filter(subsidy_name == "Section 8") |> 
+  mutate(end_date = mdy(end_date)) |> 
   mutate(year = year(end_date)) |> 
   mutate(yr_group = case_when(
     year <= 2030 ~ 2030,
@@ -1393,18 +1378,18 @@ leaflet(s8_map) |>
 
 
 ```
+
 Housing Choice Vouchers (HCVs) are utilize throughout most of the city. But most Housing Choice Vouchers are being used in the central parts of the city, where there are denser housing options. Areas of Rivermont and Daniels Hill, as well as Diamond Hill, seeing the highest utilization of HCVs among renters.
 
 ```{r}
 #| label: fig-hcv-map
 #| fig-cap: "Housing Choice Voucher utilization in Lynchburg"
 
-
 # Updated on June 8, 23
 
-hcv <- read_rds("data/hcv.rds") %>% 
-  st_transform(crs = 4326) %>% 
-  clean_names() %>% 
+hcv <- read_rds("data/hcv.rds") |> 
+  st_transform(crs = 4326) |> 
+  clean_names() |> 
   filter(county == 680) |> 
   mutate(pct = hcv_pct_renter_occ_units/100) |> 
   mutate(label = percent(pct, 2))
@@ -1416,7 +1401,7 @@ hcv <- read_rds("data/hcv.rds") %>%
 pal <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent", reverse = TRUE)
 
 
-leaflet(hcv) %>%
+leaflet(hcv) |>
   addProviderTiles(providers$CartoDB.Positron) |> 
   addPolygons(color = "darkgrey",
               weight = 0.6,
@@ -1425,19 +1410,15 @@ leaflet(hcv) %>%
               popup = ~label) |> 
   addLegend("topright", pal = pal, values = ~hcv_pct_renter_occ_units, labFormat = labelFormat(suffix = "%"), title = "Percent of renters <br> utilizing HCV")
 
-
 ```
 
 ```{r}
 #| label: fig-public-housing
 #| eval: false
 
-
-ph <- read_rds("data/ph.rds") %>% 
-  st_transform(crs = 4326) %>% 
+ph <- read_rds("data/ph.rds") |> 
+  st_transform(crs = 4326) |> 
   clean_names()
-
-
 
 leaflet(ph) |> 
   addProviderTiles(providers$CartoDB.Positron) |>
@@ -1448,8 +1429,6 @@ leaflet(ph) |>
                    label = ~project_name,
                    labelOptions = labelOptions(nohide = TRUE, textsize = "10px"))
   
-
-
 ```
 
 ## Affordability
@@ -1491,6 +1470,7 @@ cv_cb_plot <- ggplot(local_cb,
 publish_plot(cv_cb_plot)
 
 ```
+
 Cost burden by race within the city has followed similar trends at the regional level. Cost burden among Black households has remained relatively unchanged over the last decade, but has more recently seen slight declines. Asian, Hispanic, and other racial categories have seen fluctuating cost burden levels, but again, these estimates should be viewed with caution due to low sample sizes. However, white households in the city have consistently seen declining cost burden since 2014. 
 
 ```{r}
@@ -1499,12 +1479,12 @@ Cost burden by race within the city has followed similar trends at the regional 
 
 cb_9 <- read_rds("data/cb_9.rds")
 
-cv_cb9 <- cb_9 %>% 
-  subset(fips %in% lburg) %>% 
-  group_by(year, race, cb_group) %>% 
-  summarise(estimate = sum(estimate)) %>% 
-  group_by(year, race) %>% 
-  mutate(pct = estimate/sum(estimate)) %>% 
+cv_cb9 <- cb_9 |> 
+  subset(fips %in% lburg) |> 
+  group_by(year, race, cb_group) |> 
+  summarise(estimate = sum(estimate)) |> 
+  group_by(year, race) |> 
+  mutate(pct = estimate/sum(estimate)) |> 
   filter(cb_group == "Cost-burdened") |> 
   mutate(year = as.character(year))
 
@@ -1539,22 +1519,21 @@ This was only a decrease of 35 from 2012, when the gap was estimated to be 3,890
 #| label: fig-gap
 #| fig-cap: "Rental housing gap by AMI in Lynchburg"
 
-tb_18_match <- read_rds("data/tb_18_match.rds") %>% 
+tb_18_match <- read_rds("data/tb_18_match.rds") |> 
   filter(fips == lburg)
 
-
-gap <- tb_18_match %>% 
-  group_by(year, household_income, gapcode) %>% 
-  summarise(estimate = sum(estimate)) %>% 
+gap <- tb_18_match |> 
+  group_by(year, household_income, gapcode) |> 
+  summarise(estimate = sum(estimate)) |> 
   mutate(estimate = case_when(
     gapcode == "Gap" ~ estimate * -1,
     gapcode == "Matches or less than income" ~ estimate
-  )) %>% 
-  filter(household_income != "80 percent AMI or greater") %>% 
+  )) |> 
+  filter(household_income != "80 percent AMI or greater") |> 
   mutate(gapcode = case_when(
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
-  )) %>% 
+  )) |> 
   mutate(year = as.character(year))
 
 gap_plot <- ggplot(gap,
