@@ -26,7 +26,7 @@ format:
         \raggedbottom
 
 book:
-  title: "Central Virginia Planning District Regional Housing Market Analysis"
+  title: "Central Virginia Planning District Regional Housing Study"
   repo-url: https://github.com/housingforwardva/cvpdc
   output-file: "cvpdc-housing-study"
   author: 
@@ -34,21 +34,22 @@ book:
     url: https://www.housingforwardva.org
   downloads: pdf 
   date: today
+  date-format: long
   chapters:
     - index.qmd 
-    - part: "PART 1: Research and engagement"
+    - part: "Research and engagement"
       chapters:
         - part-1-1.qmd # Background research
         - part-1-2.qmd # Engagement and outreach
-    - part: "PART 2: Findings"
+    - part: "Findings"
       chapters: 
-        - part-2-1.qmd # CVPDC Housing Market Assessment
-        - part-2-2.qmd # County Housing Market Assessment
-        - part-2-3.qmd # City of Lynchburg Housing Market Analysis
-    - part: "PART 3: Policy evaluation"
+        - part-2-1.qmd # Regional market analysis
+        - part-2-2.qmd # County market analyses
+        - part-2-3.qmd # Lynchburg market analysis
+    - part: "Policy evaluation"
       chapters:
-        - part-3-1.qmd # Regional and local policy evaluation
-    - part: "PART 4: Policy recommendations"
+        - part-3-1.qmd # Policy evaluation
+    - part: "Policy recommendations"
       chapters: 
         - part-4-1.qmd # Regional solutions
         - part-4-2.qmd # Local partnerships

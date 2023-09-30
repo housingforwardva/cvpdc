@@ -85,6 +85,7 @@ library(lubridate)
 library(zoo)
 library(patchwork)
 library(mapview)
+library(zoo)
 
 lburg <- "51680"
 
@@ -1017,8 +1018,7 @@ publish_plot(lburg_dom_plot)
 From 2016 through 2022, homes sales in the city have been concentrated in the Perrymont and Fort Hill neighborhoods. There have also been a large number of home sales at the southern edge of the city along Timberlake Road.
 
 ```{r}
-#| label: fig-lburg-sales-map
-#| fig-cap: "Map of home sales in Lynchburg from 2016 through 2022"
+#| label: lb-hex-map
 #| eval: false
 
 # library(tidygeocoder)
@@ -1031,8 +1031,6 @@ From 2016 through 2022, homes sales in the city have been concentrated in the Pe
 #           long = longitude)
 
 # write_rds(lburg_props, "data/lburg_props.rds")
-
-library(zoo)
 
 # Hex map has some of these properties that may be outside of city limits. Might need to explore this and filter those out. 
 
@@ -1054,9 +1052,54 @@ hex_grid_sold <- st_sf(hex_grid) |>
 
 hex_grid_sold$n_pts <- lengths(st_intersects(hex_grid_sold, lburg_props_pcovid))
 
-hex_count <- filter(hex_grid_sold, n_pts > 5)
+lb_hex_count <- filter(hex_grid_sold, n_pts > 5)
 
-mapview(hex_count, zcol = "n_pts")
+write_rds(lb_hex_count, "data/lb_hex_count.rds")
+
+```
+
+
+```{r}
+#| label: fig-lburg-sales-map
+#| fig-cap: "Map of home sales in Lynchburg from 2016 through 2022"
+
+lb_hex_count <- read_rds("data/lb_hex_count.rds")
+
+lb_hex_basemap <- read_rds("data/lb_hex_basemap.rds")
+
+if (knitr::is_html_output()) {
+  
+  pal <- colorRampPalette(c("#b2e5e5", "#f57dbb", "#041c3b"))
+  
+  mapview(
+    lb_hex_count,
+    zcol = "n_pts",
+    layer.name = "Number of sales",
+    col.regions = pal,
+    alpha = 0
+    )
+  
+} else {
+  
+  ggplot() +
+    lb_hex_basemap +
+    geom_sf(lb_hex_count, mapping = aes(fill = n_pts), alpha = 0.5, color = NA, show.legend = "polygon") +
+    scale_fill_viridis_c(direction = -1) +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
+    labs(title = "Map of home sales in Lynchburg",
+         subtitle = "2016 through 2022",
+         fill = "Number of sales",
+         caption = "**Source:** Lynchburg Association of REALTORS®.") +
+    theme_hfv() +
+    theme(
+      legend.position = "right",
+      legend.title = element_text(),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+  
+}
 
 ```
 
@@ -1165,24 +1208,9 @@ publish_plot(vacancy_plot)
 
 ### Single-Family Rentals
 
-It is important to note that CoStar data excludes a significant amount of single-family detached rentals, which has been growing in demand across the nation. In the city, there is an estimated 4,922 single-family homes that are being used as rentals. A majority of the detached SFR is located in Ward II, where the College Hill and Diamond Hill neighborhoods are located.
+It is important to note that CoStar data excludes a significant amount of single-family detached rentals, which has been growing in demand across the nation. In the city, there are an estimated 4,922 single-family homes that are being used as rentals. A majority of the detached SFR is located in Ward II, where the College Hill and Diamond Hill neighborhoods are located.
 
 Rental prices for these are not easily discerned, as this type of housing is sometimes marketed on non-traditional channels, like Facebook groups or simply with a yard sign.
-
-```{r}
-#| label: fig-sfr
-#| fig-cap: "Map of single-family detached rentals in Lynchburg"
-#| eval: false
-
-hex_count <- read_rds("data/hex_count.rds")
-
-library(mapview)
-
-mapview(hex_count,
-        zcol = "n_pts",
-        layer.name = "Estimate")
-
-```
 
 ```{r}
 #| label: fig-sfr-ward
@@ -1219,6 +1247,7 @@ publish_plot(sfr_ward_plot)
 As of early 2023, there were a total of 3,651 assisted rental units in the city. While assisted units can be supported by multiples types of federal subsidy, the bulk of these units (35 percent) are supported by the Low-Income Housing Tax Credit (LIHTC) program. They are followed by project-based Section 8 at 1,201 units. 
 
 :::{.callout-note}
+### Public housing in Lynchburg
 
 The Lynchburg Redevelopment & Housing Authority (LRHA) owns and operates 328 units of public housing within the city. The majority of these units were built in the middle of the 20th century and, like any residential development built during this time, face deterioration and significant need for revitalization and rehab.
 
@@ -1309,22 +1338,8 @@ publish_plot(lihtc_plot)
 ```
 
 ```{r}
-
-# Plot expiration of non-public housing subsidies
-
-subsidy_exp <- read_csv("data/nhpd_subsidies.csv") |> 
-  clean_names() |> 
-  filter(city == "LYNCHBURG",
-         subsidy_status != "Inactive",
-         subsidy_name != "LIHTC")
-  
-
-```
-
-```{r}
 #| label: fig-lihtc-map
-#| fig-cap: "LIHTC properties by affordability commitment expiration"
-#| eval: false
+#| fig-cap: "Map of LIHTC properties in Lynchburg"
 
 # Map LIHTC properties by exp year
 
@@ -1345,22 +1360,46 @@ lihtc_map <- read_csv("data/nhpd_subsidies.csv") |>
     between(year, 2036, 2040) ~ 2040,
     between(year, 2041, 2045) ~ 2045,
     year > 2045 ~ 2050
-  ))
+  )) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-pal <- colorFactor(palette = "viridis", levels = c(2030, 2035, 2040, 2045, 2050))
+pal_lihtc <- colorFactor(palette = "viridis", levels = c(2030, 2035, 2040, 2045, 2050))
+
+if (knitr::is_html_output()) {
 
 leaflet(lihtc_map) |> 
   addProviderTiles(providers$CartoDB.Positron) |> 
-  addCircleMarkers(lng = ~longitude,
-                   lat = ~latitude,
-                   weight = 1,
+  addCircleMarkers(weight = 1,
                    fillOpacity = 0.6,
-                   color = ~pal(yr_group),
+                   color = ~pal_lihtc(yr_group),
                    popup = paste0("Property: ", lihtc_map$property_name,
                                   "<br>", "Units: ", lihtc_map$assisted_units)) |> 
-  addLegend("topright", pal = pal, values = c(2030, 2035, 2040, 2045, 2050),
+  addLegend("topright", pal = pal_lihtc, values = c(2030, 2035, 2040, 2045, 2050),
             title = "Expired by <br>or before")
 
+} else {
+
+  ggplot() +
+    lb_basemap +
+    geom_sf(lihtc_map, mapping = aes(color = yr_group), size = 3, show.legend = "point") +
+    scale_color_viridis_c(direction = -1) +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
+    labs(title = "Map of LIHTC properties in Lynchburg",
+         subtitle = "By affordability commitment expiration date",
+         color = "Expired by\nor before",
+         caption = "**Source:** National Housing Preservation Database.") +
+    theme_hfv() +
+    theme(
+      legend.position = "right",
+      legend.title = element_text(),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+  
+}
+
+  
 ```
 
 Section 8 properties are those that utilize project-based rental assistance. This is different from Housing Choice Vouchers, which are tenant-based and allow a recipient to choose a rental in the private market. With project-based Section 8, HUD contracts directly with private owners of multifamily housing to make units affordable. The rental assistance is tied directly to a property and cannot be transferred.
@@ -1369,8 +1408,7 @@ Section 8 project-based makes up a significant portion of affordable rental unit
 
 ```{r}
 #| label: fig-s8-map
-#| fig-cap: "Section 8 properties by affordability commitment expiration"
-#| eval: false
+#| fig-cap: "Map of Section 8 properties in Lynchburg"
 
 # Map Section 8 properties by exp year
 
@@ -1386,27 +1424,49 @@ s8_map <- read_csv("data/nhpd_subsidies.csv") |>
     between(year, 2036, 2040) ~ 2040,
     between(year, 2041, 2045) ~ 2045,
     year > 2045 ~ 2050
-  ))
-
+  )) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
 s8_summary <- s8_map |> 
   group_by(yr_group) |> 
   summarise(units = sum(assisted_units)) |> 
   mutate(pct = (units/sum(units)))
 
-pal <- colorFactor(palette = "viridis", levels = c(2030, 2035, 2040, 2045, 2050))
+pal_s8 <- colorFactor(palette = "viridis", levels = c(2030, 2035, 2040, 2045, 2050))
+
+if (knitr::is_html_output()) {
 
 leaflet(s8_map) |> 
   addProviderTiles(providers$CartoDB.Positron) |> 
-  addCircleMarkers(lng = ~longitude,
-                   lat = ~latitude,
-                   weight = 1,
+  addCircleMarkers(weight = 1,
                    fillOpacity = 0.6,
-                   color = ~pal(yr_group),
+                   color = ~pal_s8(yr_group),
                    popup = paste0("Property: ", s8_map$property_name,
                                   "<br>", "Units: ", s8_map$assisted_units)) |>
-  addLegend("topright", pal = pal, values = c(2030, 2035, 2040, 2045, 2050),
+  addLegend("topright", pal = pal_s8, values = c(2030, 2035, 2040, 2045, 2050),
             title = "Expired by <br>or before")
+
+} else {
+
+  ggplot() +
+    lb_basemap +
+    geom_sf(s8_map, mapping = aes(color = yr_group), size = 3, show.legend = "point") +
+    scale_color_viridis_c(direction = -1) +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
+    labs(title = "Map of Section 8 properties in Lynchburg",
+         subtitle = "By affordability commitment expiration date",
+         color = "Expired by\nor before",
+         caption = "**Source:** National Housing Preservation Database.") +
+    theme_hfv() +
+    theme(
+      legend.position = "right",
+      legend.title = element_text(),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+  
+}
 
 ```
 
@@ -1414,10 +1474,9 @@ Housing Choice Vouchers (HCVs) are utilize throughout most of the city. But most
 
 ```{r}
 #| label: fig-hcv-map
-#| fig-cap: "Housing Choice Voucher utilization in Lynchburg"
-#| eval: false
+#| fig-cap: "Map of Housing Choice Voucher utilization in Lynchburg by tract"
 
-# Updated on June 8, 23
+# Updated on June 8, 2023
 
 hcv <- read_rds("data/hcv.rds") |> 
   st_transform(crs = 4326) |> 
@@ -1426,21 +1485,45 @@ hcv <- read_rds("data/hcv.rds") |>
   mutate(pct = hcv_pct_renter_occ_units/100) |> 
   mutate(label = percent(pct, 2))
 
-# library(mapview)
-# 
-# mapview(hcv, zcol = "hcv_pct_renter_occ_units")
+pal_hcv <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent", reverse = TRUE)
 
-pal <- colorNumeric(palette = "viridis", domain = hcv$hcv_pct_renter_occ_units, na.color = "transparent", reverse = TRUE)
-
+if (knitr::is_html_output()) {
 
 leaflet(hcv) |>
   addProviderTiles(providers$CartoDB.Positron) |> 
   addPolygons(color = "darkgrey",
               weight = 0.6,
-              fillColor = ~pal(hcv_pct_renter_occ_units),
+              fillColor = ~pal_hcv(hcv_pct_renter_occ_units),
               fillOpacity = 0.6,
               popup = ~label) |> 
-  addLegend("topright", pal = pal, values = ~hcv_pct_renter_occ_units, labFormat = labelFormat(suffix = "%"), title = "Percent of renters <br> utilizing HCV")
+  addLegend("topright", pal = pal_hcv,
+            values = ~hcv_pct_renter_occ_units, labFormat = labelFormat(suffix = "%"),
+            title = "Percent of renters <br> utilizing HCV"
+            )
+
+} else {
+
+  ggplot() +
+    lb_basemap +
+    geom_sf(hcv, mapping = aes(fill = hcv_pct_renter_occ_units), alpha = 0.9, color = "grey70") +
+    scale_fill_gradient2(low = "#edf8b1", high = "#253494", mid = "#41b6c4",
+                         na.value = NA,
+                         midpoint = 10,
+                         labels = label_percent(scale = 1)) +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
+    labs(title = "Map of HCV utilization in Lynchburg",
+         fill = "Percent of renters\nutilizing HCV",
+         caption = "**Source:** U.S. Department of Housing and Urban Development.<br>**Note:** Tracts with no renters using HCVs are transparent.") +
+    theme_hfv() +
+    theme(
+      legend.position = "right",
+      legend.title = element_text(),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+  
+}
 
 ```
 
