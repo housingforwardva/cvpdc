@@ -84,8 +84,13 @@ library(tidytext)
 library(lubridate)
 library(zoo)
 library(patchwork)
+library(mapview)
 
 lburg <- "51680"
+
+cv_basemap <- read_rds("data/cv_basemap.rds")
+
+lb_basemap <- read_rds("data/lb_basemap.rds")
 
 ```
 
@@ -469,13 +474,7 @@ local_sub_plot <- ggplot(local_sub,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   labs(title = "Cumulative change in families living with others in Lynchburg",
        subtitle = subtitle_4,
-       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.") +
-  plot_annotation(
-    theme = theme(
-    plot.title = element_markdown(
-       margin = margin(b = 0.4, unit = 'cm'),
-        size = 11.5
-    )))
+       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B11013.")
 
 publish_plot(local_sub_plot)
 
@@ -698,7 +697,7 @@ local_str_plot <- ggplot(local_str,
   scale_y_continuous(labels = percent_format()) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
   labs(title = "Lynchburg's share of regional housing stock",
-      subtitle = "Percent of all occupied homes in region within Lynchburg by tenure and type in 2021",
+      subtitle = "Percent of region's occupied homes within Lynchburg by tenure and type in 2021",
       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
 
 publish_plot(local_str_plot)
@@ -708,27 +707,53 @@ publish_plot(local_str_plot)
 Manufactured home communities exist within the city limits, mainly on the outskirts along major thoroughfares. Six of the eleven communities are located along or in proximity to Lakeside Drive in the western end of the city. The majority of communities are small, consisting of fewer than 50 homes. Although not as prevalent as in the counties, manufactured home communities also provide an affordable housing option within the city.
 
 ```{r}
-#| label: fig-mhc
+#| label: fig-mhc-map
 #| fig-cap: "Map of manufactured home communities in Lynchburg"
-#| eval: false
 
 mhc <- read_rds("data/cv_mhc.rds") |> 
   filter(STATE == "VA") |> 
-  filter(str_detect(COUNTY, "LYNCHBURG"))
+  filter(str_detect(COUNTY, "LYNCHBURG")) |> 
+  mutate(SIZE = str_to_sentence(SIZE))
 
-leaflet(mhc) |> 
-  addTiles() |> 
-  addCircleMarkers()
+if (knitr::is_html_output()) {
+  
+  mapview(
+    mhc,
+    zcol = "SIZE",
+    legend = T,
+    popup = F,
+    burst = F,
+    layer.name = "Units in park"
+  )
+  
+} else {
+  
+  ggplot() +
+    lb_basemap +
+    geom_sf(mhc, mapping = aes(color = SIZE), size = 3, show.legend = "point") +
+    scale_color_hfv() +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
+    labs(title = "Manufactured home communities in Lynchburg",
+         color = "Units in park",
+         caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).") +
+    theme_hfv() +
+    theme(
+      panel.grid = element_blank(),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      legend.position = "right",
+      legend.title = element_text(),
+      legend.key = element_blank()
+      )  
+  
+  }
 
 ```
 
 ```{r}
-#| label: fig-mhc-county
+#| label: fig-mhc-lb
 #| fig-cap: "Manufactured home communities by size in Lynchburg"
-
-mhc <- read_rds("data/cv_mhc.rds") |> 
-  filter(STATE == "VA") |> 
-  filter(str_detect(COUNTY, "LYNCHBURG"))
 
 lburg_mhc <- mhc |> 
   group_by(SIZE) |> 
@@ -1021,8 +1046,6 @@ lburg_props_pcovid <- lburg_props |>
   st_as_sf(coords = c("longitude", "latitude"),
            crs = 4326)
 
-library(mapview)
-
 hex_grid <- st_make_grid(lburg_props_pcovid, n = c(25,25),
                          what = "polygons", square = FALSE)
 
@@ -1102,7 +1125,7 @@ Rental vacancy rates in the city hit a high during the early parts of the pandem
 
 ```{r}
 #| label: fig-vacancy
-#| fig-caption: "Rental vacancy in Lynchburg"
+#| fig-cap: "Rental vacancy in Lynchburg"
 
 # Utilize CoStar properties search for Multi-Family. Filter by County for Lynchburg - VA Market. Then review Analytics and pull QUARTERLY Vacancy Rate for entire region. Do not bring in Forecast and set History to All.
 
@@ -1501,12 +1524,12 @@ cv_cb9 <- cb_9 |>
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = year, 
            y = pct,
-           fill = str_wrap(race, width = 16),
+           fill = race,
            data_id = pct,
            tooltip = percent_format()(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive(size = 2) +
-  facet_wrap(~race, scales = "free_x", labeller = label_wrap_gen(16)) +
+  facet_wrap(~race, scales = "free_x", labeller = label_wrap_gen(25)) +
   scale_y_continuous(labels = percent_format()) +
   scale_fill_hfv() +
   theme_hfv() +

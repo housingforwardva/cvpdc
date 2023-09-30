@@ -46,6 +46,8 @@ cv_names <- list_counties("VA") |>
 
 cnty_code <- c("009", "011", "019", "031", "515")
 
+cv_basemap <- read_rds("data/cv_basemap.rds")
+
 ```
 
 ## Takeaways

@@ -1137,10 +1137,8 @@ if (knitr::is_html_output()) {
     cv_basemap +
     geom_sf(mhc, mapping = aes(color = SIZE), show.legend = "point") +
     scale_color_hfv() +
-    # scale_x_continuous(expand = expansion(mult = 0),
-    #                    limits = c(-8660000, -8585000)) +
-    # scale_y_continuous(expand = expansion(mult = 0),
-    #                    limits = c(4466959, 4548000)) +
+    scale_x_continuous(expand = expansion(mult = 0)) +
+    scale_y_continuous(expand = expansion(mult = 0)) +
     labs(title = "Manufactured home communities in Lynchburg region",
          color = "Units in park",
          caption = "**Source:** U.S. Department of Homeland Security. Homeland Infrastructure Foundation-Level Data (HIFLD).") +
@@ -1741,10 +1739,11 @@ publish_plot(cv_nhpd_plot)
 
 cnty_code <- c("009", "011", "019", "031", "515", "680")
 
-hcv <- read_rds("data/hcv.rds") %>% 
-  st_transform(crs = 4326) %>% 
-  clean_names() %>%
-  subset(county %in% cnty_code)
+hcv <- read_rds("data/hcv.rds") |>  
+  st_transform(crs = 4326) |> 
+  clean_names() |> 
+  subset(county %in% cnty_code) 
+  #filter(!is.na(hcv_public))
 
 hcv_group <- hcv |> 
   drop_na(hcv_public) |> 
@@ -1760,7 +1759,7 @@ hcv_group <- hcv |>
   st_drop_geometry()
   
 hcv_grp_plot <- ggplot(hcv_group,
-       aes(x = county_name,
+       aes(x = reorder(county_name, estimate, decreasing = TRUE),
            y = estimate,
            fill = county_name)) +
   geom_col() +
@@ -1773,6 +1772,7 @@ hcv_grp_plot <- ggplot(hcv_group,
        caption = "**Source:** U.S. Department of Housing and Urban Development.")
 
 publish_plot(hcv_grp_plot)
+
 ```
 
 ```{r}
@@ -1780,11 +1780,6 @@ publish_plot(hcv_grp_plot)
 #| fig-cap: "Percent of renters with Housing Choice Vouchers by tract"
 
 library(mapview)
-
-hcv <- read_rds("data/hcv.rds") |> 
-  clean_names() |> 
-  filter(county %in% cnty_code) |> 
-  filter(!is.na(hcv_public_pct))
   
 if (knitr::is_html_output()) {
   
@@ -1797,20 +1792,23 @@ if (knitr::is_html_output()) {
     
   ggplot() +
     cv_basemap +
-    layer_spatial(hcv, aes(fill = hcv_public_pct), alpha = 0.8) +
+    layer_spatial(hcv, aes(fill = hcv_public_pct), alpha = 0.9, color = "grey70") +
     scale_fill_gradient2(low = "#edf8b1", high = "#253494", mid = "#41b6c4",
-                         na.value = "grey90",
+                         na.value = NA,
                          midpoint = 10,
                          labels = label_percent(scale = 1)) +
+    scale_x_continuous(expand = expansion(mult = c(0,0))) +
+    scale_y_continuous(expand = expansion(mult = c(0,0))) +
     theme_hfv() +
     labs(title = "Percent of renters with Housing Choice Vouchers by tract",
          fill = "Percent",
-         caption = "**Source:** U.S. Department of Housing and Urban Development.") +
+         caption = "**Source:** U.S. Department of Housing and Urban Development.<br>**Note:** Tracts with no renters using HCVs are transparent.") +
     #fixed_plot_aspect(ratio = 0.8) +
     theme(
       panel.background = element_blank(),
+      panel.grid = element_blank(),
       axis.title = element_blank(),
-      axis.ticks = element_blank(),
+      #axis.ticks = element_blank(),
       axis.text = element_blank(),
       legend.position = "right",
       legend.key.height = unit(0.1, "npc"),
