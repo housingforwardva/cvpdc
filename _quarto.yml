@@ -3,7 +3,6 @@ project:
   execute-dir: project
   output-dir: docs
   
-  
 execute: 
   freeze: auto
 
@@ -19,7 +18,6 @@ format:
     toc-title: "On this page"
   pdf:
     documentclass: scrreprt
-    output-file: cvpdc-housing-study
     mainfont: "Open Sans"
     fig-pos: "H"
     include-in-header:
@@ -30,10 +28,11 @@ format:
 book:
   title: "Central Virginia Planning District Regional Housing Market Analysis"
   repo-url: https://github.com/housingforwardva/cvpdc
+  output-file: "cvpdc-housing-study"
   author: 
     name: "HousingForward Virginia"
     url: https://www.housingforwardva.org
-  # downloads: pdf 
+  downloads: pdf 
   date: today
   chapters:
     - index.qmd 
@@ -45,7 +44,7 @@ book:
       chapters: 
         - part-2-1.qmd # CVPDC Housing Market Assessment
         - part-2-2.qmd # County Housing Market Assessment
-        #- part-2-3.qmd # City of Lynchburg Housing Market Analysis
+        - part-2-3.qmd # City of Lynchburg Housing Market Analysis
     - part: "PART 3: Policy evaluation"
       chapters:
         - part-3-1.qmd # Regional and local policy evaluation

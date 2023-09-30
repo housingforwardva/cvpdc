@@ -85,7 +85,6 @@ library(lubridate)
 library(zoo)
 library(patchwork)
 
-
 lburg <- "51680"
 
 ```
@@ -331,7 +330,7 @@ local_age_plot <- ggplot(local_age,
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = number_format(big.mark = ",", style_positive = "plus")) +
-  theme(legend.position = "right",
+  theme(legend.position = "top",
         axis.text.x = element_text(angle = 90, hjust = 0.5)) +
   labs(title = "Cumulative change in households by age and tenure in Lynchburg",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25007.")
@@ -344,7 +343,7 @@ Among those growing number of renters, most of those households have been two-pe
 
 ```{r}
 #| label: fig-size
-#| fig-cap: "Change in households by size and tenure in Lynchburg"
+#| fig-cap: "Cumulative change in households by size and tenure in Lynchburg"
 
 b25009_data <- read_rds("data/b25009_data.rds") |> 
   filter(NAME == "Lynchburg city")
@@ -649,7 +648,7 @@ local_rinc_plot <- ggplot(local_rinc,
   scale_fill_hfv() + 
   scale_x_reordered() +
   facet_wrap(~year, scales = "free_x") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+  theme(axis.text.x = element_blank(),
         legend.position = "right") +
   scale_y_continuous(labels = dollar_format()) +
   labs(title = "Median household income by race and ethnicity in Lynchburg",
@@ -662,13 +661,13 @@ publish_plot(local_rinc_plot)
 
 ## Housing stock
 
-Lynchburg contributes to 28 percent of the region's total housing stock in 2021. Most of that contribution is composed of single-family housing that is in the homeownership stock. Despite it's urban environment, the homeownership stock in the city is not diverse and very few duplexes and other smaller housing types are not utilized for homeownership.
+Lynchburg contributes to 28 percent of the region's total housing stock in 2021. Most of that contribution is composed of single-family housing that is in the homeownership stock. Despite its urban environment, the homeownership stock in the city is not diverse and very few duplexes and other smaller housing types are not utilized for homeownership.
 
 Rather, diverse housing is largely used for rental housing. Most of the rental housing stock in the city is made up of single-family and medium-scale multifamily (5 to 19 units). 
 
 ```{r}
 #| label: fig-structure
-#| fig-cap: "Distribution of housing stock in Lynchburg in relation to the region"
+#| fig-cap: "Lynchburg's share of regional housing stock"
 
 b25127_data <- read_rds("data/b25127_data.rds") 
 
@@ -697,11 +696,9 @@ local_str_plot <- ggplot(local_str,
   theme_hfv() +
   scale_fill_hfv() + 
   scale_y_continuous(labels = percent_format()) +
-  theme(legend.position = "right",
-        strip.text = element_blank()) + 
-   scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
-  labs(title = "Distribution of housing stock in Lynchburg in relation to the region",
-      subtitle = "Percent of total occupied housing in 2021",
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) +
+  labs(title = "Lynchburg's share of regional housing stock",
+      subtitle = "Percent of all occupied homes in region within Lynchburg by tenure and type in 2021",
       caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25127.")
 
 publish_plot(local_str_plot)
@@ -713,8 +710,9 @@ Manufactured home communities exist within the city limits, mainly on the outski
 ```{r}
 #| label: fig-mhc
 #| fig-cap: "Map of manufactured home communities in Lynchburg"
+#| eval: false
 
-mhc <- st_read("https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Mobile_Home_Parks/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson", quiet = TRUE) |> 
+mhc <- read_rds("data/cv_mhc.rds") |> 
   filter(STATE == "VA") |> 
   filter(str_detect(COUNTY, "LYNCHBURG"))
 
@@ -728,11 +726,15 @@ leaflet(mhc) |>
 #| label: fig-mhc-county
 #| fig-cap: "Manufactured home communities by size in Lynchburg"
 
+mhc <- read_rds("data/cv_mhc.rds") |> 
+  filter(STATE == "VA") |> 
+  filter(str_detect(COUNTY, "LYNCHBURG"))
 
-lburg_mhc <- mhc|> 
+lburg_mhc <- mhc |> 
   group_by(SIZE) |> 
   summarise(count = n_distinct(OBJECTID)) |> 
-  st_drop_geometry()
+  st_drop_geometry() |> 
+  mutate(SIZE = str_to_sentence(SIZE))
 
 lburg_mhc_plot <- ggplot(lburg_mhc,
        aes(x = SIZE,
@@ -744,8 +746,11 @@ lburg_mhc_plot <- ggplot(lburg_mhc,
   geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,15)) +
-  labs(title = "Manufactured home communities by size in Lynchburg")
+  scale_y_continuous(breaks = seq(0,15, by = 2), limits = c(0,10)) +
+  add_zero_line("y") +
+  labs(title = "Manufactured home communities by size in Lynchburg",
+      subtitle = "Number of homes in each community by county",
+       caption = "**Source:** U.S. Department of Homeland Security, Homeland Infrastructure Foundation-Level Data (HIFLD).")
 
 publish_plot(lburg_mhc_plot)
 
@@ -768,11 +773,11 @@ lburg_cbps_plot <- ggplot(lburg_cbps,
            tooltip = label_comma()(units))) +
   geom_col(position = "stack") + 
   geom_col_interactive() +
-  # facet_grid(~type) +
+  facet_wrap(~type) +
   theme_hfv() +
   scale_fill_hfv() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8),
-        legend.position = "top") +
+  add_zero_line("y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
   scale_x_continuous(breaks = seq(from = 2000, to = 2023, by = 2.0)) +
   labs(title = "Residential building permits by unit type in Lynchburg",
        subtitle = "From 2000 through April 2023",
@@ -830,7 +835,7 @@ As the homeownership rate has declined, home prices have been on the rise. The p
 
 ```{r}
 #| label: fig-lburg-sales
-#| fig-cap: "Lynchburg median home sales price"
+#| fig-cap: "Median home sales price in Lynchburg"
 
 # Need to replace this with VAR data and maybe change the plot.
 
@@ -896,9 +901,9 @@ lburg_sales_plot <- ggplot(sales,
   scale_y_continuous(labels = dollar_format()) +
   scale_x_yearqtr(format = '%Y Q%q', n = 12) +
   scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  theme(axis.text.x = element_text(angle = 45),
-        panel.grid.major.x = element_line(color = "#dadada", size = 0.1)) +
-  labs(title = "Median sales price in Lynchburg",
+  #theme(axis.text.x = element_text(angle = 45),
+  #      panel.grid.major.x = element_line(color = "#dadada", size = 0.1)) +
+  labs(title = "Median home sales price in Lynchburg",
        caption = "**Source:** Virginia REALTORS, adjusted to Q2 2023 dollars.")
 
 publish_plot(lburg_sales_plot)
@@ -909,7 +914,7 @@ Closed home sales increased slightly during the pandemic reaching a high of 191 
 
 ```{r}
 #| label: fig-lburg-sold
-#| fig-cap: "Lynchburg closed home sales"
+#| fig-cap: "Closed home sales in Lynchburg"
 
 # lburg_sold <- read_excel("data/lburg_mls_data.xlsx", sheet = "Num Sold Listings Per Month") |> 
 #   clean_names() |> 
@@ -936,11 +941,10 @@ lburg_sold_plot <- ggplot(units_sold,
   scale_x_yearqtr(format = '%Y Q%q', n = 12) +
   scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Total home sales by quarter",
-       caption = "**Source:** Virginia REALTORS.") +
-  theme(axis.ticks.x = element_line(color = "grey", size = 0.5),
-        axis.ticks.length = unit(0.2, "cm"))
+  labs(title = "Closed home sales in Lynchburg",
+       caption = "**Source:** Virginia REALTORS.")
 
 publish_plot(lburg_sold_plot)
 
@@ -950,7 +954,7 @@ The demand in the city is exemplified by the average days on market, which was a
 
 ```{r}
 #| label: fig-dom
-#| fig-cap: "Lynchburg median days on market"
+#| fig-cap: "Median days on market in Lynchburg"
 
 # lburg_dom <- read_excel("data/lburg_mls_data.xlsx", sheet = "Average DOM") |> 
 #   clean_names() |> 
@@ -976,11 +980,10 @@ lburg_dom_plot <- ggplot(lburg_dom,
   scale_x_yearqtr(format = '%Y Q%q', n = 12) +
   scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
   theme_hfv() +
+  add_zero_line("y") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  labs(title = "Median days on market",
-       caption = "**Source:** Virginia REALTORS.") +
-  theme(axis.ticks.x = element_line(color = "grey", size = 0.5),
-        axis.ticks.length = unit(0.2, "cm"))
+  labs(title = "Median days on market in Lynchburg",
+       caption = "**Source:** Virginia REALTORS.")
 
 publish_plot(lburg_dom_plot)
 
@@ -991,6 +994,7 @@ From 2016 through 2022, homes sales in the city have been concentrated in the Pe
 ```{r}
 #| label: fig-lburg-sales-map
 #| fig-cap: "Map of home sales in Lynchburg from 2016 through 2022"
+#| eval: false
 
 # library(tidygeocoder)
 #
@@ -1127,7 +1131,7 @@ vacancy_plot <- ggplot(local_vacancy,
         tooltip = tooltip)) +
   theme_hfv() +
   scale_color_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  scale_y_continuous(labels = percent_format()) +
+  scale_y_continuous(limits = c(0,0.10), breaks = seq(0, 0.11, 0.02), labels = percent_format()) +
   labs(title = "Rental vacancy rate by quarter",
        subtitle = "All multifamily properties in Lynchburg",
        caption = "**Source:** CoStar Group, Inc.")
@@ -1145,6 +1149,7 @@ Rental prices for these are not easily discerned, as this type of housing is som
 ```{r}
 #| label: fig-sfr
 #| fig-cap: "Map of single-family detached rentals in Lynchburg"
+#| eval: false
 
 hex_count <- read_rds("data/hex_count.rds")
 
@@ -1158,7 +1163,7 @@ mapview(hex_count,
 
 ```{r}
 #| label: fig-sfr-ward
-#| fig-cap: "Single-family detached rentals by Lynchburg ward"
+#| fig-cap: "Single-family detached rentals by ward in Lynchburg"
 
 sfr <- read_rds("data/sfr.rds")
 
@@ -1177,8 +1182,10 @@ sfr_ward_plot <- ggplot(sfr_ward,
   geom_col_interactive() +
   theme_hfv() +
   scale_fill_hfv() +
-  labs(title = "Estimate of single-family detached rentals",
-       caption = "**Source:** Lynchburg city parcel data") 
+  add_zero_line("y") +
+  labs(title = "Single-family detached rentals by ward in Lynchburg",
+       subtitle = "Estimated via property ownership records",
+       caption = "**Source:** City of Lynchburg parcel data.") 
 
 publish_plot(sfr_ward_plot)
 
@@ -1223,6 +1230,7 @@ subsidy_plot <- ggplot(nhpd_subsidies,
   scale_y_continuous(labels = label_number(big.mark = ",")) +
   theme_hfv() +
   scale_fill_hfv() +
+  add_zero_line("y") +
   labs(title = "Federally-assisted rental homes in Lynchburg by subsidy",
        caption = "**Source:** National Housing Preservation Database (NHPD).")
 
@@ -1235,7 +1243,6 @@ As a major portion of Lynchburg's affordable housing stock, LIHTC is potentially
 ```{r}
 #| label: fig-lihtc-exp
 #| fig-cap: "LIHTC units by affordability commitment expiration in Lynchburg"
-
 
 lihtc <- read_csv("data/nhpd_subsidies.csv") |> 
   clean_names() |> 
@@ -1294,6 +1301,7 @@ subsidy_exp <- read_csv("data/nhpd_subsidies.csv") |>
 ```{r}
 #| label: fig-lihtc-map
 #| fig-cap: "LIHTC properties by affordability commitment expiration"
+#| eval: false
 
 # Map LIHTC properties by exp year
 
@@ -1339,6 +1347,7 @@ Section 8 project-based makes up a significant portion of affordable rental unit
 ```{r}
 #| label: fig-s8-map
 #| fig-cap: "Section 8 properties by affordability commitment expiration"
+#| eval: false
 
 # Map Section 8 properties by exp year
 
@@ -1376,7 +1385,6 @@ leaflet(s8_map) |>
   addLegend("topright", pal = pal, values = c(2030, 2035, 2040, 2045, 2050),
             title = "Expired by <br>or before")
 
-
 ```
 
 Housing Choice Vouchers (HCVs) are utilize throughout most of the city. But most Housing Choice Vouchers are being used in the central parts of the city, where there are denser housing options. Areas of Rivermont and Daniels Hill, as well as Diamond Hill, seeing the highest utilization of HCVs among renters.
@@ -1384,6 +1392,7 @@ Housing Choice Vouchers (HCVs) are utilize throughout most of the city. But most
 ```{r}
 #| label: fig-hcv-map
 #| fig-cap: "Housing Choice Voucher utilization in Lynchburg"
+#| eval: false
 
 # Updated on June 8, 23
 
@@ -1439,7 +1448,7 @@ The number of cost-burdened renter households has increased in the last decade f
 
 ```{r}
 #| label: fig-local-cb
-#| fig-cap: "Lynchburg cost burden by tenure"
+#| fig-cap: "Cost-burdened households by tenure in Lynchburg"
 
 cv_cb <- read_rds("data/b25106_data.rds") |> 
   filter(NAME == "Lynchburg city")
@@ -1462,7 +1471,8 @@ cv_cb_plot <- ggplot(local_cb,
   theme_hfv() +
   scale_fill_hfv() +
   scale_y_continuous(labels = label_number(big.mark = ",")) + 
-  labs(title = "Lynchburg cost-burdened households by tenure",
+  labs(title = "Cost-burdened households by tenure in Lynchburg",
+       subtitle = "Number of cost-burdened <span style = 'color:#011E41'><b>homeowners</b></span> and <span style = 'color:#40C0C0'><b>renters</b></span> from 2010 to 2021",
        caption = "**Source:** U.S. Census Bureau, ACS 5-Year Estimates, Table B25106.") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5))
@@ -1475,7 +1485,7 @@ Cost burden by race within the city has followed similar trends at the regional 
 
 ```{r}
 #| label: fig-cb-race
-#| fig-cap: "Lynchburg cost burden by race and ethnicity"
+#| fig-cap: "Cost burden by race and ethnicity in Lynchburg"
 
 cb_9 <- read_rds("data/cb_9.rds")
 
@@ -1491,20 +1501,21 @@ cv_cb9 <- cb_9 |>
 cv_cb9_plot <- ggplot(cv_cb9,
        aes(x = year, 
            y = pct,
-           fill = str_wrap(race, width = 10),
+           fill = str_wrap(race, width = 16),
            data_id = pct,
            tooltip = percent_format()(pct))) +
   geom_col(position = "stack") +
   geom_col_interactive(size = 2) +
-  facet_wrap(~race, nrow = 1, labeller = label_wrap_gen(8)) +
+  facet_wrap(~race, scales = "free_x", labeller = label_wrap_gen(16)) +
   scale_y_continuous(labels = percent_format()) +
   scale_fill_hfv() +
   theme_hfv() +
+  add_zero_line("y") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         strip.text.x = element_text(size = 8),
         strip.text.y = element_blank()) +
-  labs(title = "Cost burden by race and ethnicity",
-       subtitle = "Percent of cost-burdened households",
+  labs(title = "Cost burden by race and ethnicity in Lynchburg",
+       subtitle = "Percent of cost-burdened households from 2012 to 2020",
        caption = "**Source:** U.S. Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 9.")
 
 publish_plot(cv_cb9_plot)

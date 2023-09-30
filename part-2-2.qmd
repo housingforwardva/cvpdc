@@ -1511,10 +1511,12 @@ cv_cb9_plot <- ggplot(cv_cb9,
 publish_plot(cv_cb9_plot)
 
 ```
-As at the regional-level, extremely low- (30 percent AMI or less) and very low-income (31 to 50% AMI) households face greater cost burden than their higher income counterparts. But in Amherst and Campbell, nearly one in five low-income household (51 to 80% AMI) are cost-burdened. One in four low-income (51 to 80% AMI)
+
+As at the regional-level, extremely low- (30 percent AMI or less) and very low-income (31 to 50 percent AMI) households face greater cost burden than their higher income counterparts. But in Amherst and Campbell, nearly one in five low-income household (51 to 80 percent AMI) are cost-burdened. In Bedford, that share is closer to one in four. Very few households above 80 percent AMI have significant trouble with housing costs.
+
 ```{r}
 #| label: fig-cb-total
-#| fig-cap: "Local housing cost burden by household area median income"
+#| fig-cap: "Local housing cost burden by AMI"
 
 cb_7 <- read_rds("data/cb_7.rds") |> 
   filter(county != "Lynchburg city")
@@ -1543,19 +1545,21 @@ cbhh_region_plot <- ggplot(cbhh_region,
   facet_wrap(~county, nrow = 1, labeller = label_wrap_gen(10)) +
   scale_y_continuous(labels = label_percent()) +
   scale_x_reordered() +
-  labs(title = "Local cost burden by household area median income",
+  labs(title = "Local housing cost burden by AMI",
        subtitle = "Percent of cost-burdened households by household income in 2020",
-       caption = "**Source:** U.S Department of Housing and Urban Development,<br>Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
+       caption = "**Source:** U.S Department of Housing and Urban Development, Comprehensive Housing Affordability Strategy (CHAS), Table 7.") +
   add_zero_line(axis = "y") +
   theme(axis.text.x = element_blank(),
         legend.position = "right",
         strip.text = element_text(size = 8))
 
-
 publish_plot(cbhh_region_plot)
+
 ```
 
-In Amherst and Bedford, non-elderly, non-family households (i.e. individuals living alone or with unrelated persons) were more likely to be cost-burdened than any other household type, 37 and 30 percent cost-burdened, respectively. Meanwhile, in Campbell, 31 percent of elderly, non-family households (i.e. seniors living alone or with unrelated persons) were cost-burdened in 2020. These two household types face the most difficult challenges in affordability, most likely due to the challenges of affording housing alone. But interestingly, just over four in ten (40 percent) large families in Appomattox are cost-burdened, a divergence from trends in the other three counties. 
+In Amherst and Bedford, non-elderly, non-family households (i.e. individuals living alone or with unrelated persons) were more likely to be cost-burdened than any other household type, 37 and 30 percent cost-burdened, respectively. Meanwhile, in Campbell, 31 percent of elderly, non-family households (i.e. seniors living alone or with unrelated persons) were cost-burdened in 2020.
+
+These two household types face the most difficult challenges in affordability, most likely due to the challenges of affording housing alone. But interestingly, just over four in ten large families in Appomattox are cost-burdened, a divergence from trends in the other three counties. 
 
 ```{r}
 #| label: fig-hh-cb
@@ -1629,7 +1633,11 @@ gap <- tb_18_match |>
     gapcode == "Gap" ~ "Unaffordable",
     TRUE ~ "Affordable"
   )) |> 
-  filter(year == 2020)
+  filter(year == 2020) |> 
+  mutate(
+    household_income = str_replace_all(household_income, " percent", "%"),
+    county = str_remove_all(county, " County")
+  )
 
 gap_plot <- ggplot(gap,
        aes(x = household_income, 
