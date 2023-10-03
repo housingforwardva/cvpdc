@@ -1,310 +1,367 @@
----
-editor: 
-  markdown: 
-    wrap: sentence
----
-
 # Amherst County
 
-## Primary Solutions
+## Primary solutions
 
 ### Provide support for the aging population
 
-Issue: A growing number of seniors in the county require homes and services to support their mobility status and changing health needs.
+**Issue:** *A growing number of seniors in the county require homes and services to support their mobility status and changing health needs.*
 
-An increasing number of older adults are choosing to "age in place" (AIP) and stay in their own homes and communities for as long as possible.
-Across the region, the senior population grew by 9,021 individuals from 2012 to 2021, and Amherst was the only locality that experienced a population decrease (3%), in part due to overall proportion of aging residents.
+An increasing number of older adults are choosing to "age in place" (AIP) and stay in their own homes and communities for as long as possible. Across the region, the senior population grew by 9,021 individuals from 2012 to 2021, and Amherst was the only locality that experienced a population decrease (3%), in part due to overall proportion of aging residents.
 
-Solution: Adopt and implement an AIP framework for local builders to address essential home modifications and community adaptations that address residents and life-stage changes.
+**Solution:** *Adopt and implement an AIP framework for local builders to address essential home modifications and community adaptations that address residents and life-stage changes.*
 
-Finding and training regional developers capable of retrofitting existing homes and building new patio-style housing will be essential to address accessibility needs of residents.
-This work must be intentionally built into development patterns and transportation infrastructure to ensure seniors can access the healthcare and services they need outside the home, particularly in rural areas or areas along county lines that may be less connected to such resources.
-
-FRAMEWORK
-
-While aging in place has always been the first choice of seniors, baby boomers are choosing this approach to aging at a rate well beyond their parents.
-Existing research shows that more than two-thirds of boomers want to stay in their homes as long as possible and resist the idea of moving into retirement homes, even as children and families are increasingly moving away from their parents.
-Beyond the social motivations for this shift, the financial benefits of aging in place have also influenced many to seek this path.
-According to the Genworth Cost of Care Survey 2021, the average cost of assisted living in the Lynchburg region is \$4,625 a month.
-
-Housing modifications become increasingly important as people age in order to assist in their adaptation to changing capacity and to maintain a sense of well-being and independence in daily life.
-The relationship between housing and health is especially important in very old age as older adults are more vulnerable to environmental challenges.
-
-Designing an Aging in Place program involves at least two essential categories: Home modification and community adaptation.
-
-Home Modification begins with an assessment by a qualified professional.
-Often these are people with an occupational therapy background.
-They walk through the home with the resident to determine their individual physical needs and how the home needs to be modified in order to accommodate those needs.
-The home assessment will look at current and future needs so that the plan can be put in place to ensure that the house will continue to need the changing needs of the residents.
-Once the modification plan is in place, the challenge is to find a qualified contractor who will be able to accomplish those modifications at a cost the homeowners can afford.
-Since many seniors have limited incomes, it is important to be able to find sources of subsidy that can make it possible for seniors with limited incomes to be able to take advantage of all modifications that will keep them safe.
-
-Community adaptations relate to changes in public spaces that can facilitate an ease of access to community and services.
-As seniors drive less, for example, there is a need to find transportation services that can take the place of self-driving.
-Many communities are also looking at changing their own development patterns and infrastructure to make it easier for seniors to age in place in a way that does not separate them from the community.
-
-IMPLEMENTATION PLAN
-
-Immediate (0-6 months):
-
-Evaluate existing networks and leadership: Identify service providers and community leaders who are currently involved in working with seniors and would be well positioned to join a countywide Aging in Place Leadership (AIP) Team.
-This team would be responsible for organizing and guiding a comprehensive initiative following successful models like those in the New River Valley and the Village network model in Northern Virginia.
-Identify gaps: Learn where the gaps exist in housing needs and services for seniors (i.e. access to food, transportation, recreation, etc.).
-Map areas of concentration: Map the location of senior households in the area using tract or block-group level American Community Survey estimates to understand where concentrations exist.
-Evaluate survey data: Review prior surveys of senior renters and homeowners in the region to refresh the understanding of their preferences and plans with respect to housing.
-Update findings as needed.
-Seek best practices for an AIP policy: Research best practices from similar communities as to how they built AIP into policy and program decisions at the local level---for example, as a part of new developments or streetscapes.
-
-Short term (6-12 months):
-
-Establish timeline and resources: Assembly a county-wide AIP Leadership Team to meet on an established basis.
-Develop an action plan by placing the AIP initiatives on a timeline and identify the resources needed for implementation.
-If resources do not permit full scale implementation, identify initiatives that can be piloted by order of priority.
-Develop a home-modification program: Implement a comprehensive home-modification initiative that incorporates the following elements: Home assessments: pursue outreach to older residents to support home self-assessments as well as access to low-cost certified home assessments.
-Quality construction: coordinate with qualified contractors and use a construction quality control process.
-Financial assistance: provide financial assistance to homeowners on terms that are consistent with their ability to pay for AIP home modifications.
-Program navigation support: Many seniors will need a navigator/coordinator to help them through the process.
-
-Long-term (12-24 months):
-
-Coalition build beyond the county: Support localities in mapping and prioritizing the needs of their residents and identify areas of shared priority to be pursued at either a regional or local scale (perhaps as a pilot project if funding is limited).
-Ensure the CoC, regional healthcare providers, and other Strengthen capacity: Establish consistent funding sources and training programs to continue to provide a stream of home modifications services to address all levels of need.
-This may involve create hub locations in rural parts of the county.
-Incorporate AIP in housing education and outreach: Make AIP part of follow-up housing study conversations and outreach.
-If a housing forum is held, make AIP one track within the event.
-Use the existing Homebuilders Expo, Hokie Wellness Fair, Lifelong Learning Institute, or hospitals as natural venues for disseminating relevant information.
-
-RESPONSIBLE ACTORS
-
-AIP leadership team, local government staff, local senior service agencies, housing and healthcare providers, counselors, housing funders, volunteers.
-Connecting with regional institutions and leadership can further strengthen the work of local actors.
-
-LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY
-
-As with any program where advice is being given and changes are made to the homes of seniors, it is important to carefully assess legal liability.
-Making sure that providers are professionally trained and certified and that contractors are properly insured are critical elements to a properly designed program.
-Aging in place is an extensive undertaking.
-It will require coordination of many agencies and organizations.
-One model is to create a coordinating council that provides guidance and measures impact.
-In the Richmond area, that organization is the Greater Richmond Age Wave---a coalition led by VCU's Gerontology Department but that includes local governments in the region as well as many housing and service providers.
-The AIP leadership team is the starting point for this and can be built out with other public and private sector leaders.
-
-FUNDING SCOPE REQUIREMENTS
-
-Because of the size of the senior population and its continuing projected growth, the funding requirements of a full-scale aging in place program may be very substantial and need to include the following components: Home assessment costs Renovation and retrofitting costs Builder training and certification Financial assistance programs Outreach and education Program administration Monitoring and evaluation
-
-POTENTIAL FUNDING SOURCES
-
-Many traditional affordable housing funding sources can also be accessed to assist lower income seniors with aging in place.
-Most of these programs are means tested and only available to seniors with incomes below 80% of AMI and in many cases, less than 50% AMI.
-These include: State and federal grant programs: Funding programs through the DHCD, HUD, the United States Department of Agriculture (USDA), and Virginia Housing exist that may serve the housing needs of seniors; however, these sources have significant limiting factors to serving effectively for home modification needs.
-CDBG funds, distributed by DHCD, may be used for a wider variety of housing, community and economic development activities.
-These funds could be used to make home modifications or repairs as well as make community adaptations.
-Medicaid and Medicare: The Commonwealth Coordinated Care Plus (CCC Plus) is a Medicaid managed long-term services and support program that includes some minor home modification services for qualifying seniors.
-Medicare and Medicaid reimbursement rules are also providing strong incentives for health care institutions to address the housing status of their patients.
-This could include partnering for home modification initiatives---especially those in which trained occupational therapy professionals can evaluate home conditions and make recommendations.
-Nonprofit assistance: Local affordable housing providers like Habitat for Humanity have demonstrated experience providing home modifications.
-The Southeast Rural Community Assistance Project, (SERCAP) Aging in Place program, based in Roanoke, provides support services to help individuals who wish to continue living at home despite health setbacks, including adaptive design solutions for homeowners.
-Aging in place, however, is not a unique need for lower income seniors.
-Many seniors with significant retirement income as well as substantial home equity are also in need of AIP assistance.
-Any AIP program in the region/the AIP leadership team should recognize this and make access to programs and services available on a market rate basis, and connect local developers with the tools to succeed in providing the best fit for buyers.
-
-METRICS TO EVALUATE SUCCESS
-
-Resident tenure in their home, residents are able to stay in their homes as long as they had planned Improvement in health conditions Decrease in the number of injuries incurred in the home Seniors generally experiencing better health outcomes as a result of continuing to reside in their own homes Seniors generally happier and more satisfied as a result of access to services, entertainment cultural stimulation and socialization
-
-PROJECTED IMPACT
-
-The potential production and impact of these programs will be quite large.
-Most aging in place programs balance costs by starting very modestly with specific targeting of households and certain types of housing modifications.
-The program can expand from there depending on resources both financial and human.
-
-BEST PRACTICES AND EXAMPLES
-
-Albemarle Housing Improvement Program (AHIP) - Seniors Safe at Home
-
-Approach: The Albemarle Housing Improvement Program (AHIP) is a 30-year-old housing organization located in Albemarle County, Virginia.
-Over the last decade, AHIP has evolved into an agency that primarily serves seniors with a range of services to help them stay in their homes longer.
-Seniors Safe at Home sets out to make sure that no senior citizen must wait for a critical home repair while helping them preserve assets and age in place.
-The types of repairs vary and include heating/cooling, roof leaks, stair and porch repair, kitchen and bath accessibility, plumbing and electrical problems, and issues with well and septic systems.
-
-Outcomes: In 2016, this program helped 98 senior citizens with repairs and rehabs, or 53% of AHIP's clients-- as of 2021, the number of seniors rose to 66% of their total rehab participants.
-AHIP uses a variety of funding sources; however, the largest share of its support comes from the City of Charlottesville and Albemarle County.
-Both of these jurisdictions use local and HUD funds to support AHIP's work.
-AHIP also raises a substantial amount of charitable funding every year from corporate and philanthropic sources as well as individuals.
-
-The Village
-
-Approach: The Village movement began in the United States nearly 20 years ago.
-There are now more than 220 Village programs across the country and at least 10 operating in Virginia (primarily in Northern Virginia).
-The program is based on the idea of volunteerism.
-Seniors in the community join and form a nonprofit organization with a modest annual fee, and most organizations hire a coordinator who helps the members find services such as in-home care, handyman help, drivers, and meal delivery.
-
-Frequently, other members of the community will volunteer to help individuals who are a part of the village.
-For example, a young person in the neighborhood might be willing to mow a lawn, rake leaves, clean gutters, take out the trash, or change a ceiling light bulb for a senior resident.
-
-College Service Project: Appalachia Service Project Services for Homeowners
-
-Approach: The College Service Project (CSP) is a student- led campus-based organization that affiliates each of its chapters with the Appalachia Service Project (ASP).
-The CSP follows the ASP model for home repair projects in their local communities.
-College students and other volunteers make critical repairs on homes and build new homes when current dwellings are beyond repair.
-More than 15,000 volunteers give their time to repair and build homes with the Appalachia Service Project.
-This model could be replicated with the 55 colleges located within 100 miles of Amherst.
-
-Outcome(s): In the fifty two years since the Appalachia Service Project's founding in 1969, over 400,000 volunteers have repaired nearly 20,000 homes.
-Not only does the service create safer living situations for rural families in Appalachia, it also establishes meaningful relationships between repair staff and homeowners.
-Likewise, youth and adult volunteers gain experience and confidence to make important home repairs.
-
-### Attract and incentivize developers to build lower-cost homes and increase housing diversity
-
-Issue: A shortage of building construction and specialty trade contractors across the region is a major constraint on construction of new housing, and there is a lack of variety to meet residents' lifestyles and budgets.
-
-The region faces greater demand for housing than can be supplied by the current array of developers, particularly dedicated affordable housing produced by nonprofits and other mission-driven organizations.
-One-person homeowners households are increasing, indicating changes in family structures in the county, as an increase in the number of single parents with children living with others in Amherst County, which could indicate a lack of housing that is affordable and attainable for individual families.
-
-Solution: Invest in and support the growth of affordable developers and builders, and reevaluate development regulations to allow for greater density and diversity of housing.
-
-Attracting and incentivizing developers who can deliver lower-cost options requires a combination of financial, regulatory, and technical support.
-Furthermore, increasing housing choice diversity is important for promoting equitable and inclusive communities, reducing segregation and discrimination, and providing a range of housing options for people with different incomes, backgrounds, and lifestyles.
-
-FRAMEWORK
-
-A combination of efforts are required to address the issue of affordable housing supply-chain.
-Amherst County can explore ways to align development regulations with their desire to address housing that is more accessible and affordable to young families, seniors, and modest-income households.
-This can include streamlining the development process, offering zoning and land use incentives, providing financial support, and increasing technical programs and assistance to navigate the unique requirements of affordable housing.
-Through strategic implementation of these tactics, it is possible to create an environment that is attractive and conducive for developers to contribute meaningfully to housing diversity and affordability, and to minimize obstacles preventing affordable housing development.
-
-IMPLEMENTATION PLAN
-
-Immediate (0-6 months):
-
-Establish a task force comprising housing experts, developers, local government representatives, and community stakeholders.
-This body will analyze current housing policies, evaluate existing regulation and identify barriers, and determine what incentives would most effectively attract developers.
-Initiate open dialogues with potential private developer partners to better understand their hesitations and needs concerning affordable housing projects.
-This information will guide the task force in designing appealing incentive packages.
-Develop a blueprint for a technical assistance program, which will offer guidance on navigating regulatory hurdles and securing funding for affordable housing projects.
-
-Short-term (6-12 months):
-
-​​Roll out chosen financial incentives, which could include a combination of property tax abatements, density bonuses, low-interest loans, or grants to developers undertaking affordable housing projects depending on identified need and impact.
-Execute regulatory reforms, including a streamlined development approval process, relaxation of zoning laws to accommodate diverse housing types, and a fast-tracked review process for affordable housing proposals.
-Launch the technical assistance program, offering training sessions and resources to assist developers in understanding and overcoming the complexities of affordable housing development.
-
-Long-term (12-24 months):
-
-Develop public-private partnership frameworks and attract new private entities to participate in affordable housing projects.
-Continually monitor the effectiveness of all implemented measures, modifying strategies as necessary based on outcomes and feedback.
-
-RESPONSIBLE ACTORS AND ROLES
-
-Public entities, private developers, and non-profit organizations will all have roles.
-Public entities will provide policy guidance and be responsible for executing any chosen regulatory reforms.
-Private developers will bring in the required building expertise, efficiency, and scalability.
-Non-profit organizations can assist in community engagement, offering local knowledge and fostering support for affordable housing projects.
-
-LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY
-
-Training programs should cover how local zoning regulations could influence the planning and execution of affordable housing projects, including the potential need to navigate variances or amendments to these regulations.
-Training must also include understanding the Virginia Residential Landlord and Tenant Act and its implications on managing affordable housing units.
-Developers should be educated about Virginia's Low-Income Housing Tax Credits (LIHTC) and how to leverage this program to finance affordable housing development.
-Building organizational capacity involves training developers on project management, collaboration with local organizations and government entities, and compliance with affordable housing regulations.
-
-FUNDING SCOPE REQUIREMENTS
-
-Funding requirements will depend on the scale of the implementation.
-Initial costs will be associated with establishing the task force, designing incentive packages, and setting up the technical assistance program.
-Long-term operational costs will include maintaining partnerships, managing programs, and funding financial incentives.
-
-POTENTIAL FUNDING SOURCES
-
-Government Funding: Federal grants such as the HOME Investment Partnerships Program or the Community Development Block Grant (CDBG) program HUD's Thriving Communities Technical Assistance (TCTA) Program helps localities to address their housing needs, including addressing regulatory and procedural reforms Targeted grants for housing planning efforts are available from DHCD and the Appalachian Regional Commission.
-The Virginia Housing Trust Fund (VHTF) provides loans with low-interest rates for affordable housing projects Public-Private Partnerships (PPP): Private sector entities often participate in affordable housing development through PPP arrangements.
-The private sector brings in capital and operational efficiency, while the public sector can offer incentives like tax breaks, land, or eased regulatory requirements.
-Low-Income Housing Tax Credits (LIHTC) can be one example of this type of partnership.
-Philanthropic Resources: The Virginia Housing Capacity Building and Community Impact Grant programs could help fund technical assistance efforts and development planning
-
-METRICS TO EVALUATE SUCCESS
-
-Number of affordable housing units developed Uptake of financial incentives by developers Efficiency of the regulatory approval process Increase in housing types Number of new affordable developers in the county
-
-PROJECTED IMPACT
-
-With a well-executed plan, this approach could substantially increase affordable housing availability and diversity within the region over the next few years, with impacts on individual, community, and economic levels.
-
-BEST PRACTICES AND RELEVANT EXAMPLES
-
-City of Arlington - Affordable Housing Investment Fund (AHIF) Approach: The city of Arlington has expanded affordable housing by providing low-interest loans to developers through AHIF, introduced bonus density provisions, and actively involved communities in decision-making processes.
-Outcomes: The program has enabled the majority of the approximately 8,300 rental units approved throughout the County that help provide homes for low- and moderate-income households, including specialized housing for the elderly, the homeless, or persons.
-Austin, Texas - Small Developer Training Program Approach: The Small Developer Training Program is launching this year and aims to boost the availability of affordable housing in Austin by equipping small-scale developers with the necessary skills and knowledge.
-The comprehensive education initiative is organized by HousingWorks Austin and includes small scale development strategies and insights into the regulatory environment to enable smoother planning and approval processes.
-
-## Secondary Solutions
-
-### Complete needed water and sewer infrastructure projects
-
-**Issue:** *Southern parts of the county require new water and sewer infrastructure to match demand for housing*
-
-The county needs to expand water and sewer capacity to accommodate a growing demand for housing in Madison Heights and areas nearest to Lynchburg.
-In April 2023, the Amherst board voted to allow the Amherst County Service Authority (ACSA) to finance \$2.5 million in utility infrastructure improvements in southern portions of Madison Heights (the Gateway Sanitary Sewer Project); while this will allow for significant new capacity in the coming years, the county must ensure their investment will be returned through strategic new development.
-
-**Solution:** *Address water and sewer needs via strategic infrastructure planning and financing*
-
-Managing the timing of water and sewer infrastructure necessary for new housing development requires sophistication and a range of funding sources and strategies.
-Comprehensively aligning residential development and infrastructure planning will attract and encourage growth into areas where new infrastructure is planned.
+Finding and training regional developers capable of retrofitting existing homes and building new patio-style housing will be essential to address accessibility needs of residents. This work must be intentionally built into development patterns and transportation infrastructure to ensure seniors can access the healthcare and services they need outside the home, particularly in rural areas or areas along county lines that may be less connected to such resources.
 
 **FRAMEWORK**
 
-In the most recent comprehensive plan, Amherst County reinforced established boundaries where public water and sewer will and will not be extended over the next twenty years.
-The county must continue to target its housing efforts within these Designated Growth Areas and where transportation and other infrastructure improvements are in place to support this growth.
-Avenues for ACSA and the county to expand their efforts on this challenge include: Stakeholder outreach Hold a symposium to increase education on infrastructure issues.
-Target attendance from current/potential developers, owners of large properties, and other interested and affected parties.
-Help attendees understand the scope of challenges and costs and provide opportunities for questions and feedback.
-This event could coincide with ACSA's upcoming master plan effort, described further below.
-Explore coordinating with other jurisdictions (Appomattox, Lynchburg) on developer outreach, including the symposium described above.
-Innovative funding sources Continue to evaluate long-term financing options for major projects and maintenance costs.
-Connect with peer jurisdictions that have used municipal bonds and similar debt financing to discuss lessons and challenges.
-Work with CVPDC to explore ways to pair housing and community development grants (e.g. CDBG) with infrastructure upgrades.
-Proactive and coordinated planning In 2022, ACSA staff began discussing steps to complete a new master plan with the board.
+While aging in place has always been the first choice of seniors, baby boomers are choosing this approach to aging at a rate well beyond their parents. Existing research shows that more than two-thirds of boomers want to stay in their homes as long as possible and resist the idea of moving into retirement homes, even as children and families are increasingly moving away from their parents.
+
+Beyond the social motivations for this shift, the financial benefits of aging in place have also influenced many to seek this path. According to the Genworth Cost of Care Survey 2021, the average cost of assisted living in the Lynchburg region is \$4,625 a month.
+
+Housing modifications become increasingly important as people age in order to assist in their adaptation to changing capacity and to maintain a sense of well-being and independence in daily life. The relationship between housing and health is especially important in very old age as older adults are more vulnerable to environmental challenges.
+
+Designing an Aging in Place program involves at least two essential categories: Home modification and community adaptation.
+
+**Home modification** begins with an assessment by a qualified professional.
+
+* Often these are people with an occupational therapy background.
+* They walk through the home with the resident to determine their individual physical needs and how the home needs to be modified in order to accommodate those needs.
+* The home assessment will look at current and future needs so that the plan can be put in place to ensure that the house will continue to need the changing needs of the residents.
+* Once the modification plan is in place, the challenge is to find a qualified contractor who will be able to accomplish those modifications at a cost the homeowners can afford.
+* Since many seniors have limited incomes, it is important to be able to find sources of subsidy that can make it possible for seniors with limited incomes to be able to take advantage of all modifications that will keep them safe.
+
+**Community adaptations** relate to changes in public spaces that can facilitate an ease of access to community and services.
+
+* As seniors drive less, for example, there is a need to find transportation services that can take the place of self-driving.
+* Many communities are also looking at changing their own development patterns and infrastructure to make it easier for seniors to age in place in a way that does not separate them from the community.
+
+**IMPLEMENTATION PLAN**
+
+*Immediate (0-6 months):*
+
+* Evaluate existing networks and leadership: Identify service providers and community leaders who are currently involved in working with seniors and would be well positioned to join a countywide Aging in Place Leadership (AIP) Team. This team would be responsible for organizing and guiding a comprehensive initiative following successful models like those in the New River Valley and the Village network model in Northern Virginia.
+* Identify gaps: Learn where the gaps exist in housing needs and services for seniors (i.e. access to food, transportation, recreation, etc.).
+* Map areas of concentration: Map the location of senior households in the area using tract or block-group level American Community Survey estimates to understand where concentrations exist.
+* Evaluate survey data: Review prior surveys of senior renters and homeowners in the region to refresh the understanding of their preferences and plans with respect to housing. Update findings as needed.
+* Seek best practices for an AIP policy: Research best practices from similar communities as to how they built AIP into policy and program decisions at the local level---for example, as a part of new developments or streetscapes.
+
+*Short term (6-12 months):*
+
+* Establish timeline and resources: Assembly a county-wide AIP Leadership Team to meet on an established basis. Develop an action plan by placing the AIP initiatives on a timeline and identify the resources needed for implementation. If resources do not permit full scale implementation, identify initiatives that can be piloted by order of priority.
+* Develop a home-modification program: Implement a comprehensive home-modification initiative that incorporates the following elements:
+  + Home assessments: pursue outreach to older residents to support home self-assessments as well as access to low-cost certified home assessments.
+  + Quality construction: coordinate with qualified contractors and use a construction quality control process.
+  + Financial assistance: provide financial assistance to homeowners on terms that are consistent with their ability to pay for AIP home modifications.
+  + Program navigation support: Many seniors will need a navigator/coordinator to help them through the process.
+
+*Long-term (12-24 months):*
+
+* Coalition build beyond the county: Support localities in mapping and prioritizing the needs of their residents and identify areas of shared priority to be pursued at either a regional or local scale (perhaps as a pilot project if funding is limited). Ensure the CoC, regional healthcare providers, and other partners understand and are on board with plans.
+* Strengthen capacity: Establish consistent funding sources and training programs to continue to provide a stream of home modifications services to address all levels of need. This may involve create hub locations in rural parts of the county.
+* Incorporate AIP in housing education and outreach: Make AIP part of follow-up housing study conversations and outreach. If a housing forum is held, make AIP one track within the event.
+Use the existing community/senior centers, community events, and/or hospitals as natural venues for disseminating relevant information.
+
+**RESPONSIBLE ACTORS**
+
+* AIP leadership team, local government staff, local senior service agencies, housing and healthcare providers, counselors, housing funders, volunteers.
+Connecting with regional institutions and leadership can further strengthen the work of local actors.
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+* As with any program where advice is being given and changes are made to the homes of seniors, it is important to carefully assess legal liability. Making sure that providers are professionally trained and certified and that contractors are properly insured are critical elements to a properly designed program.
+* Aging in place is an extensive undertaking. It will require coordination of many agencies and organizations. The AIP leadership team is the starting point for this and can be built out with other public and private sector leaders.
+
+::: callout-note
+
+### Longevity Project
+
+*Richmond, Virginia*
+
+One model is to create a coordinating council that provides guidance and measures impact. In the Richmond area, that organization is the Longevity Project---a coalition led by VCU's Gerontology Department but that includes local governments in the region as well as many housing and service providers.
+
+(The Longevity Project for a greater Richmond)[https://gerontology.chp.vcu.edu/about-us/longevity-project-for-a-greater-richmond/]
+
+:::
+
+**FUNDING SCOPE REQUIREMENTS**
+
+Because of the size of the senior population and its continuing projected growth, the funding requirements of a full-scale aging in place program may be very substantial and need to include the following components:
+
+* Home assessment costs
+* Renovation and retrofitting costs
+* Builder training and certification
+* Financial assistance programs
+* Outreach and education
+* Program administration
+* Monitoring and evaluation
+
+**POTENTIAL FUNDING SOURCES**
+
+Many traditional affordable housing funding sources can also be accessed to assist lower income seniors with aging in place. Most of these programs are means tested and only available to seniors with incomes below 80% of AMI and in many cases, less than 50% AMI.
+These include:
+
+* State and federal grant programs: Funding programs through the DHCD, HUD, the United States Department of Agriculture (USDA), and Virginia Housing exist that may serve the housing needs of seniors; however, these sources have significant limiting factors to serving effectively for home modification needs. CDBG funds, distributed by DHCD, may be used for a wider variety of housing, community and economic development activities. These funds could be used to make home modifications or repairs as well as make community adaptations.
+* Medicaid and Medicare: The Commonwealth Coordinated Care Plus (CCC Plus) is a Medicaid managed long-term services and support program that includes some minor home modification services for qualifying seniors. Medicare and Medicaid reimbursement rules are also providing strong incentives for health care institutions to address the housing status of their patients.
+This could include partnering for home modification initiatives---especially those in which trained occupational therapy professionals can evaluate home conditions and make recommendations.
+* Nonprofit assistance: Local affordable housing providers like Habitat for Humanity have demonstrated experience providing home modifications. The Southeast Rural Community Assistance Project, (SERCAP) Aging in Place program, based in Roanoke, provides support services to help individuals who wish to continue living at home despite health setbacks, including adaptive design solutions for homeowners.
+
+Aging in place, however, is not a unique need for lower income seniors. Many seniors with significant retirement income as well as substantial home equity are also in need of AIP assistance.
+
+Any AIP program in the region/the AIP leadership team should recognize this and make access to programs and services available on a market rate basis, and connect local developers with the tools to succeed in providing the best fit for buyers.
+
+**METRICS TO EVALUATE SUCCESS**
+
+* Lengthened tenure for seniors aging-in-place (i.e., residents are able to stay in their homes as long as they had planned)
+* Improvement in health conditions:
+  + Decrease in the number of injuries incurred in the home
+  + Increase in life expectancy
+  + Better mental health outcomes (e.g., lower rates of depression and loneliness)
+* Fewer emergency room visits and lower long-term healthcare costs
+
+**PROJECTED IMPACT**
+
+The potential production and impact of these programs could be quite large. Most aging in place programs balance costs by starting very modestly with specific targeting of households and certain types of housing modifications. The program can expand from there depending on resources, both financial and human.
+
+**BEST PRACTICES AND EXAMPLES**
+
+::: callout-note
+
+### Albemarle Housing Improvement Program (AHIP) - Seniors Safe at Home
+
+**Approach:**
+
+The Albemarle Housing Improvement Program (AHIP) is a 30-year-old housing organization located in Albemarle County, Virginia. Over the last decade, AHIP has evolved into an agency that primarily serves seniors with a range of services to help them stay in their homes longer.
+
+Seniors Safe at Home sets out to make sure that no senior citizen must wait for a critical home repair while helping them preserve assets and age in place. The types of repairs vary and include heating/cooling, roof leaks, stair and porch repair, kitchen and bath accessibility, plumbing and electrical problems, and issues with well and septic systems.
+
+**Outcomes:**
+
+In 2016, this program helped 98 senior citizens with repairs and rehabs, or 53% of AHIP's clients-- as of 2021, the number of seniors rose to 66% of their total rehab participants.
+
+AHIP uses a variety of funding sources; however, the largest share of its support comes from the City of Charlottesville and Albemarle County. Both of these jurisdictions use local and HUD funds to support AHIP's work. AHIP also raises a substantial amount of charitable funding every year from corporate and philanthropic sources as well as individuals.
+
+[AHIP - Safe at Home](https://ahipva.org/programs/safe-at-home/)
+
+:::
+
+
+::: callout-note
+
+### The Village Movement
+
+**Approach:**
+
+The Village Movement began in the United States nearly 20 years ago. The program is based on the idea of volunteerism. Seniors in the community join and form a nonprofit organization with a modest annual fee, and most organizations hire a coordinator who helps the members find services such as in-home care, handyman help, drivers, and meal delivery.
+
+Frequently, other members of the community will volunteer to help individuals who are a part of the village. For example, a young person in the neighborhood might be willing to mow a lawn, rake leaves, clean gutters, take out the trash, or change a ceiling light bulb for a senior resident.
+
+**Outcomes:**
+
+There are now more than 220 Village programs across the country and at least 10 operating in Virginia (primarily in Northern Virginia).
+
+[The Village Movement](https://www.helpfulvillage.com/the-village-movement)
+
+:::
+
+::: callout-note
+
+### College Service Project: Appalachia Service Project Services for Homeowners
+
+**Approach:**
+
+The College Service Project (CSP) is a student-led campus-based organization that affiliates each of its chapters with the Appalachia Service Project (ASP). The CSP follows the ASP model for home repair projects in their local communities. College students and other volunteers make critical repairs on homes and build new homes when current dwellings are beyond repair.
+
+More than 15,000 volunteers give their time to repair and build homes with the Appalachia Service Project. This model could be replicated with the universities and colleges located in the Lynchburg region.
+
+**Outcomes:**
+
+In the fifty two years since the Appalachia Service Project's founding in 1969, over 400,000 volunteers have repaired nearly 20,000 homes. Not only does the service create safer living situations for rural families in Appalachia, it also establishes meaningful relationships between repair staff and homeowners. Likewise, youth and adult volunteers gain experience and confidence to make important home repairs.
+
+[ASP Services for Homeowners](https://asphome.org/homeowners/)
+
+:::
+
+### Attract and incentivize developers to build lower-cost homes and increase housing diversity
+
+**Issue:** *A shortage of building construction and specialty trade contractors across the region is a major constraint on construction of new housing, and there is a lack of variety to meet residents' lifestyles and budgets.*
+
+The region faces greater demand for housing than can be supplied by the current array of developers, particularly dedicated affordable housing produced by nonprofits and other mission-driven organizations.
+
+One-person homeowners households are increasing, indicating changes in family structures in the county, as an increase in the number of single parents with children living with others in Amherst County, which could indicate a lack of housing that is affordable and attainable for individual families.
+
+**Solution:** *Invest in and support the growth of affordable developers and builders, and reevaluate development regulations to allow for greater density and diversity of housing.*
+
+Attracting and incentivizing developers who can deliver lower-cost options requires a combination of financial, regulatory, and technical support. Furthermore, increasing housing choice diversity is important for promoting equitable and inclusive communities, reducing segregation and discrimination, and providing a range of housing options for people with different incomes, backgrounds, and lifestyles.
+
+**FRAMEWORK**
+
+A combination of efforts are required to address the issue of affordable housing supply-chain.
+Amherst County can explore ways to align development regulations with their desire to address housing that is more accessible and affordable to young families, seniors, and modest-income households. This can include streamlining the development process, offering zoning and land use incentives, providing financial support, and increasing technical programs and assistance to navigate the unique requirements of affordable housing.
+
+Through strategic implementation of these tactics, it is possible to create an environment that is attractive and conducive for developers to contribute meaningfully to housing diversity and affordability, and to minimize obstacles preventing affordable housing development.
+
+**IMPLEMENTATION PLAN**
+
+*Immediate (0-6 months):*
+
+* Establish a task force comprising housing experts, developers, local government representatives, and community stakeholders. This body will analyze current housing policies, evaluate existing regulation and identify barriers, and determine what incentives would most effectively attract developers.
+* Initiate open dialogues with potential private developer partners to better understand their hesitations and needs concerning affordable housing projects. This information will guide the task force in designing appealing incentive packages.
+* Develop a blueprint for a technical assistance program, which will offer guidance on navigating regulatory hurdles and securing funding for affordable housing projects.
+
+*Short-term (6-12 months):*
+
+* Roll out chosen financial incentives, which could include a combination of property tax abatements, density bonuses, low-interest loans, or grants to developers undertaking affordable housing projects depending on identified need and impact.
+* Execute regulatory reforms, including a streamlined development approval process, relaxation of zoning laws to accommodate diverse housing types, and a fast-tracked review process for affordable housing proposals.
+* Launch the technical assistance program, offering training sessions and resources to assist developers in understanding and overcoming the complexities of affordable housing development.
+
+*Long-term (12-24 months):*
+
+* Develop public-private partnership frameworks and attract new private entities to participate in affordable housing projects.
+* Continually monitor the effectiveness of all implemented measures, modifying strategies as necessary based on outcomes and feedback.
+
+**RESPONSIBLE ACTORS AND ROLES**
+
+Public entities, private developers, and non-profit organizations will all have roles.
+
+* Public entities will provide policy guidance and be responsible for executing any chosen regulatory reforms.
+* Private developers will bring in the required building expertise, efficiency, and scalability.
+* Non-profit organizations can assist in community engagement, offering local knowledge and fostering support for affordable housing projects.
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+* Training programs should cover how local zoning regulations could influence the planning and execution of affordable housing projects, including the potential need to navigate variances or amendments to these regulations. Training must also include understanding the Virginia Residential Landlord and Tenant Act and its implications on managing affordable housing units.
+* Developers should be educated about Virginia's Low-Income Housing Tax Credits (LIHTC) and how to leverage this program to finance affordable housing development.
+* Building organizational capacity involves training developers on project management, collaboration with local organizations and government entities, and compliance with affordable housing regulations.
+
+**FUNDING SCOPE REQUIREMENTS**
+
+Funding requirements will depend on the scale of the implementation. Initial costs will be associated with establishing the task force, designing incentive packages, and setting up the technical assistance program. Long-term operational costs will include maintaining partnerships, managing programs, and funding financial incentives.
+
+**POTENTIAL FUNDING SOURCES**
+
+1. Government funding:
+  + Federal grants, such as the HOME Investment Partnerships Program or the Community Development Block Grant (CDBG) program.
+  + HUD's Thriving Communities Technical Assistance (TCTA) Program helps localities to address their housing needs, including addressing regulatory and procedural reforms.
+  + Targeted grants for housing planning efforts are available from DHCD and the Appalachian Regional Commission.
+  + The Capacity Building and Community Impact Grant programs from Virginia Housing could help fund technical assistance efforts and development planning.
+  + The Virginia Housing Trust Fund (VHTF) provides loans with low-interest rates for affordable housing projects.
+2. Public-Private Partnerships (PPP):
+  + Private sector entities often participate in affordable housing development through PPP arrangements.
+  + The private sector brings in capital and operational efficiency, while the public sector can offer incentives like tax breaks, land, or eased regulatory requirements.
+  + Low-Income Housing Tax Credits (LIHTC) can be one example of this type of partnership.
+3. Philanthropic Resources:
+  + Local/regional foundations, businesses, and professional associations could potentially sponsor events and other activities.
+
+**METRICS TO EVALUATE SUCCESS**
+
+* Number of affordable housing units developed
+* Uptake of financial incentives by developers
+* Efficiency of the regulatory approval process
+* Increase in housing types
+* Number of new affordable developers in the county
+
+**PROJECTED IMPACT**
+
+With a well-executed plan, this approach could substantially increase affordable housing availability and diversity within the region over the next few years, with impacts on individual, community, and economic levels.
+
+::: callout-note
+
+### City of Arlington - Affordable Housing Investment Fund (AHIF)
+
+**Approach:**
+
+The city of Arlington has expanded affordable housing by providing low-interest loans to developers through AHIF, introduced bonus density provisions, and actively involved communities in decision-making processes.
+
+**Outcomes:**
+
+The program has enabled the majority of the approximately 8,300 rental units approved throughout the County that help provide homes for low- and moderate-income households, including specialized housing for the elderly, the homeless, or persons.
+
+[Affordable Housing Investment Fund](https://www.arlingtonva.us/Government/Programs/Housing/Development/Affordable-Housing-Investment-Fund)
+
+:::
+
+::: callout-note
+
+### Austin, Texas - Small Developer Training
+
+The Small Developer Training program launched in 2023 and aims to boost the availability of affordable housing in Austin by equipping small-scale developers skills and knowledge necessary for successful residential development.
+
+[Austin Small Developer Training](https://housingworksaustin.org/education/austin-small-developer-training/)
+
+:::
+
+## Secondary solutions
+
+### Complete needed water and sewer infrastructure projects
+
+**Issue:** *Southern parts of the county require new water and sewer infrastructure to match demand for housing.*
+
+The county needs to expand water and sewer capacity to accommodate a growing demand for housing in Madison Heights and areas nearest to Lynchburg. In April 2023, the Amherst board voted to allow the Amherst County Service Authority (ACSA) to finance \$2.5 million in utility infrastructure improvements in southern portions of Madison Heights (the Gateway Sanitary Sewer Project); while this will allow for significant new capacity in the coming years, the county must ensure their investment will be returned through strategic new development.
+
+**Solution:** *Address water and sewer needs via strategic infrastructure planning and financing.*
+
+Managing the timing of water and sewer infrastructure necessary for new housing development requires sophistication and a range of funding sources and strategies. Comprehensively aligning residential development and infrastructure planning will attract and encourage growth into areas where new infrastructure is planned.
+
+**FRAMEWORK**
+
+In the most recent comprehensive plan, Amherst County reinforced established boundaries where public water and sewer will and will not be extended over the next twenty years. The county must continue to target its housing efforts within these Designated Growth Areas and where transportation and other infrastructure improvements are in place to support this growth.
+
+Avenues for ACSA and the county to expand their efforts on this challenge include:
+
+**Stakeholder outreach**
+
+* Hold a symposium to increase education on infrastructure issues. Target attendance from current/potential developers, owners of large properties, and other interested and affected parties.Help attendees understand the scope of challenges and costs and provide opportunities for questions and feedback. This event could coincide with ACSA's upcoming master plan effort, described further below.
+* Explore coordinating with other jurisdictions (Appomattox, Lynchburg) on developer outreach, including the symposium described above.
+
+**Innovative funding sources**
+
+* Continue to evaluate long-term financing options for major projects and maintenance costs.
+* Connect with peer jurisdictions that have used municipal bonds and similar debt financing to discuss lessons and challenges.
+* Work with CVPDC to explore ways to pair housing and community development grants (e.g. CDBG) with infrastructure upgrades.
+
+**Proactive and coordinated planning**
+
+In 2022, ACSA staff began discussing steps to complete a new master plan with the board.
 As of June 2023, the scope and RFP for this plan are not final.
 This plan is a major opportunity to harmonize ACSA strategies with county growth plans.
+
 The new ACSA master plan should directly reference relevant objectives found in the water infrastructure chapter of the county's most recent comprehensive plan.
-Goal 1, Objective 2 recommends innovative funding sources.
-Goal 1, Objective 4 encourages cooperation with stakeholders, such as county staff, the EDA, and developers.
-Goal 2, Objective 1 recommends that needed infrastructure work be coordinated to take advantage of other county projects and private developments.
-Goal 2, Objective 3 suggests additional collaboration with neighboring service providers to explore interconnects and other ways to maximize system efficiency.
+
+* Goal 1, Objective 2 recommends innovative funding sources.
+* Goal 1, Objective 4 encourages cooperation with stakeholders, such as county staff, the EDA, and developers.
+* Goal 2, Objective 1 recommends that needed infrastructure work be coordinated to take advantage of other county projects and private developments.
+* Goal 2, Objective 3 suggests additional collaboration with neighboring service providers to explore interconnects and other ways to maximize system efficiency.
+
 These objectives provide a pre-existing framework for ACSA to develop and prioritize tasks in the master plan.
 
-IMPLEMENTATION
+**IMPLEMENTATION**
 
-Immediate (within 6 months)
+*Immediate (within 6 months):*
 
-Determine the feasibility of hosting an infrastructure symposium in the next 12-18 months.
-Conduct preliminary stakeholder outreach to assess appetite for such an event.
-Finish drafting master plan RFP and incorporate all board feedback.
+* Determine the feasibility of hosting an infrastructure symposium in the next 12-18 months. Conduct preliminary stakeholder outreach to assess appetite for such an event.
+* Finish drafting master plan RFP and incorporate all board feedback.
 
-Short-term (within 12 months)
+*Short-term (within 12 months):*
 
-Plan and hold an infrastructure symposium as described above.
-Announce master plan RFP, solicit bids, and select winner.
-Establish regular meetings with county planning staff to share updates and expected development plans.
-Monitor development trends following recent changes to rates and fees.
+* Plan and hold an infrastructure symposium as described above.
+* Announce master plan RFP, solicit bids, and select winner.
+* Establish regular meetings with county planning staff to share updates and expected development plans.
+* Monitor development trends following recent changes to rates and fees.
 
-Mid-term (within 24 months)
+*Long-term (within 24 months):*
 
-Work with consultant to develop and publish master plan.
-Conduct additional research and interviews to thoroughly evaluate non-traditional revenue sources.
+* Work with consultant to develop and publish master plan.
+* Conduct additional research and interviews to thoroughly evaluate non-traditional revenue sources.
 
-RESPONSIBLE ACTORS AND ROLES
+**RESPONSIBLE ACTORS AND ROLES**
 
-ACSA staff: Prioritize and execute activities, interface with stakeholders, provide updates and recommendations to ACSA board.
-ACSA board: Evaluate and adopt policy changes, oversee staff activities, build and maintain relationships with other local, state, and federal leaders.
-Amherst County administration: Collaborate with ACSA on stakeholder outreach and master plan.
-CVPDC and neighboring localities: Provide information and coordinate on certain activities as needed.
+* ACSA staff: Prioritize and execute activities, interface with stakeholders, provide updates and recommendations to ACSA board.
+* ACSA board: Evaluate and adopt policy changes, oversee staff activities, build and maintain relationships with other local, state, and federal leaders.
+* Amherst County administration: Collaborate with ACSA on stakeholder outreach and master plan.
+* CVPDC and neighboring localities: Provide information and coordinate on certain activities as needed.
 
-POTENTIAL FUNDING SOURCES
+**POTENTIAL FUNDING SOURCES**
 
-User rates and fees: Provide consistent core operational revenue, but cannot support major capital projects on their own.
-State and federal grants: Can be used for multiple activities depending on originating agency and program, but often have competitive and lengthy application periods.
-Self-financed debt: Municipal bonds and similar funding mechanisms can be complex and politically challenging, but can also generate significant revenue.
-EXAMPLES AND BEST PRACTICES HFV is currently completing outreach to localities in Virginia that may be referenced as helpful case studies.
-Any useful information gathered will be added here.
+* User rates and fees: Provide consistent core operational revenue, but cannot support major capital projects on their own.
+* State and federal grants: Can be used for multiple activities depending on originating agency and program, but often have competitive and lengthy application periods.
+* Self-financed debt: Municipal bonds and similar funding mechanisms can be complex and politically challenging, but can also generate significant revenue.

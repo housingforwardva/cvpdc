@@ -1327,11 +1327,12 @@ lihtc_plot <- ggplot(lihtc,
   geom_col() +
   geom_col_interactive() +
   theme_hfv() +
+  add_zero_line("y") +
   labs(title = "LIHTC units by affordability commitment expiration date",
        subtitle = "Percent of total expired by or before year",
        caption = "**Source:** National Housing Preservation Database (NHPD).") +
   scale_fill_gradientn(colours = c("#ADDCB1", "#46A88F", "#207A88", "#0F1A4E")) +
-  scale_y_continuous(labels = percent_format())
+  scale_y_continuous(labels = label_percent())
 
 publish_plot(lihtc_plot)
 
@@ -1385,7 +1386,7 @@ leaflet(lihtc_map) |>
     scale_color_viridis_c(direction = -1) +
     scale_x_continuous(expand = expansion(mult = 0)) +
     scale_y_continuous(expand = expansion(mult = 0)) +
-    labs(title = "Map of LIHTC properties in Lynchburg",
+    labs(title = "LIHTC properties in Lynchburg",
          subtitle = "By affordability commitment expiration date",
          color = "Expired by\nor before",
          caption = "**Source:** National Housing Preservation Database.") +
@@ -1399,7 +1400,6 @@ leaflet(lihtc_map) |>
   
 }
 
-  
 ```
 
 Section 8 properties are those that utilize project-based rental assistance. This is different from Housing Choice Vouchers, which are tenant-based and allow a recipient to choose a rental in the private market. With project-based Section 8, HUD contracts directly with private owners of multifamily housing to make units affordable. The rental assistance is tied directly to a property and cannot be transferred.
@@ -1454,7 +1454,7 @@ leaflet(s8_map) |>
     scale_color_viridis_c(direction = -1) +
     scale_x_continuous(expand = expansion(mult = 0)) +
     scale_y_continuous(expand = expansion(mult = 0)) +
-    labs(title = "Map of Section 8 properties in Lynchburg",
+    labs(title = "Section 8 properties in Lynchburg",
          subtitle = "By affordability commitment expiration date",
          color = "Expired by\nor before",
          caption = "**Source:** National Housing Preservation Database.") +
@@ -1512,7 +1512,8 @@ leaflet(hcv) |>
                          labels = label_percent(scale = 1)) +
     scale_x_continuous(expand = expansion(mult = 0)) +
     scale_y_continuous(expand = expansion(mult = 0)) +
-    labs(title = "Map of HCV utilization in Lynchburg",
+    labs(title = "HCV utilization in Lynchburg",
+         subtitle = "By census tract",
          fill = "Percent of renters\nutilizing HCV",
          caption = "**Source:** U.S. Department of Housing and Urban Development.<br>**Note:** Tracts with no renters using HCVs are transparent.") +
     theme_hfv() +

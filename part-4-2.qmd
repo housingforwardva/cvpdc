@@ -19,7 +19,7 @@ best suit partnerships between two or more local governments.
 *Amherst, Appomattox, and Campbell counties*
 
 **Issue:** *Increasing operations and capacity for first time homebuyer
-readiness*
+readiness.*
 
 Homeownership rates have been declining in recent years in all counties
 but Bedford, and the loss of younger households is common among all
@@ -31,19 +31,16 @@ credit challenges, insufficient savings, or job
 instability/irregularity.
 
 **Solution:** *Expand the network of homebuyer assistance in counties
-with lowest homeownership rates*
+with lowest homeownership rates.*
 
 Localities have an interest in providing opportunities for its own
 residents (especially young workers and young families) to buy a home
-and stay in the counties.[^part-5-2-1] Using local money to specifically
+and stay in the counties. Using local money to specifically
 enhance operations and capacity and extend these services beyond one
 organization would bolster current efforts and increase accessibility
 for residents served both within the city and in the adjacent
 localities. By working together, these counties can pool resources and
 potentially achieve more efficient outcomes.
-
-[^part-5-2-1]: <https://housingforwardva.github.io/cvpdc/part-3-2.html>.
-    Figures 5.5 and 5.6
 
 **FRAMEWORK**
 
@@ -211,6 +208,8 @@ who gain an important asset and a sense of belonging in their community.
 Additionally, higher rates of homeownership can enhance local economies,
 as homeowners are more likely to invest in their properties and local
 businesses, leading to neighborhood revitalization.
+
+**BEST PRACTICES AND EXAMPLES**
 
 ::: callout-note
 
@@ -801,6 +800,8 @@ legal aid.
     direct service organizations who might already serve park residents
     can act as liaisons for researchers, and provide valuable insights
     into household needs.
+
+**BEST PRACTICES AND EXAMPLES**
 
 ::: callout-note
 
