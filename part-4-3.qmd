@@ -37,7 +37,7 @@ Designing an Aging in Place program involves at least two essential categories: 
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 * Evaluate existing networks and leadership: Identify service providers and community leaders who are currently involved in working with seniors and would be well positioned to join a countywide Aging in Place Leadership (AIP) Team. This team would be responsible for organizing and guiding a comprehensive initiative following successful models like those in the New River Valley and the Village network model in Northern Virginia.
 * Identify gaps: Learn where the gaps exist in housing needs and services for seniors (i.e. access to food, transportation, recreation, etc.).
@@ -45,7 +45,7 @@ Designing an Aging in Place program involves at least two essential categories: 
 * Evaluate survey data: Review prior surveys of senior renters and homeowners in the region to refresh the understanding of their preferences and plans with respect to housing. Update findings as needed.
 * Seek best practices for an AIP policy: Research best practices from similar communities as to how they built AIP into policy and program decisions at the local level---for example, as a part of new developments or streetscapes.
 
-*Short term (6-12 months):*
+*Short term (within 12 months):*
 
 * Establish timeline and resources: Assembly a county-wide AIP Leadership Team to meet on an established basis. Develop an action plan by placing the AIP initiatives on a timeline and identify the resources needed for implementation. If resources do not permit full scale implementation, identify initiatives that can be piloted by order of priority.
 * Develop a home-modification program: Implement a comprehensive home-modification initiative that incorporates the following elements:
@@ -54,16 +54,19 @@ Designing an Aging in Place program involves at least two essential categories: 
   + Financial assistance: provide financial assistance to homeowners on terms that are consistent with their ability to pay for AIP home modifications.
   + Program navigation support: Many seniors will need a navigator/coordinator to help them through the process.
 
-*Long-term (12-24 months):*
+*Long-term (within 24 months):*
 
 * Coalition build beyond the county: Support localities in mapping and prioritizing the needs of their residents and identify areas of shared priority to be pursued at either a regional or local scale (perhaps as a pilot project if funding is limited). Ensure the CoC, regional healthcare providers, and other partners understand and are on board with plans.
 * Strengthen capacity: Establish consistent funding sources and training programs to continue to provide a stream of home modifications services to address all levels of need. This may involve create hub locations in rural parts of the county.
 * Incorporate AIP in housing education and outreach: Make AIP part of follow-up housing study conversations and outreach. If a housing forum is held, make AIP one track within the event.
 Use the existing community/senior centers, community events, and/or hospitals as natural venues for disseminating relevant information.
 
-**RESPONSIBLE ACTORS**
+**RESPONSIBLE ACTORS AND THEIR ROLES**
 
-* AIP leadership team, local government staff, local senior service agencies, housing and healthcare providers, counselors, housing funders, volunteers.
+* AIP leadership team: Initiate and coordinate program activities.
+* Local government staff: Educate partners and clients on information for existing resources, and assist with implementation.
+* Local senior service agencies, housing and healthcare providers, counselors, and volunteers: Provide direct services and update leadership team on changing needs and opportunities.
+
 Connecting with regional institutions and leadership can further strengthen the work of local actors.
 
 **LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
@@ -202,24 +205,24 @@ Through strategic implementation of these tactics, it is possible to create an e
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 * Establish a task force comprising housing experts, developers, local government representatives, and community stakeholders. This body will analyze current housing policies, evaluate existing regulation and identify barriers, and determine what incentives would most effectively attract developers.
 * Initiate open dialogues with potential private developer partners to better understand their hesitations and needs concerning affordable housing projects. This information will guide the task force in designing appealing incentive packages.
 * Develop a blueprint for a technical assistance program, which will offer guidance on navigating regulatory hurdles and securing funding for affordable housing projects.
 
-*Short-term (6-12 months):*
+*Short-term (within 12 months):*
 
 * Roll out chosen financial incentives, which could include a combination of property tax abatements, density bonuses, low-interest loans, or grants to developers undertaking affordable housing projects depending on identified need and impact.
 * Execute regulatory reforms, including a streamlined development approval process, relaxation of zoning laws to accommodate diverse housing types, and a fast-tracked review process for affordable housing proposals.
 * Launch the technical assistance program, offering training sessions and resources to assist developers in understanding and overcoming the complexities of affordable housing development.
 
-*Long-term (12-24 months):*
+*Long-term (within 24 months):*
 
 * Develop public-private partnership frameworks and attract new private entities to participate in affordable housing projects.
 * Continually monitor the effectiveness of all implemented measures, modifying strategies as necessary based on outcomes and feedback.
 
-**RESPONSIBLE ACTORS AND ROLES**
+**RESPONSIBLE ACTORS AND THEIR ROLES**
 
 Public entities, private developers, and non-profit organizations will all have roles.
 
@@ -334,7 +337,7 @@ The new ACSA master plan should directly reference relevant objectives found in 
 
 These objectives provide a pre-existing framework for ACSA to develop and prioritize tasks in the master plan.
 
-**IMPLEMENTATION**
+**IMPLEMENTATION PLAN**
 
 *Immediate (within 6 months):*
 

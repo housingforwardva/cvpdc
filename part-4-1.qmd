@@ -30,7 +30,7 @@ This proposed campaign will use a range of methods to educate the public and oth
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 -   Explore formation of work group to oversee education campaign at a high level and ensure consistent messaging.
 
@@ -40,7 +40,7 @@ This proposed campaign will use a range of methods to educate the public and oth
 
 -   Outline major talking points needed for audience types.
 
-*Short-term (6-12 months):*
+*Short-term (within 12 months):*
 
 -   Develop outreach plan by assigning contacts to designated liaisons with specific pitches and requests.
 
@@ -50,7 +50,7 @@ This proposed campaign will use a range of methods to educate the public and oth
 
 -   Evaluate progress to determine long-term goals of campaign(s); assess, reevaluate, and redesign outreach efforts as necessary to reflect changing housing needs in the region.
 
-*Long-term (12-24 months):*
+*Long-term (within 24 months):*
 
 -   Consider a formal public opinion poll on attitudes toward housing development and affordability. The Campaign for Housing and Civic Engagement (CHACE) conducted a statewide poll in 2017 with the help of William & Mary, and should be used as a reference.
 
@@ -120,7 +120,7 @@ This proposed campaign will use a range of methods to educate the public and oth
 
 **PROJECTED IMPACT**
 
--   Measuring the impact of education campaigns is not as simple as quantifying housing production or service delivery. Broad public support for housing is a necessary prerequisite for advancing policy solutions---and can only be achieved with higher levels of knowledge and saliency about the issue. If successful, such efforts will allow local policymakers, developers, and providers to more quickly, efficiently, and effectively expand housing opportunities.
+Measuring the impact of education campaigns is not as simple as quantifying housing production or service delivery. Broad public support for housing is a necessary prerequisite for advancing policy solutions---and can only be achieved with higher levels of knowledge and saliency about the issue. If successful, such efforts will allow local policymakers, developers, and providers to more quickly, efficiently, and effectively expand housing opportunities.
 
 **BEST PRACTICES AND EXAMPLES**
 
@@ -146,7 +146,7 @@ In 2019, community engagement efforts, including survey responses, reached over 
 
 Mid-size and smaller local governments in Virginia today face a range of housing challenges with limited abilities to effectively address them. Smaller budgets and fewer staff---particularly subject matter experts---often prevent these communities from generating and implementing successful policies.
 
-**Solution**: *Establish new pathways for CVPDC to guide and support efforts to increase housing affordability throughout the region.*
+**Solution:** *Establish new pathways for CVPDC to guide and support efforts to increase housing affordability throughout the region.*
 
 Planning district commissions (PDCs) throughout Virginia have started or expanded collaborative efforts on housing affordability over the last several years. Notably, some of the more impressive examples are small-metro or non-metro regions outside of the Urban Crescent, which face many of the same conditions and challenges found in the Lynchburg area.
 
@@ -236,15 +236,15 @@ The operational steps required to fully plan and implement this fund are beyond 
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 Solicit invitations for a regional housing task force and schedule its first meeting. Hold internal conversations on PDC housing priorities, current staff capacity limits, and initial task force agenda. Host first regional housing task force meeting and generate specific next steps. Determine preferred approach(es) for funding new PDC housing position and hold initial conversations with potential funders.
 
-*Short-term (6-12 months):*
+*Short-term (within 12 months):*
 
 Continue to support and lead regular task force meetings. Ensure the task force is focused on specific priorities and attainable objectives. Begin steps on selected regional housing solution(s), e.g. housing education campaign. (Specific tasks depend on each issue.) Take action to secure new funding for dedicated housing staff, e.g. grant applications.
 
-*Long-term (12-24 months):*
+*Long-term (within 24 months):*
 
 Seek out and appoint leadership among task force members to encourage autonomy and reduce PDC responsibilities (as possible). Pending funds, hire and onboard new housing staff to manage CVPDC's housing activities. Find strategic opportunity to begin exploratory steps for the regional housing loan fund.
 
@@ -378,29 +378,29 @@ The fund will make its first awards in late 2023.
 
 ### Evaluate opportunities for regional consistency for short-term rental regulations
 
-**Issue:** *Varying approaches across localities to regulate the growing demand for short-term and seasonal rentals create a confusing policy environment*
+**Issue:** *Varying approaches across localities to regulate the growing demand for short-term and seasonal rentals create a confusing policy environment.*
 
 While short-term rentals can provide a source of income for property owners and provide travelers with alternative lodging options, they can create significant challenges in the housing market. One of the most significant issues is that they can reduce the availability of housing units for long-term rental or ownership, particularly in areas with high demand for housing.
 
 Today, localities in the region have different approaches for regulating and enforcing STRs. Some are very permissive, while others are more restrictive. This may be placing the demand burden on specific communities, such as Smith Mountain Lake, or creating pressure on localities with tighter regulations. Additionally, accurate STR counts and other data from localities are not easily accessible, leading to uncertainty on the total supply, locations, and types of STRs across the region
 
-**SOLUTION:** *Convene a regional task force to evaluate STR policy and market dynamics*
-
-**FRAMEWORK**
+**Solution:** *Convene a regional task force to evaluate STR policy and market dynamics.*
 
 Better decisions about STR regulation will require additional collaboration and knowledge. To accomplish this, localities may explore creating a task force with the purposes of identifying specific data-sharing opportunities, compiling and evaluating all local STR policies, and finding consensus on ways to help make STRs an asset rather than liability for the region.
+
+**FRAMEWORK**
 
 While each locality is keenly aware of the impacts of STRs on their local housing market, there may be a lack of understanding on how differing approaches to STRs are impacting the overall region. A regional task force of local government representatives can be brought together to discuss shared values and common concerns about STRs. In addition, a regional task force can consider hiring a consultant to study STRs across the region and provide real data to make informed decisions.
 
 **IMPLEMENTATION PLAN**
 
-*Immediate:*
+*Immediate (within 6 months):*
 
 -   **Survey existing STR regulations:** Compile all regulations pertaining to STR in each locality and assess the differences and commonalities between them.
 
 -   **Invite local government representatives to participate:** Coordinate with member jurisdictions to identify and invite most appropriate representative(s).
 
-*Short-term:*
+*Short-term (within 12 months):*
 
 -   **Hold regular meetings of a regional task force:** Discuss local and regional goals in terms of STR regulation, focusing on the impacts to the housing market, economic development, and workforce.
 

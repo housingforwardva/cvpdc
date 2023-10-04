@@ -1,9 +1,3 @@
----
-editor: 
-  markdown: 
-    wrap: 72
----
-
 # Local partnerships {#part-4-2}
 
 These solutions involve the coordination of two or more jurisdictions to
@@ -68,7 +62,7 @@ repair, individual counseling, and down payment savings plans.
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 -   **Stakeholder Identification and Engagement:** Identify and engage
     with key stakeholders and partners, including mortgage lenders,
@@ -87,7 +81,7 @@ repair, individual counseling, and down payment savings plans.
     outlines the objectives, deliverables, timeline, and resources
     required for the initiative.
 
-*Short-term (6-12 months):*
+*Short-term (within 12 months):*
 
 -   **Curriculum Development:** Collaborate with housing and financial
     experts to design an improved homebuyer education curriculum. This
@@ -101,7 +95,7 @@ repair, individual counseling, and down payment savings plans.
     Training should cover the curriculum, teaching methods, and
     strategies for engaging with diverse groups of homebuyers.
 
-*Long-term (12- 24 months):*
+*Long-term (within 24 months):*
 
 -   **Marketing and Promotion:** Develop and launch a marketing campaign
     to raise awareness about the program. This can involve social media
@@ -263,7 +257,7 @@ have received education and counseling services.
 
 **Issue:** *Increased placements of new manufactured homes (and poor
 quality of existing, older ones) may run counter to counties' growth
-goals*
+goals.*
 
 The rising cost of homeownership is leading many buyers to manufactured
 homes as an affordable solution, particularly in Amherst and Appomattox
@@ -277,7 +271,7 @@ functional lifespan and present significant health and safety issues.
 
 **Solution:** *Explore land use, fiscal, and other mechanisms to ensure
 manufactured homes benefit both homeowners and the community in the long
-term*
+term.*
 
 This recommendation investigates and proposes specific actions these
 counties could take to address these issues. Options include evaluating
@@ -457,7 +451,7 @@ contractors to complete work.
 
 **IMPLEMENTATION PLAN**
 
-*Immediate:*
+*Immediate (within 6 months):*
 
 -   Begin data collection and analysis.
 
@@ -476,7 +470,7 @@ contractors to complete work.
 
     -   Strategies to successfully relocate residents in those homes.
 
-*Short-term:*
+*Short-term (within 12 months):*
 
 -   Finish data analysis, prepare memo with major findings, and share
     results with county leadership.
@@ -495,7 +489,7 @@ contractors to complete work.
 
 -   Establish criteria to prioritize mobile home replacements.
 
-*Long-term:*
+*Long-term (within 24 months):*
 
 -   Initiate formal public hearing process for any amendments to the
     zoning ordinance and/or county fiscal policy.
@@ -598,7 +592,7 @@ housing.
 *Bedford and Campbell counties*
 
 **Issue:** *Manufactured housing offers affordable housing but is often
-plagued with housing quality issues, especially in mobile home parks*
+plagued with housing quality issues, especially in mobile home parks.*
 
 Although manufactured homes provide a much-needed source of low-cost
 housing, particularly in rural areas, they have challenges. Older mobile
@@ -613,7 +607,7 @@ track in mobile home communities.
 
 **Solution:** *Survey and assess existing mobile home parks to inform
 resource allocations and policy decisions that address rehabilitation
-and overcrowding*
+and overcrowding.*
 
 **FRAMEWORK**
 
@@ -679,7 +673,7 @@ presentation/event are possible options.
 
 **IMPLEMENTATION PLAN**
 
-*Immediate:*
+*Immediate (within 6 months):*
 
 -   Determine if research will be conducted "internally" by CVPDC and
     local government staff, or if project will be contracted out to a
@@ -696,7 +690,7 @@ presentation/event are possible options.
 -   Develop list of potential funding entities; submit proposals to
     interested parties.
 
-*Short-term (next 12 months):*
+*Short-term (within 12 months):*
 
 -   Create a standardized database for known manufactured home
     communities in the region. At the very least, this database should
@@ -710,7 +704,7 @@ presentation/event are possible options.
 
 -   Begin Census data collection and analysis.
 
-*Mid-term (12-24 months):*
+*Long-term (within 24 months):*
 
 -   Conduct in-person park survey to gather on-the-ground information
     about community and housing conditions.
@@ -722,7 +716,7 @@ presentation/event are possible options.
     study. Identify and pursue any key next steps identified in the
     report.
 
-*Long-term (24+ months):*
+*Follow-up tasks:*
 
 -   Conduct a scaled-down "check-in" survey to parks in the region to
     determine if the number of units or vacancy rates have changed.
