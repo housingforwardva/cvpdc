@@ -263,6 +263,7 @@ The chart below shows the differences in these amounts between each statute.
 ```{r}
 #| label: fig-va-adu
 #| fig-cap: "Allowable ADU program design limits in Virginia state code"
+#| fig-asp: 0.618
 
 library(tidyverse)
 library(scales)
@@ -271,7 +272,7 @@ library(ggtext)
 
 adu <- read_rds("data/adu.rds")
 
-ggplot(adu,
+adu_plot <- ggplot(adu,
        aes(
          x = affordable,
          y = density,
@@ -317,15 +318,32 @@ ggplot(adu,
     x = "\nAffordable units",
     y = "Density bonus\n",
     caption = "**Source:** Va. Code Ann. § 15.2-2305 and § 15.2-2305.1."
-  ) +
+  )
+
+if (knitr::is_html_output()) {
+  
+ adu_plot +
+  theme_hfv(base_size = 20) +
+  theme(
+    axis.title.x = element_text(margin = margin(t = -5)),
+    axis.title.y = element_text(margin = margin(r = -5)),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    panel.grid.major.x = element_line(color = "#cbcdcc", linewidth = 0.05)
+  )
+  
+} else {
+  
+ adu_plot +
   theme_hfv() +
   theme(
-    plot.title = element_textbox(size = 11),
+    plot.title = element_textbox(size = 10),
     plot.subtitle = element_textbox(size = 9),
     axis.title = element_text(),
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     panel.grid.major.x = element_line(color = "#cbcdcc", linewidth = 0.05)
-  )
+  ) 
+  
+}
 
 ```
 

@@ -4,14 +4,14 @@
 
 This website is the online version of the Central Virginia Planning District Commission's 2023 Housing Market Analysis Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region and ways to address the issues identified. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
 
-It is currently a draft and not meant to be publicly circulated at this time.
+This final draft version is not meant to be publicly circulated until final approval in November 2023.
 
 :::: callout-tip
 ## How to give interactive feedback
 
 Invited stakeholders can provide feedback on the draft content on these pages.
 
-You can highlight and add comments to this website using [hypothesis.is](https://web.hypothes.is/).
+You can highlight and add comments to this website using [hypothesis.is](https://web.hypothes.is/). Setup takes two minutes.
 
 1.  Create a [free account](https://web.hypothes.is/start/) with your email address. You do not need to install the browser extension. Be sure to activate your account by clicking the link sent to your email upon registering.
 2.  Here, or any other page on this website, open the annotation sidebar by clicking on the little arrow at the top right.
@@ -19,7 +19,7 @@ You can highlight and add comments to this website using [hypothesis.is](https:/
 4.  You can now select any text on the page to make new annotations or highlights. These will be visible to all viewers.
 5.  Clicking on any yellow-highlighted text will reveal comments made by others. You can reply to these annotations.
 
-For more information, see the [Annotation Basics](https://web.hypothes.is/help/annotation-basics/) help page.
+For more information, see the hypothes.is [Annotation Basics](https://web.hypothes.is/help/annotation-basics/) help page.
 
 If you have any questions or problems with this website, please email [jonathan\@housingforwardva.org](mailto:jonathan@housingforwardva.org).
 ::::
