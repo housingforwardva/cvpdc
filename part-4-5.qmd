@@ -22,17 +22,17 @@ With increased funding and formalization, Bedford Housing Coalition, or simply t
 
 **IMPLEMENTATION PLAN**
 
-*Immediate (0-6 months):*
+*Immediate (within 6 months):*
 
 * Invite business leaders and economic development professionals to join the Bedford Housing Coalition.
 * Discuss with the BARC Steering Committee the potential to formalize the network into a standalone nonprofit organization.
 
-*Short term (6-12 months):*
+*Short term (within 12 months):*
 
 * Explore funding opportunities to support sustainability of BARC, or Bedford Housing Coalition, as a nonprofit organization.
 * Explore funding opportunities to hire a consultant for organizational development and strategic planning.
 
-*Long-term (12-24 months):*
+*Long-term (within 24 months):*
 
 * Evaluate the ability of the Coalition to hire a consultant to assist in the development of housing campaign. Consider launching a campaign around workforce housing to reach a broad spectrum of people.
 
@@ -65,6 +65,7 @@ If choosing to create a nonprofit, donations and sponsorship can be key indicato
 The impact of an organization whose sole purpose is to address housing challenges in the county and advocate for residents cannot be easily quantified. An organization with representation from a broad spectrum of stakeholders, however, can have substantial influence on policymaking and decision-making.
 
 ### Attract and incentivize developers to build lower-cost homes and increase housing diversity 
+
 **Issue:** *Bedford County faces greater housing demand than can be supplied by developers working under the current regulatory and economic status quo.*
 
 While this demand exists across the whole housing spectrum, particularly absent are lower-cost ownership options that would be more affordable to existing residents. These include essential workers like teachers and nurses. County land use regulations, along with a shortage of construction and specialty trade contractors across the region, are a major constraint on creation of new lower-cost housing.
@@ -201,9 +202,10 @@ Along with unrestricted general fund revenue, some or all revenue from any futur
 The [Charlottesville Homeowner Assistance Program](https://www.charlottesville.gov/1513/Real-Estate-Tax-Relief) (CHAP) is the only known local initiative in Virginia to provide direct grants to homeowners to offset real estate tax costs. Charlottesville’s program is targeted to long-term homeowners with low incomes facing potential displacement pressures. Although this policy goal is very different, the program demonstrates how localities can offer tax relief without a formal exemption or abatement.
 
 Numerous localities in Virginia use progressive permit fee rates based on the estimated home valuation. Examples include:
-The City of Lynchburg [[link](https://www.lynchburgva.gov/sites/default/files/COLFILES/Community-Development/Technical-Review-Committee/Community%20Development%20Department%20Fee%20Schedule.pdf)]
-Roanoke County [[link](https://www.roanokecountyva.gov/1376/Building-Permit-Fees)]
-Rockbridge County [[link](https://www.co.rockbridge.va.us/DocumentCenter/View/9)]
+
+* The City of Lynchburg [[link](https://www.lynchburgva.gov/sites/default/files/COLFILES/Community-Development/Technical-Review-Committee/Community%20Development%20Department%20Fee%20Schedule.pdf)]
+* Roanoke County [[link](https://www.roanokecountyva.gov/1376/Building-Permit-Fees)]
+* Rockbridge County [[link](https://www.co.rockbridge.va.us/DocumentCenter/View/9)]
 
 ## Secondary solutions 
 
@@ -279,6 +281,18 @@ Connecting with regional institutions and leadership can further strengthen the 
 * As with any program where advice is being given and changes are made to the homes of seniors, it is important to carefully assess legal liability. Making sure that providers are professionally trained and certified and that contractors are properly insured are critical elements to a properly designed program.
 * Aging in place is an extensive undertaking. It will require coordination of many agencies and organizations. The AIP leadership team is the starting point for this and can be built out with other public and private sector leaders.
 
+::: callout-note
+
+### Longevity Project
+
+*Richmond, Virginia*
+
+One model is to create a coordinating council that provides guidance and measures impact. In the Richmond area, that organization is the Longevity Project---a coalition led by VCU's Gerontology Department but that includes local governments in the region as well as many housing and service providers.
+
+[The Longevity Project for a greater Richmond](https://gerontology.chp.vcu.edu/about-us/longevity-project-for-a-greater-richmond/)
+
+:::
+
 **POTENTIAL FUNDING SOURCES**
 
 Many traditional affordable housing funding sources can also be accessed to assist lower income seniors with aging in place. Most of these programs are means tested and only available to seniors with incomes below 80% of AMI and in many cases, less than 50% AMI.
@@ -307,7 +321,7 @@ Seniors Safe at Home sets out to make sure that no senior citizen must wait for 
 
 **Outcomes:**
 
-In 2016, this program helped 98 senior citizens with repairs and rehabs, or 53% of AHIP's clients-- as of 2021, the number of seniors rose to 66% of their total rehab participants.
+In 2016, this program helped 98 senior citizens with repairs and rehabs, or 53% of AHIP's clients---as of 2021, the number of seniors rose to 66% of their total rehab participants.
 
 AHIP uses a variety of funding sources; however, the largest share of its support comes from the City of Charlottesville and Albemarle County. Both of these jurisdictions use local and HUD funds to support AHIP's work. AHIP also raises a substantial amount of charitable funding every year from corporate and philanthropic sources as well as individuals.
 

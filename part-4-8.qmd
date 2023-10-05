@@ -1,288 +1,409 @@
 # Towns
 
-## Primary Solutions
+## Primary solutions
 
 ### Spearhead regional effort to help developers overcome state development regulations
 
-Issue: State transportation and environmental regulations are stifling towns’ efforts to attract meaningful residential infill development
+**Issue:** *State transportation and environmental regulations are stifling towns’ efforts to attract meaningful residential infill development.*
 
 Despite allowing for higher residential density on parcels identified for development, many towns in the CVPDC region have been unsuccessful in attracting proposals from developers. Currently, VDOT and DEQ requirements imposed on larger-scale residential development (e.g. road infrastructure, stormwater abatement) impose unsustainable costs that are not justified by the lower returns expected in these towns’ markets.
 
 As a result, developers are instead incentivized to find larger greenfield sites in the counties that can provide the additional sales volume needed to cover regulatory expenses. Towns therefore continue to lose out on new residents, while development in the counties contributes to suburban sprawl.
 
-Solution: Create a sustained regional initiative to develop the additional resources and capacity needed to make town infill development an attractive investment
+**Solution:** *Create a sustained regional initiative to develop the additional resources and capacity needed to make town infill development an attractive investment.*
+
 Towns in the Central Virginia region are not alone on this problem. Therefore, town leaders should begin regional conversations amongst each other, CVPDC, developers, and other stakeholders to identify specific problems and potential solutions. Working together, they can research best practices and develop unified recommendations to help small towns.
 
-FRAMEWORK
+**FRAMEWORK**
 
-Assemble task force
+**Assemble task force**
+
 Representatives from the towns and CVPDC, along with additional partners as desired, should establish a small town development task force. Together, this group should begin their work by completing the following tasks:
-Develop a comprehensive assessment of the specific regulatory barriers preventing the residential development they want,
-Study any successful recent developments in towns to find possible best practices, and
-Interview developers and builders to gather additional insight and potential solution pathways.
+
+* Develop a comprehensive assessment of the specific regulatory barriers preventing the residential development they want,
+* Study any successful recent developments in towns to find possible best practices, and
+* Interview developers and builders to gather additional insight and potential solution pathways.
+
 Alternatively, if town staff already convene on a regular basis to discuss general issues, then this activity may be more easily incorporated as a standing agenda item in those meetings.
-Establish statewide connections
+
+**Establish statewide connections**
+
 The task force should subsequently conduct additional outreach on this topic to aligned organizations across Virginia, including but not limited to:
-The Virginia Municipal League (VML) and its members, particularly members of its Infrastructure, Transportation, and Environmental Quality Policy Committee,
-Regional homebuilder associations, and
-The Home Builders Association of Virginia (HBAV).
+
+* The Virginia Municipal League (VML) and its members, particularly members of its Infrastructure, Transportation, and Environmental Quality Policy Committee,
+* Regional homebuilder associations, and
+* The Home Builders Association of Virginia (HBAV).
+
 Task force members should share findings from their regional assessment and propose priority issues for these groups to collaboratively find solutions.
+
 Furthermore, the task force could also seek constructive relationships with staff who represent the relevant state agencies, such as:
-The Virginia Department of Transportation (VDOT), ideally representatives from the Lynchburg and/or Salem districts,
-The Department of Environmental Quality (DEQ), and
-The Virginia State Water Control Board.
+
+* The Virginia Department of Transportation (VDOT), ideally representatives from the Lynchburg and/or Salem districts,
+* The Department of Environmental Quality (DEQ), and
+* The Virginia State Water Control Board.
+
 These connections with state officials should be used to seek their guidance on new or creative workarounds to current challenges, and to ensure towns are accessing every possible grant and funding opportunity available to cover the costs of new infrastructure.
 
+**Create regional support systems**
 
-Create regional support systems
 As best possible, towns should pool their time and energy to avoid duplicative efforts. The task force should explore new collective resources that would benefit each community. Possible examples include:
-Build a clearinghouse of infill parcels towns would like to see developed to proactively seek proposals from developers,
-Explore whether planning staff from CVPDC or parent counties could serve as “on call” development consultants to help town staff and interested builders, and
-Develop common program language for new incentive packages, as described below.
-Promote low-impact development
+
+* Build a clearinghouse of infill parcels towns would like to see developed to proactively seek proposals from developers,
+* Explore whether planning staff from CVPDC or parent counties could serve as “on call” development consultants to help town staff and interested builders, and
+* Develop common program language for new incentive packages, as described below.
+
+**Promote low-impact development**
+
 Absent any favorable changes to state road and stormwater regulations, towns should evaluate potential incentives for developers to design proposals that mitigate regulatory burdens. Incentives may take the form of:
-Permit fee reductions or waivers,
-Utility hookup fee reductions or waivers, and
-Streamlined permitting process with fewer steps.
-Those options are not exclusive; other incentive mechanisms—especially those that do not require new enabling legislation in state code—should also be explored.
+
+* Permit fee reductions or waivers,
+* Utility hookup fee reductions or waivers, and
+* Streamlined permitting process with fewer steps.
+
+Those options are not exclusive; other incentive mechanisms---especially those that do not require new enabling legislation in state code---should also be explored.
+
 To be eligible for incentives, plans could be required to incorporate elements such as:
-Pervious surfaces and materials that trap runoff,
-Parcel and street layouts that minimize subdivision street lengths, and
-Clustering of homes to preserve open space.
+
+* Pervious surfaces and materials that trap runoff,
+* Parcel and street layouts that minimize subdivision street lengths, and
+* Clustering of homes to preserve open space.
+
 Additional steps towns should take include:
-Evaluating existing zoning codes (with stakeholder input) to ensure low-impact designs are not inadvertently restricted, and
-Exploring infrastructure upgrades that allow more stormwater to be treated off-site, reducing on-site requirements.
 
-IMPLEMENTATION
+* Evaluating existing zoning codes (with stakeholder input) to ensure low-impact designs are not inadvertently restricted, and
+* Exploring infrastructure upgrades that allow more stormwater to be treated off-site, reducing on-site requirements.
 
-Immediate:
+**IMPLEMENTATION PLAN**
 
-Assemble the task force in coordination with CVPDC and establish a regular meeting schedule.
-Draft and delegate specific action items for task force members to complete for their initial assessment work.
-Begin outreach to partners and stakeholders within the region to gather input.
+*Immediate (within 6 months):*
 
-Short-term:
+* Assemble the task force in coordination with CVPDC and establish a regular meeting schedule.
+* Draft and delegate specific action items for task force members to complete for their initial assessment work.
+* Begin outreach to partners and stakeholders within the region to gather input.
 
-Continue task force meetings; share and discuss results from various regulatory assessments and outreach.
-Write specific talking points that summarize challenges and communicate needs; use them to begin outreach to statewide organizations and state agency representatives.
-Participate in high level advocacy conversations with VML and other organizations to explore potential regulatory reform options.
-Invite state agency representatives to speak with town officials and local developers.
-Long-term:
-Evaluate and prioritize possible incentives for low-impact development. Vet proposals with town leaders and stakeholders to amend as needed.
-Following approval of any incentives, affirmatively communicate new options to developers and identify specific parcels available.
+*Short-term (within 12 months):*
 
-LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY
+* Continue task force meetings; share and discuss results from various regulatory assessments and outreach.
+* Write specific talking points that summarize challenges and communicate needs; use them to begin outreach to statewide organizations and state agency representatives.
+* Participate in high level advocacy conversations with VML and other organizations to explore potential regulatory reform options.
+* Invite state agency representatives to speak with town officials and local developers.
 
-Legal:
+*Long-term (within 24 months):*
+
+* Evaluate and prioritize possible incentives for low-impact development. Vet proposals with town leaders and stakeholders to amend as needed.
+* Following approval of any incentives, affirmatively communicate new options to developers and identify specific parcels available.
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+*Legal:*
+
 The regulatory bodies responsible for reviewing the state regulations relevant to this issue include the Commonwealth Transportation Board and State Water Control Board. They do not regularly undertake major overhauls of regulations, and are lobbied heavily by competing interests. Therefore, major beneficial changes to these codes is unlikely in the near future.
-Financial:
+
+*Financial:*
+
 Nothing described in this solution would require new financial structures, with the exception of low-impact development incentives that could incorporate alternative real estate tax schemes. However, more straightforward fee reductions and waivers should be attempted first.
-Organizational:
+
+*Organizational:*
+
 Staff and resources among the towns are not as robust as their larger municipal counterparts in the region. Therefore, the activities in this recommendation focus on collaboration and leverage of regional entities, such as CVPDC. Towns should strive as much as possible to remain coordinated on this effort and not independently pursue different paths.
 
-FUNDING SCOPE REQUIREMENTS
+**FUNDING SCOPE REQUIREMENTS**
 
 The primary cost associated with activities in this solution is personnel hours for town staff. While some of the tasks might be reasonably included within general staff duties, important objectives are much more likely to be achieved if dedicated funding is acquired. Such funds could support existing staff, contribute to the hiring of new staff, and/or cover the cost of technical assistance from outside consultants.
 
-POTENTIAL FUNDING SOURCES
+**POTENTIAL FUNDING SOURCES**
 
-Virginia Housing’s Community Impact Grant could be used for some of the tasks described above. Applications are accepted on a rolling basis. Awards range from \$15,000 to \$20,000 depending on project type.
-CDBG funds may be used for planning and capacity building activities. Town representatives and CVPDC should engage DHCD to explore options.
-Pooled town general funds and private philanthropic grants may also be explored as funding options.
+* Virginia Housing’s Community Impact Grant could be used for some of the tasks described above. Applications are accepted on a rolling basis. Awards range from \$15,000 to \$20,000 depending on project type.
+* CDBG funds may be used for planning and capacity building activities. Town representatives and CVPDC should engage DHCD to explore options.
+* Pooled town general funds and private philanthropic grants may also be explored as funding options.
 
-METRICS TO EVALUATE SUCCESS
+**METRICS TO EVALUATE SUCCESS**
 
-Task force action items defined and accomplished
-Number of new stakeholders and partners reached
-Number of parcels successfully developed
-Number of new homes built
-Property value increases (and subsequent tax revenue collected)
-New funding obtained for infrastructure planning/construction
+* Task force action items defined and accomplished
+* Number of new stakeholders and partners reached
+* Number of parcels successfully developed
+* Number of new homes built
+* Property value increases (and subsequent tax revenue collected)
+* New funding obtained for infrastructure planning/construction
 
-RESPONSIBLE ACTORS AND THEIR ROLES
+**RESPONSIBLE ACTORS AND THEIR ROLES**
 
 Town staff: Organize and participate in task force, complete initial assessments, maintain developer/stakeholder outreach, investigate and propose new incentives.
+
 Town planning commissions and councils: Provide high-level guidance on process, facilitate connections with stakeholders (especially state regulators), evaluate and adopt new incentives.
+
 CVPDC: As able, assist task force with its work, participate in conversations with regulators, potentially provide formal technical assistance, help apply for grants.
 
 ### Tackle housing vacancy and address blight
 
-Issue: Many small towns do not have the resources to address vacant and unmaintained homes 
+**Issue:** *Many small towns do not have the resources to address vacant and unmaintained homes.*
 
 The rehabilitation of blighted properties is an important part of community development efforts; most of the region’s housing is surpassing 20 years in age, making quality an ever-present issue in an aging housing stock. Population decline (in some areas) and migration in the region have also contributed to vacancies and absent landowners, further adding to the challenge of blight and disrepair. These problems are most acute in the smaller towns within the CVPDC footprint.
 
-Solution: Research and implement new revitalization strategies 
+**Solution:** *Research and implement new revitalization strategies.*
 
 Towns can expand rehabilitation efforts in a number of ways, including the expansion of successful statewide programs like DHCD’s ARS program (Acquire, Renovate, Sell, currently used in Altavista), the establishment of land banks, increasing staff capacity to track and enforce absentee landlords, or studying new tax structures, like a progressive taxation of vacant land to discourage speculation and encourage development. Proactive and regular coordination among the towns would facilitate higher success.
 
-FRAMEWORK
+**FRAMEWORK**
 
 There are multiple policy paths that the towns can undertake to address vacant housing and blighted properties. Some strategies may take significant effort to successfully implement, while others less so. Below are a list of recommended strategies:
-Expand Acquire, Renovate, Sell (ARS) utilization: Learning from the successes in Altavista, DHCD’s ARS program can provide towns with the grant funding to acquire and rehab homes to a comparable market state. As a partnership between the provider, DHCD, and VHDA, these homes are also eligible for first time homebuyer downpayment assistance, and  ten percent of the net proceeds of sales can be put back into administrative costs to support local staffing.  
-Establish a regional land bank organization: While most land banks in Virginia serve one locality, regional models exist in other parts of the county, including the North East Pennsylvania Land Bank Authority, which serves nine distinct municipalities. Advantages of a regional land bank approach include the ability to address “spillover effects” associated with vacant and abandoned properties across county lines and to tackle a larger number of foreclosed properties through bulk negotiations.  Rather than conducting a public tax lien auction, counties or cities can decide to directly transfer tax liens on a property to a municipal authority or land bank. The PDC could be positioned to assist in this effort, along with representation from participating town leadership.
-Increase staff capacity for proactive code enforcement: Administrative budget challenges in smaller towns can prevent jurisdictions from hiring the amount of staff necessary to effectively enforce code and tax delinquency. Towns can advocate for and seek out increased funding with a clear outline of the scope of code enforcement challenges  and data insights. Furthermore, capacity building grants, like those offered through Virginia Housing, can provide funds for towns to strategically approach issues like code enforcement with the help of consultants.
-Improve the foreclosure process:  Tax foreclosure best practices can lead to improved foreclosure systems that enable communities to better serve local needs and respond to blight in a more timely manner. Legislative modifications to state and local property tax enforcement and sale regulations may be necessary for some of these best practices.
-Explore a land value tax: Potentially the most challenging of these recommendations, implementing a land value tax would provide a stable source of funding for affordable housing and rehabilitation if localities agree to dedicate a share of all tax revenue. This tax could also reduce economic distortions by encouraging the development of underutilized land and discouraging speculative landholding, but it would require new state enabling legislation and, by necessity, coalition building to accomplish. 
 
-IMPLEMENTATION PLAN: 
+1. **Expand Acquire, Renovate, Sell (ARS) utilization:** Learning from the successes in Altavista, DHCD’s ARS program can provide towns with the grant funding to acquire and rehab homes to a comparable market state.
 
-Immediate (within 6 months): 
+    As a partnership between the provider, DHCD, and VHDA, these homes are also eligible for first time homebuyer downpayment assistance, and  ten percent of the net proceeds of sales can be put back into administrative costs to support local staffing. 
+    
+2. **Establish a regional land bank organization:** While most land banks in Virginia serve one locality, regional models exist in other parts of the county, including the North East Pennsylvania Land Bank Authority, which serves nine distinct municipalities.
 
-Hold an inter-town meeting to learn from Altavista about the ARS program and how others in the region could apply and replicate successes in their own context
-Audit and evaluate current data collection strategies to determine the full scale and scope of delinquencies and blight and to document the cost of inaction 
-Explore expedited judicial foreclosure processes for tax delinquent properties that also have code violations to rapidly deal with properties that may pose greater costs to the community. 
+    Advantages of a regional land bank approach include the ability to address “spillover effects” associated with vacant and abandoned properties across county lines and to tackle a larger number of foreclosed properties through bulk negotiations.
+    
+    Rather than conducting a public tax lien auction, counties or cities can decide to directly transfer tax liens on a property to a municipal authority or land bank. The PDC could be positioned to assist in this effort, along with representation from participating town leadership.
 
-Short-term (within 12 months): 
+3. **Increase staff capacity for proactive code enforcement:** Administrative budget challenges in smaller towns can prevent jurisdictions from hiring the amount of staff necessary to effectively enforce code and tax delinquency. Towns can advocate for and seek out increased funding with a clear outline of the scope of code enforcement challenges  and data insights. 
 
-Develop pool of funds to undertake rehab or demolition of properties
-Identify properties that are difficult to address due to absentee or missing landowners or other foreclosure challenges and options for transfer
-Pursue capacity building grants to explore collaborations with community-based nonprofit and private developers to tackle blight 
+    Furthermore, capacity building grants, like those offered through Virginia Housing, can provide funds for towns to strategically approach issues like code enforcement with the help of consultants.
 
-Long-term (within 24 months): 
+4. **Improve the foreclosure process:**  Tax foreclosure best practices can lead to improved foreclosure systems that enable communities to better serve local needs and respond to blight in a more timely manner. Legislative modifications to state and local property tax enforcement and sale regulations may be necessary for some of these best practices.
 
-Hire additional staff to support overall capacity to address strategies and actions focused on vacancy and blight
-Explore the possibility of creating a regional land bank, housed either through the PDC or through an identified and capable non-profit organization
+5. **Explore a land value tax:** Potentially the most challenging of these recommendations, implementing a land value tax would provide a stable source of funding for affordable housing and rehabilitation if localities agree to dedicate a share of all tax revenue.
 
-LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY
+    This tax could also reduce economic distortions by encouraging the development of underutilized land and discouraging speculative landholding, but it would require new state enabling legislation and, by necessity, coalition building to accomplish. 
 
-Legal Capacity: Virginia state code gives localities certain powers to deal with vacant and tax delinquent properties. Relevant chapters are below.
-§ 15.2-7500 et seq. Land Bank Entities Act:
-Enabling legislation for the creation/designation of land bank entities
-Covers property acquisitions and dispositions
-Allows for tax exemption for land bank entities
-Optional collection of partial tax assessments on conveyed properties
-§ 15.2-7509. Financing of operations:
-Up to 50% of real property taxes collected on conveyed properties may be remitted to the land bank entity
-Allocation of property tax revenues begins after conveyance and lasts for up to 10 years
-§ 58.1-3965. When land may be sold for delinquent taxes; notice of sale; owner's right of redemption:
-Covering the general process for auctioning tax delinquent properties
-§ 58.1-3970.1. Appointment of special commissioner to execute title to certain real estate with delinquent taxes or liens to localities:
-Process for "direct sale" of tax delinquent properties to land banks and nonprofits
-Expanded criteria for delinquent balance and assessed value of properties in most localities
-§ 15.2-907.1. Authority to require removal, repair, etc., of buildings that are declared to be derelict; civil penalty:
-Local powers/process for addressing derelict buildings
-§ 15.2-907.2. Authority of locality or land bank entity to be appointed to act as a receiver to repair derelict and blighted buildings in certain limited circumstances:
-Local powers/process for using land banks as receivers for derelict/blighted properties
-Financial capacity:
-Additional funding is required to support new programs aimed at addressing vacancy and blight.
-Local cities should actively seek out dedicated grant funds that are specifically available for addressing vacancy and blight issues.
-Exploring other potential funding sources such as community development block grants, state funding programs, or partnerships with private organizations can help secure additional financial resources.
-Organizational capacity:
-The Planning and Development Commission (PDC) and local city staff will need to undergo training on new programs and strategies related to addressing vacancy and blight.
-Staff members may be required to take on new temporary or permanent roles, specifically focused on managing and implementing initiatives to combat vacancy and blight.
-Collaboration and coordination between different departments and agencies within the locality is crucial for effective implementation of programs.
-Establishing partnerships with community organizations, non-profits, and other stakeholders can help enhance organizational capacity and improve the overall effectiveness of efforts to tackle vacancy and blight.
-Regular monitoring, evaluation, and reporting of progress are necessary to ensure the effectiveness of the implemented programs and make any necessary adjustments.
+**IMPLEMENTATION PLAN:**
 
-RESPONSIBLE ACTORS AND ROLES 
+*Immediate (within 6 months):*
 
-Planning District Commission: 
-Support localities in locating and applying for funding opportunities
-Support regional planning around strategies to enforce/repurpose vacancies
+* Hold an inter-town meeting to learn from Altavista about the ARS program and how others in the region could apply and replicate successes in their own context
+* Audit and evaluate current data collection strategies to determine the full scale and scope of delinquencies and blight and to document the cost of inaction 
+* Explore expedited judicial foreclosure processes for tax delinquent properties that also have code violations to rapidly deal with properties that may pose greater costs to the community. 
+
+*Short-term (within 12 months):*
+
+* Develop pool of funds to undertake rehab or demolition of properties
+* Identify properties that are difficult to address due to absentee or missing landowners or other foreclosure challenges and options for transfer
+* Pursue capacity building grants to explore collaborations with community-based nonprofit and private developers to tackle blight 
+
+*Long-term (within 24 months):* 
+
+* Hire additional staff to support overall capacity to address strategies and actions focused on vacancy and blight
+* Explore the possibility of creating a regional land bank, housed either through the PDC or through an identified and capable non-profit organization
+
+**LEGAL, FINANCIAL, AND ORGANIZATIONAL CAPACITY**
+
+*Legal:*
+
+Virginia state code gives localities certain powers to deal with vacant and tax delinquent properties. Relevant chapters are below.
+
+[§ 15.2-7500 et seq](https://law.lis.virginia.gov/vacode/title15.2/chapter75/). *Land Bank Entities Act*
+
+* Enabling legislation for the creation/designation of land bank entities
+* Covers property acquisitions and dispositions
+* Allows for tax exemption for land bank entities
+* Optional collection of partial tax assessments on conveyed properties
+
+[§ 15.2-7509](https://law.lis.virginia.gov/vacode/title15.2/chapter75/section15.2-7509/). *Financing of operations*
+
+* Up to 50% of real property taxes collected on conveyed properties may be remitted to the land bank entity
+* Allocation of property tax revenues begins after conveyance and lasts for up to 10 years
+
+[§ 58.1-3965](https://law.lis.virginia.gov/vacode/58.1-3965/). *When land may be sold for delinquent taxes; notice of sale; owner's right of redemption*
+
+* Covering the general process for auctioning tax delinquent properties
+
+[§ 58.1-3970.1](https://law.lis.virginia.gov/vacode/title58.1/chapter39/section58.1-3970.1/). *Appointment of special commissioner to execute title to certain real estate with delinquent taxes or liens to localities*
+
+* Process for "direct sale" of tax delinquent properties to land banks and nonprofits
+* Expanded criteria for delinquent balance and assessed value of properties in most localities
+
+[§ 15.2-907.1](https://law.lis.virginia.gov/vacode/title15.2/chapter9/section15.2-907.1/). *Authority to require removal, repair, etc., of buildings that are declared to be derelict; civil penalty*
+
+* Local powers/process for addressing derelict buildings
+
+[§ 15.2-907.2](https://law.lis.virginia.gov/vacode/title15.2/chapter9/section15.2-907.2/). *Authority of locality or land bank entity to be appointed to act as a receiver to repair derelict and blighted buildings in certain limited circumstances*
+
+* Local powers/process for using land banks as receivers for derelict/blighted properties
+
+*Financial:*
+
+* Additional funding is required to support new programs aimed at addressing vacancy and blight.
+* Local cities should actively seek out dedicated grant funds that are specifically available for addressing vacancy and blight issues.
+* Exploring other potential funding sources such as community development block grants, state funding programs, or partnerships with private organizations can help secure additional financial resources.
+
+*Organizational:*
+
+* CVPDC and local staff will need to undergo training on new programs and strategies related to addressing vacancy and blight.
+* Staff members may be required to take on new temporary or permanent roles, specifically focused on managing and implementing initiatives to combat vacancy and blight.
+* Collaboration and coordination between different departments and agencies within the locality is crucial for effective implementation of programs.
+* Establishing partnerships with community organizations, non-profits, and other stakeholders can help enhance organizational capacity and improve the overall effectiveness of efforts to tackle vacancy and blight.
+* Regular monitoring, evaluation, and reporting of progress are necessary to ensure the effectiveness of the implemented programs and make any necessary adjustments.
+
+**RESPONSIBLE ACTORS AND THEIR ROLES**
+
+CVPDC: 
+
+* Support localities in locating and applying for funding opportunities
+* Support regional planning around strategies to enforce/repurpose vacancies
+
 Locality staff: 
-Administer and evaluate code enforcement 
-Compile updated inventory of vacancies 
-Pursue funding opportunities 
-Institute a regional land bank
-Contractors
-Perform rehabilitation or demolition of purchased/locality-owned vacant properties
-Local housing and service providers 
-Locate future homeowners for rehabilitated properties
-Operate as chosen land bank administrator (nonprofits only)
 
-FUNDING SCOPE REQUIREMENTS
+* Administer and evaluate code enforcement 
+* Compile updated inventory of vacancies 
+* Pursue funding opportunities 
+* Institute a regional land bank
+
+Contractors:
+
+* Perform rehabilitation or demolition of purchased/locality-owned vacant properties
+
+Local housing and service providers:
+
+* Locate future homeowners for rehabilitated properties
+* If ideal, operate as chosen land bank administrator (nonprofits only)
+
+**FUNDING SCOPE REQUIREMENTS**
 
 The amount of new funding required will depend on how much of the above scope is pursued at once. Additional staff needed within the PDC and/or town administrations could range from one to three full-time equivalent (FTE) positions.
-POTENTIAL FUNDING SOURCES 
-DHCD: ARS program includes development and operational funds.
-Virginia Housing: Community impact and capacity building grants can support administrative costs and the ability to hire consultants to support strategy development
 
-METRICS TO EVALUATE SUCCESS
+Furthermore, the legal costs and court fees associated with the acquisition of properties by a land bank could be several thousand dollars per transaction. However, these expenses should theoretically be an investment relative to the increased long-term property tax revenue.
 
-Number of vacant homes moved back into viable use 
-Funding resources acquired for rehabilitation
-Creation of regional land bank
-Reclamation of property values and subsequent tax revenue
+**POTENTIAL FUNDING SOURCES**
 
-PROJECTED IMPACT
+* DHCD: ARS program includes development and operational funds.
+* Virginia Housing: Community impact and capacity building grants can support administrative costs and the ability to hire consultants to support strategy development
+
+**METRICS TO EVALUATE SUCCESS**
+
+* Number of vacant homes moved back into viable use 
+* Funding resources acquired for rehabilitation
+* Creation of regional land bank
+* Reclamation of property values and subsequent tax revenue
+
+**PROJECTED IMPACT**
 
 The expected impact of this solution depends on the specific activities pursued and achieved. In general, the repositioning of vacant and blighted properties has the strong potential to improve community character, attract new private investments, and raise property values. Successful expansion of the ARS program can also create new affordable homeownership opportunities for town residents.
 
-RELEVANT EXAMPLES
+**EXAMPLES AND BEST PRACTICES**
 
-City of Altoona Blight Task Force
-[will add description]
-WPPDC regional land bank plan
-[currently on paper and seeking funding; will add details when next steps confirmed in coming weeks]
+::: callout-note
 
-## Secondary Solution 
+### Land banks in Virginia
+
+As of October 2023, active land banks in the state include:
+
+* [The Maggie Walker Community Land Trust](https://maggiewalkerclt.org/) (designated as the land bank for the City of Richmond, Chesterfield County, and Henrico County)
+* [Total Action for Progress](https://www.nationalcivicleague.org/city-of-roanoke-va-transforms-vacant-homes-into-affordable-housing/) (designated as the land bank for the City of Roanoke)
+* [Chesapeake Land Bank Authority](https://www.cityofchesapeake.net/1287/Chesapeake-Land-Bank-Authority)
+
+Additional information:
+
+* [Land Banking in the Commonwealth](https://housingforwardva.org/news/land-banking-in-the-commonwealth/) (HousingForward Virginia webinar, April 2020)
+* [Land Bank Resources](https://communityprogress.org/resources/land-banks/) (Center for Community Progress)
+
+:::
+
+::: callout-note
+
+### City of Altoona Blight Task Force
+
+**Approach:**
+
+Altoona is one of the many post-industrial cities in Pennsylvania that experienced significant population decline in recent decades. High vacancy rates and blighted, abandoned properties followed. In 2017, leaders assembled a Blight Task Force to examine the problem and propose a series of strategies to overcome those challenges.
+
+The report released by the task force in 2018 recommended the creation of a land bank, expanding repair and rehab assistance, and strengthening city authority to enforce property codes.
+
+**Outcomes:**
+
+That October, the Altoona City Council designated the Altoona Redevelopment Authority as the city's land bank. Within a year, the Authority had adopted policies and procedures for its land bank activity. Today, the Authority uses its powers to assemble and "package" multiple underused properties to be redeveloped as housing.
+
+[Altoona, PA Land Bank and Blight Strategies](https://www.altoonapa.gov/land-bank-blight-strategies)
+
+:::
+
+## Secondary solution 
 
 ### Align housing and community development efforts
 
-Issue: Towns want to reclaim their character by attracting new businesses and residents and pursuing more livable mainstreet communities.
+**Issue:** *Towns want to reclaim their character by attracting new businesses and residents and pursuing more livable main street communities.*
 
 Over the past few decades, many rural towns have experienced the loss of traditional industries, population declines, and the rise of national chain stores. Towns in the CVPDC region have not been immune to these trends, and are currently pursuing—and already succeeding in—efforts to rebuild their economy and improve public spaces. However, housing can often be a more difficult challenge, which limits the residential base for new, stimulating activity. 
 
-Solution: Leverage state and federal resources to ensure housing is proactively addressed in commercial revitalization efforts
+**Solution:** *Leverage state and federal resources to ensure housing is proactively addressed in commercial revitalization efforts.*
 
 Economic development, community development, and housing are interconnected, particularly in smaller communities. The continuing revitalization of historic downtown areas and addressing vacant and/or dilapidated buildings is critical to attracting both new businesses and residents.
+
 This recommendation would develop specific strategies for the towns to expand their use of the Virginia Main Street Program, state and federal tax credits, and other resources currently available for this purpose. Opportunities to secure technical assistance and training programs for mixed-use development, adaptive reuse, and other steps to add residential space to activate core downtown areas will also be identified, so communities can increase their public, nonprofit, and private sector capacities.
 
-FRAMEWORK
+**FRAMEWORK**
 
-The Virginia Main Street (VMS) Program housed under the Department of Housing and Community Development helps communities implement the National Main Street Center’s (NMSC) Main Street Approach. The VMS Program provides communities with technical assistance, consulting services, training, and grant funding.  While the towns of Altavista, Bedford, and Brookneal have participated in one of the offered tiers, Amherst and Appomattox have not. Federal and state historic tax credits can be used in Virginia to restore commercial buildings, including office and retail properties. These tax credits have been leveraged across many declining downtowns in the rehabilitation and adaptive reuse of buildings — often turning old warehouses into a mix of housing and commercial uses.
+The Virginia Main Street (VMS) Program housed under the Department of Housing and Community Development helps communities implement the National Main Street Center’s (NMSC) Main Street Approach. The VMS Program provides communities with technical assistance, consulting services, training, and grant funding.
+
+While the towns of Altavista, Bedford, and Brookneal have participated in one of the offered tiers, Amherst and Appomattox have not. Federal and state historic tax credits can be used in Virginia to restore commercial buildings, including office and retail properties. These tax credits have been leveraged across many declining downtowns in the rehabilitation and adaptive reuse of buildings---often turning old warehouses into a mix of housing and commercial uses.
 
 Virginia Housing also contributed to community development efforts through its mixed-use/mixed-income (MUMI) program. MUMI provides for low-rate mortgage finance for projects that include both housing and commercial uses. Virginia Housing is flexible on the incomes served and will fund projects with household incomes up to 150% of AMI. Some more deeply affordable apartments are required and determined through negotiation that considers the underlying economic feasibility of the project.
 
-IMPLEMENTATION PLAN:
+**IMPLEMENTATION PLAN**
 
-Immediate (0-6 months):
+*Immediate (within 6 months):*
 
-Inventory downtown assets in towns, including unique features and historic structures to highlight 
-Consider the town’s interest in the following approaches:
-Obtain and maintain Virginia Main Street designation.
-Coordinate downtown district strategies through regular meetings with Chambers of Commerce, town and county economic development staff, and regional organizations.
-Improve directional signage to the downtown district and outdoor recreation amenities.
-Facilitate the sale or redevelopment of vacant commercial properties in collaboration with owners and potential investors targeting the buildings listed in the Pulaski Redevelopment and Renewal Plan and the Pulaski Downtown Revitalization Master Plan.
-Review and update zoning regulations and implement an overlay zoning district for downtown to promote design guidelines and target incentive programs to businesses.
-Initiate a business recruitment strategy to encourage business investment in downtown and in target business sectors.
-Target grant, loan, and incentive programs to property owners in downtown areas to upgrade buildings or invest in new business development.
-Promote downtown residential development through updates to the zoning regulations to allow residential units in upper floors of downtown buildings and market to regional target markets.
-Identify parcels suitable for housing: finalize inventory of vacant parcels and underutilized buildings suitable for housing.
+* Inventory downtown assets in towns, including unique features and historic structures to highlight.
+* Consider and prioritize towns' interest in the following approaches:
+  + Obtain and maintain Virginia Main Street designation.
+  + Coordinate downtown district strategies through regular meetings with Chambers of Commerce, town and county economic development staff, and regional organizations.
+  + Improve directional signage to the downtown district and outdoor recreation amenities.
+  + Facilitate the sale or redevelopment of vacant commercial properties in collaboration with owners and potential investors.
+  + Review and update zoning regulations and implement an overlay zoning district for downtown to promote design guidelines and target incentive programs to businesses.
+  + Initiate a business recruitment strategy to encourage business investment in downtown and in target business sectors.
+  + Target grant, loan, and incentive programs to property owners in downtown areas to upgrade buildings or invest in new business development.
+  + Promote downtown residential development through updates to the zoning regulations to allow residential units in upper floors of downtown buildings and market to regional target markets.
+  + Identify parcels suitable for housing: finalize inventory of vacant parcels and underutilized buildings suitable for housing.
 
-Short-term (next 12 months):
+Short-term (within 12 months):
 
-Host a downtown housing event: invite funders and potential development partners. This could also include meeting with owners of vacant parcels to determine motivation to sell or partner.
-Host a downtown tour: provide facts about development opportunities at various buildings and parcels.
-Target code enforcement for dilapidated buildings downtown.
-Assess current zoning: assess and modify zoning or land-use barriers to development.
-Pursue financing options: invite Virginia Community Development Corporation (VCDC) (equity investment) and Virginia Community Capital (flexible debt) to visit and discuss possible projects.
-Evaluate potential for land banking: explore land and property acquisition line of credit for RHA “land banking.”
-Conduct a market study for downtown housing that can be used to help developers understand demand and the pricing.
+* Host a downtown housing event: invite funders and potential development partners. This could also include meeting with owners of vacant parcels to determine motivation to sell or partner.
+* Host a downtown tour: provide facts about development opportunities at various buildings and parcels.
+* Target code enforcement for dilapidated buildings downtown.(See previous solution.)
+* Assess current zoning: assess and modify zoning or land-use barriers to development.
+* Pursue financing options: invite Virginia Community Development Corporation (VCDC) (equity investment) and Virginia Community Capital (flexible debt) to visit and discuss possible projects.
+* Evaluate potential for land banking: explore land and property acquisition via regional land bank. (See previous solution.)
+* Conduct a market study for downtown housing that can be used to help developers understand demand and the pricing.
 
-Mid-term (12–24 months):
+*Long-term (within 24 months):*
 
-Solicit development partners: develop RFPs for property development that can be sent to potential partners.
-Market downtown: prepare a marketing campaign for affordable downtown living.
+* Solicit development partners: develop RFPs for property development that can be sent to potential partners.
+* Market downtown: prepare a marketing campaign for affordable downtown living.
 
-RESPONSIBLE ACTORS AND THEIR ROLES
+**RESPONSIBLE ACTORS AND THEIR ROLES**
 
-Town staff
-PDC staff
-County economic development staff: 
-REALTORS
-Downtown businesses
+Town staff and leaders: assess needs, determine priorities, implement chosen activities.
 
-POTENTIAL FUNDING SOURCES
+CVPDC staff: Provide towns with technical assistance, connections to grants and other resources, and coordinate regional-level initiatives.
 
-Virginia Housing Trust Fund, Department of Housing and Community Development, Federal and state historic rehabilitation tax credits, Low-Income Housing Tax Credits, Federal Home Loan Bank, Vibrant Communities Drive Change (VCDC), corporate partners, and healthcare systems.
+**POTENTIAL FUNDING SOURCES**
 
-BEST PRACTICES AND RELEVANT EXAMPLES
+* DHCD Virginia Main Street grant opportunities (Downtown Investment Grants, Community Vitality Grants, and Financial Feasibility Grants)
+* Federal and state historic rehabilitation tax credits, Low-Income Housing Tax Credits, and other financing incentives (for specific projects)
+* Corporate partners, healthcare systems, and other local institutions (for sponsoring events and other activities)
 
-Downtown Harrisonburg Renaissance Project: Harrisonburg, Virginia
+**BEST PRACTICES AND EXAMPLES**
 
-Approach: In the early 2000s, downtown Harrisonburg faced various challenges, including blight, vacant buildings, and a lack of residential and commercial appeal. To address these challenges, the city established the Harrisonburg Downtown Renaissance (HDR) in 2003, a non-profit organization devoted to revitalizing the downtown area. HDR became part of the Virginia Main Street program, which provided a comprehensive strategy for revitalization. One key component of the Harrisonburg Downtown Renaissance was the focus on mixed-use development. Recognizing the value of having both residential and commercial spaces in the downtown area, the city encouraged developers to create mixed-use spaces. This meant renovating the upper floors of existing commercial buildings into residential units and promoting the ground floors for commercial use.
+::: callout-note
 
-Outcomes: Several projects under the HDR initiative, like the Walton Hotel and the City Exchange, were transformed from vacant or underutilized properties into vibrant mixed-use spaces with shops, restaurants, and residential units. These redevelopments spurred further investment and helped create a lively, pedestrian-friendly downtown. Another significant part of the revitalization effort was the enhancement of public spaces. The city invested in streetscape improvements, including better lighting, sidewalks, and public art. This made the downtown area more attractive to both residents and visitors.
+### Harrisonburg Downtown Renaissance
+
+**Approach:**
+
+In the early 2000s, downtown Harrisonburg faced various challenges, including blight, vacant buildings, and a lack of residential and commercial appeal. To address these challenges, the city established the Harrisonburg Downtown Renaissance (HDR) in 2003, a non-profit organization devoted to revitalizing the downtown area. HDR became part of the Virginia Main Street program, which provided a comprehensive strategy for revitalization.
+
+One key component of the Harrisonburg Downtown Renaissance was the focus on mixed-use development. Recognizing the value of having both residential and commercial spaces in the downtown area, the city encouraged developers to create mixed-use spaces. This meant renovating the upper floors of existing commercial buildings into residential units and promoting the ground floors for commercial use.
+
+**Outcomes:**
+
+Several projects under the HDR initiative, like the Walton Hotel and the City Exchange, were transformed from vacant or underutilized properties into vibrant mixed-use spaces with shops, restaurants, and residential units. These redevelopments spurred further investment and helped create a lively, pedestrian-friendly downtown.
+
+Another significant part of the revitalization effort was the enhancement of public spaces. The city invested in streetscape improvements, including better lighting, sidewalks, and public art. This made the downtown area more attractive to both residents and visitors.
 
 Today, downtown Harrisonburg is a thriving urban center, recognized as a Great American Main Street Award winner.
+
+[Harrisonburg Downtown Renaissance](https://downtownharrisonburg.org/)
+
+:::
+
