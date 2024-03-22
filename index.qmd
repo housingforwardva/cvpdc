@@ -4,6 +4,14 @@
 
 This website is the online version of the Central Virginia Planning District Commission's Regional Housing Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region, along with recommendations for addressing the identified challenges. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
 
+:::: callout-tip
+
+## Download study as PDF
+
+[Central Virginia Planning District Regional Housing Study](pdf/cvpdc-housing-study.pdf) (23.7 MB)
+
+::::
+
 :::
 
 ::: {.content-visible when-format="pdf"}
@@ -12,9 +20,9 @@ This website is the online version of the Central Virginia Planning District Com
 
 ## Web version available
 
-The preferred format for this report is an interactive website available at the URL below.
+The preferred format for this report is an interactive website at the URL below.
 
-https://housingforwardva.github.io/cvpdc/
+<https://housingforwardva.github.io/cvpdc/>
 
 ::::
 

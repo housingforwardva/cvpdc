@@ -10,12 +10,14 @@ format:
   html:
     theme:
       - lumen
-    #grid: 
-    #  sidebar-width: 250px
+    grid:
+      #sidebar-width: 250px
+      body-width: 750px
     fontsize: "100%"
     #template-partials:
     #  - toc.html
     toc-title: "On this page"
+    
   pdf:
     documentclass: scrreprt
     mainfont: "Open Sans"
@@ -32,9 +34,9 @@ book:
   author: 
     name: "HousingForward Virginia"
     url: https://www.housingforwardva.org
-  downloads: pdf 
+  #downloads: pdf 
   date: today
-  date-format: long
+  date-format: "MMMM YYYY"
   chapters:
     - index.qmd 
     - summary.qmd

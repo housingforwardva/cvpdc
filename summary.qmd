@@ -1,5 +1,19 @@
 # Executive summary {.unnumbered}
 
+::: {.content-visible when-format="html"}
+
+:::: callout-tip
+
+## Download summary slidedeck as PDF
+
+This summary is also available as a 21-slide presentation.
+
+[Executive Summary Slidedeck](pdf/cvpdc-executive-summary.pdf) (1.4 MB)
+
+::::
+
+:::
+
 ## Key takeaways
 
 * Lower cost-of-living, diverse job opportunities, and natural amenities make CVPDC region highly attractive.
