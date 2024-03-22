@@ -10,11 +10,11 @@ format:
   html:
     theme:
       - lumen
-    grid: 
-      sidebar-width: 350px
+    #grid: 
+    #  sidebar-width: 250px
     fontsize: "100%"
-    template-partials:
-      - toc.html
+    #template-partials:
+    #  - toc.html
     toc-title: "On this page"
   pdf:
     documentclass: scrreprt
@@ -37,6 +37,7 @@ book:
   date-format: long
   chapters:
     - index.qmd 
+    - summary.qmd
     - part: "Research and engagement"
       chapters:
         - part-1-1.qmd # Background research
@@ -67,7 +68,7 @@ knitr:
     warning: false
     message: false
     
-comments: 
-  hypothesis: true
+#comments: 
+#  hypothesis: true
   
 

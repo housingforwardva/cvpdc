@@ -2,27 +2,7 @@
 
 ::: {.content-visible when-format="html"}
 
-This website is the online version of the Central Virginia Planning District Commission's 2023 Housing Market Analysis Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region and ways to address the issues identified. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
-
-This final draft version is not meant to be publicly circulated until final approval in November 2023.
-
-:::: callout-tip
-## How to give interactive feedback
-
-Invited stakeholders can provide feedback on the draft content on these pages.
-
-You can highlight and add comments to this website using [hypothesis.is](https://web.hypothes.is/). Setup takes two minutes.
-
-1.  Create a [free account](https://web.hypothes.is/start/) with your email address. You do not need to install the browser extension. Be sure to activate your account by clicking the link sent to your email upon registering.
-2.  Here, or any other page on this website, open the annotation sidebar by clicking on the little arrow at the top right.
-3.  Click "Log in" and enter your credentials when prompted.
-4.  You can now select any text on the page to make new annotations or highlights. These will be visible to all viewers.
-5.  Clicking on any yellow-highlighted text will reveal comments made by others. You can reply to these annotations.
-
-For more information, see the hypothes.is [Annotation Basics](https://web.hypothes.is/help/annotation-basics/) help page.
-
-If you have any questions or problems with this website, please email [jonathan\@housingforwardva.org](mailto:jonathan@housingforwardva.org).
-::::
+This website is the online version of the Central Virginia Planning District Commission's Regional Housing Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region, along with recommendations for addressing the identified challenges. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
 
 :::
 
@@ -38,21 +18,21 @@ https://housingforwardva.github.io/cvpdc/
 
 ::::
 
-This document is the PDF version of the Central Virginia Planning District Commission's 2023 Housing Market Analysis Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region and ways to address the issues identified. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
-
-It is currently a draft and not meant to be publicly circulated at this time.
-
-If you have any questions or problems with this PDF, please email [jonathan\@housingforwardva.org](mailto:jonathan@housingforwardva.org).
+This document is the PDF version of the Central Virginia Planning District Commission's Regional Housing Study. The report was completed by HousingForward Virginia to provide the region with a clear understanding of housing affordability in the region, along with recommendations for addressing the identified challenges. The study was completed thanks to funding from Virginia Housing's Community Impact Grant.
 
 :::
 
 ## About HousingForward Virginia {.unnumbered}
+
+![](img/hfv_logo.jpg){width=50%}
 
 This report was written by HousingForward Virginia, the Commonwealth's trusted resource for affordable housing data and actionable insights. Advocates, planners, developers, and mission aligned organizations rely on us to help them build connections and advance their work. With our support, they're able to better identify needs, influence decision makers, and ultimately increase access to affordable housing for all. HousingForward Virginia is a 501(c)3 nonprofit organization based in Richmond, Virginia.
 
 For more information, visit: <https://www.housingforwardva.org>
 
 ## About Central Virginia Planning District Commission {.unnumbered}
+
+![](img/cvpdc_logo.png){width=50%}
 
 The Central Virginia Planning District Commission (CVPDC), formally known as Region 2000 District Commission, is the regional planning entity for Planning District 11. The region includes the City of Lynchburg, Amherst County, Appomattox County, Bedford County, Campbell County, and the Towns of Altavista, Amherst, Appomattox, Bedford, and Brookneal. The CVPDC works to provide services for member localities and identify and develop opportunities for coordination among the region's local governments. Additionally, the CVPDC encourages and facilitates collaboration among local governments in addressing challenges and opportunities of greater-than-local significance.
 
